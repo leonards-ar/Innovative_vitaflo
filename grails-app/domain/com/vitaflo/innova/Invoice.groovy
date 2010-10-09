@@ -1,6 +1,7 @@
 package com.vitaflo.innova
 
 class Invoice implements Comparable {
+    static auditable = true
 
     Date createdAt = new Date()
     Date date = new Date()

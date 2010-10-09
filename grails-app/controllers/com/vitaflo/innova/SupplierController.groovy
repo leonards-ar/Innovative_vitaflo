@@ -1,6 +1,6 @@
 package com.vitaflo.innova
 
-class SupplierController {
+class SupplierController extends BaseController {
 
     def index = { redirect(action: "list", params: params) }
 
@@ -8,10 +8,9 @@ class SupplierController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def list = {
+        rememberListState([max: 15, offset: 0, sort: 'name', order: 'asc'])
+
         params.max = Math.min(params.max ? params.max.toInteger() : 15,  100)
-        if (!params.offset) params.offset = 0
-        if (!params.sort) params.sort = "name"
-        if (!params.order) params.order = "asc"
 
         [supplierInstanceList: Supplier.list(params), supplierInstanceTotal: Supplier.count()]
     }

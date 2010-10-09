@@ -1,6 +1,7 @@
 package com.vitaflo.innova
 
 class Purchase implements Comparable {
+    static auditable = true
 
     String codeNumber
     Double amount

@@ -2,7 +2,7 @@ package com.vitaflo.innova
 
 import grails.converters.JSON
 
-class ClientController {
+class ClientController extends BaseController {
 
     def index = { redirect(action: "list", params: params) }
 
@@ -10,11 +10,7 @@ class ClientController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def list = {
-        params.max = Math.min(params.max ? params.max.toInteger() : 15, 100)
-    
-        if (!params.offset) params.offset = 0
-        if (!params.sort) params.sort = "name"
-        if (!params.order) params.order = "asc"
+        rememberListState([max: 15, offset: 0, sort: 'name', order: 'asc'])
 
         def query = {
             ne('status', 'Deleted')
@@ -37,7 +33,7 @@ class ClientController {
         def total = criteria.count(query);
 
         def clients = Client.withCriteria {
-            maxResults(params.max)
+            maxResults(params.max?.toInteger())
             firstResult(params.offset?.toInteger())
             order(params.sort, params.order)
             ne('status', 'Deleted')

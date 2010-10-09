@@ -1,6 +1,7 @@
 package com.vitaflo.innova
 
 class Client {
+    static auditable = true
 
     String name
     String address

@@ -1,7 +1,8 @@
 package com.vitaflo.innova
 
 class Supplier {
-
+    static auditable = true
+    
     String name
     String phone
     String email

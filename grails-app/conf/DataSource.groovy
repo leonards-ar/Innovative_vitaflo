@@ -15,7 +15,7 @@ environments {
 		dataSource {
                     // dbCreate = "create-drop" // one of 'create', 'create-drop','update'
                     dbCreate = 'update'
-                    url = "jdbc:mysql://spmdb/vitaflo_sistema?useUnicode=true&characterEncoding=utf-8"
+                    url = "jdbc:mysql://spmdb/vitaflo_sistema?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
 		}
                 hibernate {
                     show_sql=true
@@ -24,13 +24,26 @@ environments {
 	test {
 		dataSource {
 			dbCreate = "update"
-                        url = "jdbc:mysql://localhost/vitaflo_sistema?useUnicode=true&characterEncoding=utf-8"
+                        url = "jdbc:mysql://localhost/vitaflo_sistema?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
 		}
 	}
 	production {
 		dataSource {
 			dbCreate = "update"
-                        url = "jdbc:mysql://localhost/vitaflo_sistema?useUnicode=true&characterEncoding=utf-8"
+                        url = "jdbc:mysql://localhost/vitaflo_sistema?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
+		}
+	}
+	vitaflo {
+		dataSource {
+			dbCreate = "update"
+                        url = "jdbc:mysql://localhost/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
+		}
+	}
+
+	innova {
+		dataSource {
+			dbCreate = "update"
+                        url = "jdbc:mysql://localhost/vitaflo_sistema?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
 		}
 	}
 }

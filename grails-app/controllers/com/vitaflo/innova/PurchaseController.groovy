@@ -1,6 +1,6 @@
 package com.vitaflo.innova
 
-class PurchaseController {
+class PurchaseController extends BaseController {
 
     def index = { redirect(action: "list", params: params) }
 
@@ -8,51 +8,85 @@ class PurchaseController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def list = {
-        params.max = Math.min(params.max ? params.max.toInteger() : 15,  100)
-        if (!params.offset) params.offset = 0
-        if (!params.sort) params.sort = "expireDate"
-        if (!params.order) params.order = "desc"
+        rememberListState([max: 15, offset: 0, sort: 'expireDate', order: 'desc'])
 
         def query = {
-          if(params.codeNumber) {
-            eq('codeNumber', params.codeNumber)
-          }
-
-          if(params.supplier) {
-            supplier {
-              eq('name', params.supplier)
+			projections {
+				distinct("id")
+			}
+            if(params.codeNumber) {
+                eq('codeNumber', params.codeNumber)
             }
-          }
 
-          if(params.status) {
-            eq('status', params.status)
-          }
+            if(params.supplier) {
+                supplier {
+                    eq('name', params.supplier)
+                }
+            }
+
+            if(params.status) {
+                eq('status', params.status)
+            }
+
+            invoices {
+                proforma{
+                    or {
+                        client {
+                            inList('country', session.countries)
+                        }
+                        patient {
+                            inList('country', session.countries)
+                        }
+
+                    }
+                }
+            }
         }
 
         def criteria = Purchase.createCriteria()
 
         def total = criteria.count(query)
 
-        def purchases = Purchase.withCriteria{
+        def purchasesIds = Purchase.withCriteria{
 
-          maxResults(params.max)
-          firstResult(params.offset?.toInteger())
-          order(params.sort, params.order)
+            maxResults(params.max?.toInteger())
+            firstResult(params.offset?.toInteger())
+            order(params.sort, params.order)
 
-          if(params.codeNumber) {
-            eq('codeNumber', params.codeNumber)
-          }
-
-          if(params.supplier) {
-            supplier {
-              eq('name', params.supplier)
+			projections {
+				distinct("id")
+			}
+			
+            if(params.codeNumber) {
+                eq('codeNumber', params.codeNumber)
             }
-          }
 
-          if(params.status) {
-            eq('status', params.status)
-          }
+            if(params.supplier) {
+                supplier {
+                    eq('name', params.supplier)
+                }
+            }
+
+            if(params.status) {
+                eq('status', params.status)
+            }
+
+            invoices {
+                proforma{
+                    or {
+                        client {
+                            inList('country', session.countries)
+                        }
+                        patient {
+                            inList('country', session.countries)
+                        }
+
+                    }
+                }
+            }
         }
+		
+		def purchases = Purchase.getAll(purchasesIds)
       
         [purchaseInstanceList: purchases, purchaseInstanceTotal: total, codeNumber:params.codeNumber, supplier:params.supplier, status:params.status]
     }
@@ -60,7 +94,8 @@ class PurchaseController {
     def create = {
         def purchaseInstance = new Purchase()
         purchaseInstance.properties = params
-        return [purchaseInstance: purchaseInstance]
+        def invoices = getInvoicesForSelect()
+        return [purchaseInstance: purchaseInstance, invoices:invoices]
     }
 
     def save = { PurchaseInvoicesCommand invoicesCmd ->
@@ -92,7 +127,31 @@ class PurchaseController {
             redirect(action: "list")
         }
         else {
-            return [purchaseInstance: purchaseInstance]
+            def invoices = Invoice.withCriteria{
+                order('number', 'asc')
+                isNull('purchase')
+                proforma{
+                    or {
+                        client {
+                            if (params.client) {
+                                eq('name', params.client)
+                            }
+
+                            inList('country', session.countries)
+                        }
+                        patient {
+                            if (params.patient) {
+                                def str = params.patient.split(',')
+                                eq('lastName', str[0])
+                            }
+                            inList('country', session.countries)
+                        }
+
+                    }
+                }
+            }
+            return [purchaseInstance: purchaseInstance, invoices:invoices]
+
         }
     }
 
@@ -105,7 +164,8 @@ class PurchaseController {
             redirect(action: "list")
         }
         else {
-            return [purchaseInstance: purchaseInstance]
+			def invoices = getInvoicesForSelect()
+            return [purchaseInstance: purchaseInstance, invoices:invoices]
         }
     }
 
@@ -202,8 +262,11 @@ class PurchaseController {
 
         addInvoice(purchaseInstance)
 
+		def invoices = getInvoicesForSelect()
+		invoices -= purchaseInstance.invoices
+		
         purchaseInstance.invoices*.discard()
-        render(view: "create", model: [purchaseInstance: purchaseInstance])
+        render(view: "create", model: [purchaseInstance: purchaseInstance, invoices:invoices])
     }
 
     def removeInvoiceForCreate = {PurchaseInvoicesCommand invoicesCmd ->
@@ -215,7 +278,10 @@ class PurchaseController {
         removeInvoice(purchaseInstance)
 
         purchaseInstance.invoices*.discard()
-        render(view: "create", model: [purchaseInstance: purchaseInstance])
+
+		def invoices = getInvoicesForSelect()
+		
+        render(view: "create", model: [purchaseInstance: purchaseInstance, invoices:invoices])
     }
 
     def addInvoiceForUpdate = {
@@ -224,7 +290,9 @@ class PurchaseController {
 
         addInvoice(purchaseInstance)
 
-        render(view: "edit", model: [purchaseInstance: purchaseInstance])
+		def invoices = getInvoicesForSelect()
+		invoices -= purchaseInstance.invoices
+        render(view: "edit", model: [purchaseInstance: purchaseInstance, invoices:invoices])
     }
 
     def removeInvoiceForUpdate = {
@@ -233,20 +301,26 @@ class PurchaseController {
 
         removeInvoice(purchaseInstance)
 
-        render(view: "edit", model: [purchaseInstance: purchaseInstance])
+		def invoiceId = params.invoiceToRemove
+		def invoice = Invoice.get(invoiceId)
+		
+		def invoices = getInvoicesForSelect()
+		invoices.add(invoice)
+		invoices.sort {it.number}
+        render(view: "edit", model: [purchaseInstance: purchaseInstance, invoices:invoices])
     }
 
 
-   void addInvoice(Purchase purchaseInstance){
+    void addInvoice(Purchase purchaseInstance){
 
         def invoice = Invoice.get(params.invoiceSelected)
         purchaseInstance.addToInvoices(invoice)
 
         def updatedAmount = purchaseInstance.amount?purchaseInstance.amount + invoice.amount:invoice.amount
         purchaseInstance.amount = updatedAmount < 0? invoice.amount : updatedAmount
-   }
+    }
 
-   void removeInvoice(Purchase purchaseInstance){
+    void removeInvoice(Purchase purchaseInstance){
 
         def invoiceId = params.invoiceToRemove
 
@@ -255,7 +329,7 @@ class PurchaseController {
 
         def updatedAmount = purchaseInstance.amount?purchaseInstance.amount - invoice.amount:0
         purchaseInstance.amount = updatedAmount < 0? 0 : updatedAmount
-   }
+    }
 
 
     def updateExpireDate ={
@@ -283,6 +357,32 @@ class PurchaseController {
         //https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Global_Objects/Date/parse
         render formatDate(date:expireDateUpdated, format:"MMM d, yyyy")
     }
+	
+	private getInvoicesForSelect(){
+		return Invoice.withCriteria{
+			order('number', 'asc')
+			isNull('purchase')
+			proforma{
+				or {
+					client {
+						if (params.client) {
+							eq('name', params.client)
+						}
+
+						inList('country', session.countries)
+					}
+					patient {
+						if (params.patient) {
+							def str = params.patient.split(',')
+							eq('lastName', str[0])
+						}
+						inList('country', session.countries)
+					}
+
+				}
+			}
+		}
+	}
 }
 
 class PurchaseInvoicesCommand{

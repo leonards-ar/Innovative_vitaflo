@@ -8,7 +8,7 @@
           </tr>
           <tr class="prop">
               <td valign="top" class="value ${hasErrors(bean: purchaseInstance, field: 'invoices', 'errors')}">
-                  <g:select name="invoiceSelected" from="${com.vitaflo.innova.Invoice.findAllByPurchaseIsNull()}" optionValue="viewPurchase" optionKey="id" value="${invoiceSelected}" />
+                  <g:select name="invoiceSelected" from="${invoices}" optionValue="viewPurchase" optionKey="id" value="${invoiceSelected}" />
               </td>
           </tr>
           <tr class="prop">

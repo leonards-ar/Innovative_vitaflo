@@ -22,7 +22,7 @@
                 <table>
                     <thead>
                         <tr>
-                                                
+                            <th>&nbsp;</th>
                    	    <g:sortableColumn property="name" title="Name" titleKey="supplier.name" />
                                                 
                    	    <g:sortableColumn property="contact" title="Contact" titleKey="supplier.contact" />
@@ -34,7 +34,7 @@
                     <tbody>
                     <g:each in="${supplierInstanceList}" status="i" var="supplierInstance">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-                                                
+                            <td>${i + params.offset.toInteger() + 1}</td>
                             <td><g:link action="show" id="${supplierInstance.id}">${fieldValue(bean: supplierInstance, field: "name")}</g:link></td>
                                                 
                             <td>${fieldValue(bean: supplierInstance, field: "contact")}</td>

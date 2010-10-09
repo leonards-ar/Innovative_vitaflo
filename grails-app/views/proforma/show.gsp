@@ -77,6 +77,11 @@
                                 <td valign="top" class="value"><g:formatNumber number="${proformaInstance?.discount}"/></td>
 
                             </tr>
+                            
+                            <tr class="prop">
+                                <td valign="top" class="name"><g:message code="proforma.deliveryDate" default="Date of Delivery" />:</td>
+                                <td valign="top" class="value"><g:formatDate format="dd-MM-yyyy" date="${proformaInstance?.deliveryDate}" /></td>
+                            </tr>                            
                         </tbody>
                     </table>
                 </div>

@@ -11,9 +11,7 @@
 <body>
   <div class="nav">
     <span class="menuButton"><a class="home" href="${createLinkTo(dir: '')}"><g:message code="home" default="Home" /></a></span>
-    <g:ifAnyGranted role="ROLE_ADMIN">
       <span class="menuButton"><g:link class="create" action="create"><g:message code="patient.new" default="New Patient" /></g:link></span>
-    </g:ifAnyGranted>
   </div>
   <div class="body">
     <h1><g:message code="patient.list" default="Patient List" /></h1>
@@ -64,6 +62,7 @@
       <table>
         <thead>
           <tr>
+            <th>&nbsp;</th>
         <g:sortableColumn property="lastName" title="Name" params="${params}" titleKey="patient.firstName" />
         <th><g:message code="patient.initials" default="Initials"/></th>
         <th><g:message code="patient.country" default="Country" /></th>
@@ -74,8 +73,8 @@
         <tbody>
         <g:each in="${patientInstanceList}" status="i" var="patientInstance">
           <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-
-          <td><g:link action="show" id="${patientInstance.id}">${patientInstance}</g:link></td>
+            <td>${i + params.offset.toInteger() + 1}</td>
+            <td><g:link action="show" id="${patientInstance.id}">${patientInstance}</g:link></td>
 
           <td><g:link action="show" id="${patientInstance.id}">${patientInstance?.initials}</g:link></td>
 
