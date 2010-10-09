@@ -116,7 +116,7 @@
                         </tbody>
                     </table>
                 </div>
-                <g:render template="invoicePurchase" model="[purchaseInstance:purchaseInstance, invoices:invoices]"/>
+                <g:render template="invoicePurchase" model="[purchaseInstance:purchaseInstance]"/>
                 <div class="buttons">
                     <span class="button"><g:submitButton name="create" class="save" value="${message(code: 'create', 'default': 'Create')}" /></span>
                 </div>

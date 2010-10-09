@@ -28,21 +28,16 @@ class UserController extends BaseController {
         }
 
         if(!params.selectedCountries) {
-            userInstance.errors.rejectValue("countries", "user.countries.min.size.message")
+          userInstance.errors.rejectValue("countries", "user.countries.min.size.message")
         }
 
         if(!params.selectedAuthorities) {
-            userInstance.errors.rejectValue("authorities", "user.roles.min.size.message")
-        }
-
-        if(!userInstance.hasErrors()){
-            addRoles(userInstance)
-            addCountries(userInstance)
-        } else {
-            render view: 'create', model: [userInstance: userInstance]
+          userInstance.errors.rejectValue("authorities", "user.roles.min.size.message")
         }
 
         if(!userInstance.hasErrors() && userInstance.save()) {
+            addRoles(userInstance)
+            addCountries(userInstance)
             flash.message = "User ${userInstance.id} created"
             redirect(action: show, id: userInstance.id)
         }
@@ -117,22 +112,18 @@ class UserController extends BaseController {
             }
 
             if(!params.selectedCountries) {
-                userInstance.errors.rejectValue("countries", "user.countries.min.size.message")
+              userInstance.errors.rejectValue("countries", "user.countries.min.size.message")
             }
 
             if(!params.selectedAuthorities) {
-                userInstance.errors.rejectValue("authorities", "user.roles.min.size.message")
+              userInstance.errors.rejectValue("authorities", "user.roles.min.size.message")
             }
-
-            if(!userInstance.hasErrors()){
+          
+            if (!userInstance.hasErrors() && userInstance.save()) {
                 Country.findAll().each {userInstance.removeFromCountries(it)}
                 Role.findAll().each {userInstance.removeFromAuthorities(it)}
                 addCountries(userInstance)
                 addRoles(userInstance)
-            } else {
-                render(view: "edit", model: [userInstance: userInstance])
-            }
-            if (!userInstance.hasErrors() && userInstance.save()) {
                 
                 flash.message = "user.updated"
                 flash.args = [params.id]
@@ -148,66 +139,55 @@ class UserController extends BaseController {
         }
     }
 
-    def updateProfile = {
-        def userInstance = User.get(params.id)
+  def updateProfile = {
+      def userInstance = User.get(params.id)
 
-        if (userInstance) {
-            if (params.version) {
-                def version = params.version.toLong()
-                if (userInstance.version > version) {
+      if (userInstance) {
+          if (params.version) {
+              def version = params.version.toLong()
+              if (userInstance.version > version) {
 
-                    userInstance.errors.rejectValue("version", "user.optimistic.locking.failure", "Another user has updated this User while you were editing")
-                    render(view: "editProfile", model: [userInstance: userInstance])
-                    return
-                }
-            }
-            def tmpPass = userInstance.passwd
-            userInstance.properties = params
-            if(tmpPass != params.passwd) {
-                userInstance.passwd = authenticateService.encodePassword(params.passwd)
-            }
+                  userInstance.errors.rejectValue("version", "user.optimistic.locking.failure", "Another user has updated this User while you were editing")
+                  render(view: "editProfile", model: [userInstance: userInstance])
+                  return
+              }
+          }
+          def tmpPass = userInstance.passwd
+          userInstance.properties = params
+          if(tmpPass != params.passwd) {
+              userInstance.passwd = authenticateService.encodePassword(params.passwd)
+          }
 
-            if (!userInstance.hasErrors() && userInstance.save()) {
-                if(isAdmin(userInstance)){
-                    Country.findAll().each {userInstance.removeFromCountries(it)}
-                    Role.findAll().each {userInstance.removeFromAuthorities(it)}
-                    addCountries(userInstance)
-                    addRoles(userInstance)
-                }
-                flash.message = "user.updated"
-                flash.args = [params.id]
-                flash.defaultMessage = "User ${params.id} updated"
-                redirect(action: "showProfile", id: userInstance.id)
+          if (!userInstance.hasErrors() && userInstance.save()) {
+            if(isAdmin(userInstance)){
+              Country.findAll().each {userInstance.removeFromCountries(it)}
+              Role.findAll().each {userInstance.removeFromAuthorities(it)}
+              addCountries(userInstance)
+              addRoles(userInstance)
             }
-            else {
-                render(view: "editProfile", model: [userInstance: userInstance])
-            }
-        }
-        else {
-            redirect(controller: "logout")
-        }
-    }
+              flash.message = "user.updated"
+              flash.args = [params.id]
+              flash.defaultMessage = "User ${params.id} updated"
+              redirect(action: "showProfile", id: userInstance.id)
+          }
+          else {
+              render(view: "editProfile", model: [userInstance: userInstance])
+          }
+      }
+      else {
+          redirect(controller: "logout")
+      }
+  }
 
     private void addRoles(person) {
-        //This fixes the problem when only one role is selected and it has two digits.
-        if(params.selectedAuthorities instanceof String){
-            person.addToAuthorities(Role.findById(params.selectedAuthorities))
-        } else {
-            for (String key in params.selectedAuthorities) {
-                person.addToAuthorities(Role.findById(key))
-            }
+        for (String key in params.selectedAuthorities) {
+            person.addToAuthorities(Role.findById(key))
         }
     }
 
     private void addCountries(person){
-
-        //This fixes the problem when only one country is selected and it has two digits.
-        if(params.selectedCountries instanceof String) {
-            person.addToCountries(Country.findById(params.selectedCountries))
-        } else {
-            for(Integer key: params.selectedCountries) {
-                person.addToCountries(Country.findById(key))
-            }
+        for(String key: params.selectedCountries) {
+            person.addToCountries(Country.findById(key))
         }
        
     }
