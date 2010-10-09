@@ -74,27 +74,3 @@ div.autocomplete ul li {
     padding-left: 28px;
 }
 
-.menuButton a.report {
-    background: url(../images/skin/report.png) center left no-repeat;
-    color: #333;
-    padding-left: 25px;
-}
-
-.menuButton a.chart {
-    background: url(../images/skin/chart_curve.png) center left no-repeat;
-    color: #333;
-    padding-left: 25px;
-}
-
-.menuButton a.excel {
-    background: url(../images/skin/page_white_excel.png) center left no-repeat;
-    color: #333;
-    padding-left: 25px;
-}
-
-.menuButton a.pdf {
-    background: url(../images/skin/page_white_acrobat.png) center left no-repeat;
-    color: #333;
-    padding-left: 25px;
-}
-

@@ -10,7 +10,9 @@
 <body>
 <div class="nav">
   <span class="menuButton"><a class="home" href="${createLinkTo(dir: '')}"><g:message code="home" default="Home"/></a></span>
+  <g:ifAnyGranted role="ROLE_ADMIN">
     <span class="menuButton"><g:link class="create" action="create"><g:message code="client.new" default="New Client"/></g:link></span>
+  </g:ifAnyGranted>
 </div>
 <div class="body">
   <h1><g:message code="client.list" default="Client List"/></h1>
@@ -32,7 +34,7 @@
     <table>
       <thead>
       <tr>
-        <th>&nbsp;</th>
+
         <g:sortableColumn property="name" params="${params}" title="Name" titleKey="client.name"/>
 
         <g:sortableColumn property="phone" params="${params}" title="Phone" titleKey="client.phone"/>
@@ -49,7 +51,6 @@
       <g:each in="${clientInstanceList}" status="i" var="clientInstance">
         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
 
-          <td>${i + params.offset.toInteger() + 1}</td>
           <td><g:link action="show" id="${clientInstance.id}">${fieldValue(bean: clientInstance, field: "name")}</g:link></td>
 
           <td>${fieldValue(bean: clientInstance, field: "phone")}</td>
@@ -65,9 +66,10 @@
     </table>
 
     <div class="paginateButtons">
-          <g:paginate total="${clientInstanceTotal}" params="${params}"/>
+      <g:paginate total="${clientInstanceTotal}" params="${params}" />
     </div>
   </div>
+
 </div>
 </body>
 </html>

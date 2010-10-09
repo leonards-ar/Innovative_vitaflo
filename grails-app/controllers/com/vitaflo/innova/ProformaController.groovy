@@ -1,6 +1,6 @@
 package com.vitaflo.innova
 import grails.converters.JSON
-class ProformaController extends BaseController {
+class ProformaController {
 
     // the delete, save and update actions only accept POST requests
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
@@ -10,7 +10,12 @@ class ProformaController extends BaseController {
     def index = { redirect(action: "list", params: params) }
 
     def list = {
-        rememberListState([max: 15, offset: 0, sort: 'id', order: 'desc'])
+        
+        if (!params.offset) params.offset = 0
+        if (!params.sort) params.sort = "id"
+        if (!params.order) params.order = "desc"
+        
+        params.max = Math.min(params.max ? params.max.toInteger() : 15,  100)
 
         def query = {
 
@@ -68,7 +73,7 @@ class ProformaController extends BaseController {
         def total = criteria.count(query)
         
         def proformas = Proforma.withCriteria {
-            maxResults(params.max?.toInteger())
+            maxResults(params.max)
             firstResult(params.offset?.toInteger())
             order(params.sort, params.order)
             
@@ -127,7 +132,6 @@ class ProformaController extends BaseController {
             inList('country',session.countries)
             order("lastName", "asc")
             order("firstName", "asc")
-            order("initials", "asc")
         }
     }
     
@@ -244,7 +248,7 @@ class ProformaController extends BaseController {
             Double totalDetails = proformaInstance.getTotalDetails();
 
             //Total Amount
-            Double totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0.0;
+            Double totalAmount = proformaInstance.getTotalAmount();
 
             //Discount Amount
             Double discountAmount = proformaInstance.getDiscountAmount();
@@ -267,7 +271,7 @@ class ProformaController extends BaseController {
         def totalDetails = proformaInstance.getTotalDetails();
 
         //Total Amount
-        def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
+        def totalAmount = proformaInstance.getTotalAmount();
 
         //Discount Amount
         def discountAmount = proformaInstance.getDiscountAmount();
@@ -294,7 +298,7 @@ class ProformaController extends BaseController {
       def totalDetails = proformaInstance.getTotalDetails();
 
       //Total Amount
-      def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
+      def totalAmount = proformaInstance.getTotalAmount();
 
       //Discount Amount
       def discountAmount = proformaInstance.getDiscountAmount();
@@ -311,7 +315,7 @@ class ProformaController extends BaseController {
         //Total Details
         def totalDetails = proformaInstance.getTotalDetails();
         //Total Amount
-        def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
+        def totalAmount = proformaInstance.getTotalAmount();
         //Discount Amount
         def discountAmount = proformaInstance.getDiscountAmount();
 
@@ -319,9 +323,9 @@ class ProformaController extends BaseController {
             try{
                 mailService.sendMail {
                     to emailCmd.clientEmail
-                    from grailsApplication.config.application.emailFromAddress
+                    from "Vitaflo-Sistema@vitaflo.com.ar"
                     subject "Proforma ${proformaInstance.id}"
-                    body (view:"/emails/${grailsApplication.config.application.template}Mail", model:[proformaInstance:proformaInstance, totalDetails:totalDetails, totalAmount:totalAmount,
+                    body (view:"/emails/proforma", model:[proformaInstance:proformaInstance, totalDetails:totalDetails, totalAmount:totalAmount,
                             discountAmount: discountAmount])
 
                     flash.message = "proforma.emailsent"
@@ -460,32 +464,6 @@ class ProformaController extends BaseController {
         }
     }
 
-    def updateStatus ={
-        def proformaInstance = Proforma.get(params.id)
-
-        if(params.version) {
-            if (params.version) {
-                def version = params.version.toLong()
-                if (proformaInstance.version > version) {
-
-                    proformaInstance.errors.rejectValue("version", "proforma.optimistic.locking.failure", "Another user has updated this Client while you were editing")
-                    redirect(action: "list", params:params)
-                    return
-                }
-            }
-
-        }
-        
-        proformaInstance.status = params.proformaStatus
-
-        proformaInstance.save()
-
-        def data = []
-        data = [status:params.proformaStatus,proformaId:params.id]
-        render data as JSON
-        //redirect(action: "list", params:params)
-    }
-    
     def lookUpClient ={
 
         Double dose = 0.0

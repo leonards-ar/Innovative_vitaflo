@@ -52,8 +52,7 @@
             <div class="list">
                 <table>
                     <thead>
-                        <tr>
-                          <th>&nbsp;</th>
+                        <tr>                                                
                    	    <g:sortableColumn property="codeNumber" title="Code Number" titleKey="purchase.codeNumber" params="${params}" />
 
                    	    <th><g:message code="purchase.supplier" default="Supplier" /></th>
@@ -69,8 +68,7 @@
                     <tbody>
                     <g:each in="${purchaseInstanceList}" status="i" var="purchaseInstance">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-
-                            <td>${i + params.offset.toInteger() + 1}</td>
+                                                
                             <td><g:link action="show" id="${purchaseInstance.id}">${(purchaseInstance?.codeNumber)?purchaseInstance?.codeNumber : '_'}</g:link></td>
                         
                             <td>${fieldValue(bean: purchaseInstance, field: "supplier")}</td>

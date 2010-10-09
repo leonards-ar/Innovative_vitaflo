@@ -2,7 +2,7 @@ package com.vitaflo.innova
 
 import org.grails.plugins.springsecurity.service.AuthenticateService
 
-class PatientController extends BaseController {
+class PatientController {
 
     def authenticateService
     
@@ -12,7 +12,11 @@ class PatientController extends BaseController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def list = {
-        rememberListState([max: 15, offset: 0, sort: 'lastName', order: 'asc'])
+        params.max = Math.min(params.max ? params.max.toInteger() : 15,  100)
+
+        if (!params.offset) params.offset = 0
+        if (!params.sort) params.sort = "lastName"
+        if (!params.order) params.order = "asc"
 
         def query = {
             ne('status', 'Deleted')
@@ -21,7 +25,6 @@ class PatientController extends BaseController {
                 or{
                     like('lastName', '%' + params.patient + '%')
                     like('firstName', '%' + params.patient + '%')
-                    like('initials', '%' + params.patient + '%')
                 }
             }
 
@@ -49,7 +52,7 @@ class PatientController extends BaseController {
         def total = criteria.count(query)
 
         def patients = Patient.withCriteria {
-            maxResults(params.max?.toInteger())
+            maxResults(params.max)
             firstResult(params.offset?.toInteger())
             ne('status', 'Deleted')
 
@@ -63,7 +66,6 @@ class PatientController extends BaseController {
                 or{
                     like('lastName', '%' + params.patient + '%')
                     like('firstName', '%' + params.patient+ '%')
-                    like('initials', '%' + params.patient + '%')
                 }
             }
 
@@ -217,7 +219,6 @@ class PatientController extends BaseController {
             or{
                 like('lastName', '%' + params.patient + '%')
                 like('firstName', '%' + params.patient + '%')
-                like('initials', '%' + params.patient + '%')
             }
             
             inList('country', session.countries)
@@ -226,7 +227,7 @@ class PatientController extends BaseController {
         StringBuffer idList = new StringBuffer()
         idList.append('<ul>')
 
-        patients?.each{p -> idList.append('<li>' + p + '</li>')}
+        patients?.each{p -> idList.append('<li>' + p.lastName +', ' + p.firstName + '</li>')}
 
         idList.append('</ul>')
 

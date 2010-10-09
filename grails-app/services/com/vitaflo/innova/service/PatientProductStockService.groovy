@@ -133,7 +133,6 @@ class PatientProductStockService {
     }
 
     def sendPatientsProductStockNotifications() {
-        log.debug "Executing sendPatientsProductStockNotifications..."
         listPatientsProductStockToNotify().each { patientProductStock ->
             if(sendNotification(patientProductStock)) {
                 patientProductStock.setNotified(true);

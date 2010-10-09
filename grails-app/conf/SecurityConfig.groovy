@@ -20,8 +20,7 @@ security {
   requestMapString = """
     CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
     PATTERN_TYPE_APACHE_ANT
-    /home/**=ROLE_ADMIN,ROLE_USER,ROLE_ACCOUNTANT,ROLE_REPORT
-    /auditlog/list=ROLE_ADMIN
+    /home/**=ROLE_ADMIN,ROLE_USER
     /user/show=ROLE_ADMIN
     /user/edit=ROLE_ADMIN
     /user/list=ROLE_ADMIN
@@ -29,13 +28,9 @@ security {
     /user/showprofile=ROLE_ADMIN,ROLE_USER
     /user/editprofile=ROLE_ADMIN,ROLE_USER
     /client/**=ROLE_ADMIN,ROLE_USER
-    /client/create=ROLE_ADMIN,ROLE_USER
-    /client/edit=ROLE_ADMIN,ROLE_USER
     /drug/**=ROLE_ADMIN,ROLE_USER
     /login/**=IS_AUTHENTICATED_ANONYMOUSLY
     /patient/**=ROLE_ADMIN,ROLE_USER
-    /patient/create=ROLE_ADMIN,ROLE_USER
-    /patient/edit=ROLE_ADMIN,ROLE_USER
     /product/**=ROLE_ADMIN,ROLE_USER
     /proforma/**=ROLE_ADMIN,ROLE_USER
     /proforma/create=ROLE_ADMIN,ROLE_USER
@@ -47,8 +42,6 @@ security {
     /purchase/**=ROLE_ADMIN,ROLE_USER
     /purchase/create=ROLE_ADMIN,ROLE_USER
     /purchase/edit=ROLE_ADMIN,ROLE_USER
-    /report/**=ROLE_REPORT,ROLE_ACCOUNTANT
-    /report/consolidatedreport=ROLE_REPORT,ROLE_ACCOUNTANT
     /**/create=ROLE_ADMIN
     /**/edit=ROLE_ADMIN
     /emails/**=ROLE_ADMIN, ROLE_USER

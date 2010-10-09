@@ -33,7 +33,7 @@ class ProformaDetail {
 
     Integer getTotalDoseDays() {
         if(this.product?.presentation != null && this.dailyDose != null && this.quantity != null) {
-            return Math.ceil(this.product?.presentation * this.quantity / this.dailyDose);
+            return new Integer(this.product?.presentation * this.quantity / this.dailyDose)
         } else {
             return new Integer(0);
         }

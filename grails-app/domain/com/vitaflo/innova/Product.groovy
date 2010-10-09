@@ -1,7 +1,6 @@
 package com.vitaflo.innova
 
 class Product {
-    static auditable = true
 
     String name
     String description
@@ -32,11 +31,6 @@ class Product {
 
     String toString() {
         return name
-    }
-
-    String shortName() {
-      def words = name.split(" ")
-      return "${words[0]} ${presentation}${(doseUnit != null)? doseUnit:""}"
     }
 
     Integer getDeliveryPeriod() {

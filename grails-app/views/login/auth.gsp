@@ -1,7 +1,7 @@
 <head>
   <meta name='layout' content='main' />
-  <link rel="stylesheet" href="${resource(dir:'css',file:grailsApplication.config.application.cssFile)}" />
-  <title>${grailsApplication.config.application.name}</title>
+  <link rel="stylesheet" href="${resource(dir:'css',file:'vitaflo.css')}" />
+  <title>Innovative</title>
 </head>
 
 <body>

@@ -4,7 +4,6 @@ package com.vitaflo.innova
  * Authority domain class.
  */
 class Role {
-    static auditable = true
 
     static hasMany = [people: User]
 

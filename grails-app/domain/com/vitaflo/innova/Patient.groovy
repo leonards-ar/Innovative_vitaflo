@@ -1,7 +1,6 @@
 package com.vitaflo.innova
 
 class Patient {
-    static auditable = true
 
     String firstName
     String lastName
@@ -60,10 +59,5 @@ class Patient {
         deliveryAddress column:'delivery_address'
     }
 
-   String toString(){
-       if(!this.lastName && !this.firstName)
-            return "${this.initials}"
-        return "${this.lastName}, ${this.firstName}"
-   }
-
+   String toString(){return "${this.lastName}, ${this.firstName}"}
 }

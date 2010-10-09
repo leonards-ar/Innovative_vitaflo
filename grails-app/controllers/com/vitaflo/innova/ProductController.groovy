@@ -1,6 +1,6 @@
 package com.vitaflo.innova
 
-class ProductController extends BaseController {
+class ProductController {
 
     def index = { redirect(action: "list", params: params) }
 
@@ -8,7 +8,10 @@ class ProductController extends BaseController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def list = {
-        rememberListState([max: 15, offset: 0, sort: 'name', order: 'asc'])
+        params.max = Math.min(params.max ? params.max.toInteger() : 15,  100)
+        if (!params.offset) params.offset = 0
+        if (!params.sort) params.sort = "name"
+        if (!params.order) params.order = "asc"
 
         def query = {
             if(params.name) {
@@ -27,7 +30,7 @@ class ProductController extends BaseController {
 
         def products = Product.withCriteria {
 
-            maxResults(params.max?.toInteger())
+            maxResults(params.max)
             firstResult(params.offset?.toInteger())
             order(params.sort, params.order)
 

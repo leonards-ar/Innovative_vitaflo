@@ -7,26 +7,6 @@
     <title><g:message code="proforma.list" default="Proforma List" /></title>
   <g:javascript library="prototype" />
   <g:javascript library="scriptaculous" />
-  <g:javascript>
-
-    var listStatus=new Array();
-      listStatus['Aprobada']='${message(code:'proforma.status.list.Aprobada')}';
-      listStatus['Anulada']='${message(code:'proforma.status.list.Anulada')}';
-      listStatus['Rechazada']='${message(code:'proforma.status.list.Rechazada')}';
-      listStatus['Creada']='${message(code:'proforma.status.list.Creada')}';
-    
-      function updateComponents(e){
-
-      var status = e.responseText.evalJSON().status;
-      var proformaId = e.responseText.evalJSON().proformaId;
-
-      if(status != 'Creada' && status != 'Rechazada'){
-        $('pepe' + proformaId).update(listStatus[status]);
-      }
-
-    }
-  </g:javascript>
-
 </head>
 <body>
   <div class="nav">
@@ -81,7 +61,7 @@
       <table>
         <thead>
           <tr>
-            <th>&nbsp;</th>
+
         <g:sortableColumn property="id" title="Id" titleKey="proforma.id" params="${params}"/>
 
         <th><g:message code="proforma.client" default="Client" /></th>
@@ -97,24 +77,15 @@
         <tbody>
         <g:each in="${proformaInstanceList}" status="i" var="proformaInstance">
           <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-            <td>${i + params.offset.toInteger() + 1}</td>
+
             <td><g:link action="show" id="${proformaInstance.id}">${fieldValue(bean: proformaInstance, field: "id")}</g:link></td>
 
           <td>${proformaInstance?.client}</td>
 
           <td>${proformaInstance?.patient}</td>
 
-          <g:if test="${(proformaInstance?.status == 'Creada') || (proformaInstance?.status == 'Rechazada')}">
-            <td><div id="pepe${proformaInstance.id}"><g:select name="proformaStatus" from="${com.vitaflo.innova.Proforma.STATUS_LIST}" value="${proformaInstance.status}" noSelection="['':'']" valueMessagePrefix="proforma.status.list"
-                        onchange="${remoteFunction (controller:'proforma', id:proformaInstance.id, action:'updateStatus', params:'\'proformaStatus=\' + this.value')}"/>
-                </div>
-            </td>
-
-          </g:if>
-          <g:else>
-
           <td>${message(code: 'proforma.status.list.'+proformaInstance.status)}</td>
-          </g:else>
+
           <td><g:formatDate format="dd-MM-yyyy" date="${proformaInstance.createdAt}" /></td>
 
           </tr>

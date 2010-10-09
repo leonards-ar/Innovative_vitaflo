@@ -1,7 +1,6 @@
 package com.vitaflo.innova
 
 class Drug {
-    static auditable = true
 
     String name
 

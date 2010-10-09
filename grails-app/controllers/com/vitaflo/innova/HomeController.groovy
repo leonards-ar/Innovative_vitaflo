@@ -1,8 +1,6 @@
 package com.vitaflo.innova
 
-class HomeController extends BaseController {
+class HomeController {
 
-    def index = {
-        clearListState()
-    }
+    def index = {}
 }

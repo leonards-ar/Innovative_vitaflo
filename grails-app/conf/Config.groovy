@@ -19,9 +19,6 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
                       atom: 'application/atom+xml',
                       css: 'text/css',
                       csv: 'text/csv',
-                      pdf: 'application/pdf',
-                      excel: 'application/vnd.ms-excel',
-                      ods: 'application/vnd.oasis.opendocument.spreadsheet',
                       all: '*/*',
                       json: ['application/json','text/json'],
                       form: 'application/x-www-form-urlencoded',
@@ -36,34 +33,7 @@ grails.converters.encoding="UTF-8"
 grails.enable.native2ascii = true
 
 // set per-environment serverURL stem for creating absolute links
-        application.emailFromAddress = "Innova-Sistema@vitaflo.com.ar"
-        application.name = "Innovative"
-        application.cssFile = "innova.css"
-        application.logoFile = "innovative-logo.gif"
-        application.template = "templateInnova"
-        application.favicon = "innova-favicon.ico"
-
 environments {
-    vitaflo {
-        grails.serverURL = "http://www.changeme.com"
-        grails.app.context = "/vitaflo"
-        application.emailFromAddress = "Vitaflo-Sistema@vitaflo.com.ar"
-        application.name = "Vitaflo"
-        application.cssFile = "vitaflo.css"
-        application.logoFile = "vitaflo-logo.gif"
-        application.template = "templateVitaflo"
-        application.favicon = "vitaflo-favicon.ico"
-    }
-    innova {
-        grails.serverURL = "http://www.changeme.com"
-        grails.app.context = "/innova"
-        application.emailFromAddress = "Innova-Sistema@vitaflo.com.ar"
-        application.name = "Innovative"
-        application.cssFile = "innova.css"
-        application.logoFile = "innovative-logo.gif"
-        application.template = "templateInnova"
-        application.favicon = "innova-favicon.ico"
-    }
     production {
         grails.serverURL = "http://www.changeme.com"
     }
@@ -74,11 +44,6 @@ environments {
         grails.serverURL = "http://localhost:8080/${appName}"
     }
 
-}
-
-// Audit log
-auditLog {
-    verbose = false
 }
 
 // log4j configuration
