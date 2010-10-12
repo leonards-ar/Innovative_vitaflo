@@ -25,126 +25,134 @@
               <td colspan="2"><img src="${resource(dir:'images',file:grailsApplication.config.application.logoFile)}" alt="${grailsApplication.config.application.name}" /></td>
             </tr>
             <tr>
-              <td colspan="2" style="text-align:right">Montevideo,<g:formatDate date="${proformaInstance?.createdAt}" format="yyyy-MM-dd HH:mm:ss"/></td>
+      <td  style="vertical-align: middle;text-align: right">Buenos Aires, <g:formatDate
+          date="${proformaInstance?.createdAt}" format="yyyy-MM-dd HH:mm:ss" /></td>
+      </tr>
+      <tr>
+      <td>
+       <table>
+        <tbody>
+          <tr class="prop">
+            <td valign="baseline" class="name" style="vertical-align: middle;">
+             ${line1}<br/>
+             ${line2}<br/>
+             ${line3}
+           </td>
           </tr>
+         </tbody>
+       </table>           
+      </td>      
+      </tr>
+  </table>
+  </div>
 
-          <tr>
-            <td style="vertical-align:middle">
-              VITAFLO BUENOS AIRES<br/>
-              <label>Dirección </label>
-              Cabello 3627 Piso 5 Dto. A<br/>
-              <label>C&oacute;digo Postal </label>
-              1425, Ciudad de Buenos Aires, Argentina<br/>
-              <label>Tel/Fax </label>
-              (54 11) 4807 0999<br/>
-            </td>
+  <h4 style="text-align:center"><g:message code="proforma.number" /> ${proformaInstance?.id}
+  </h4>
+  <g:if test="${proformaInstance?.details?.size()> 0}">
+    <div id="detailListPanel" class="list">
+    <table style="margin-top: 5px;" border="1">
+      <thead>
+        <tr>
+
+          <th><g:message code="proformaDetail.product" default="Product" /></th>
+
+          <th><g:message code="proformaDetail.quantity"
+            default="Quantity" /></th>
+
+          <th><g:message code="product.price" default="Price" /></th>
+
+          <th><g:message code="proformaDetail.total" default="Total" /></th>
+        </tr>
+      </thead>
+      <tbody>
+        <g:each in="${proformaInstance.details}" status="i"
+          var="proformaDetail">
+          <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
+
             <td>
-    <b>${proformaInstance?.client?.name}</b></b><br />
-    <b>${proformaInstance?.client?.address}</b><br/>
-    <b>${proformaInstance?.client?.phone}</b><br/>
-    <b>${proformaInstance?.client?.email}</b><br/></b>
-          <g:if test="${proformaInstance?.patient}">
-            <label class="name"><g:message code="proforma.patient" default="Patient" /></label>
-            <br/>
-    ${proformaInstance?.patient?.firstName}, ${proformaInstance?.patient?.lastName}<br/>
-          </g:if>
-          </td>
+            ${fieldValue(bean:proformaDetail, field: "productName")}
+            </td>
+
+            <td>
+            ${fieldValue(bean:proformaDetail, field: "quantity")}
+            </td>
+
+            <td class="currencyValue"><g:formatNumber
+              number="${(proformaDetail?.price*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00" /></td>
+
+            <td class="currencyValue"><g:formatNumber
+              number="${(proformaDetail?.total*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00" /></td>
           </tr>
+        </g:each>
+        <g:set var="detailsSize" value="${proformaInstance.details.size()}" />
+        <tr class="${(detailsSize % 2) == 0?'odd':'even'}" style="border-top: 1px solid #ddd">
+          <td colspan="3"><g:message code="proforma.totalproducts" default="Total Products" /></td>
+          <td class="currencyValue"><g:formatNumber number="${(totalDetails*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00" /></td>
+        </tr>
+        <g:if test="${proformaInstance?.courier  > 0}">
+          <tr class="${((detailsSize+1) % 2) == 0?'odd':'even'}">
+            <td colspan="3"><g:message code="proforma.courier" default="Courier" /></td>
+            <td class="currencyValue"><g:formatNumber number="${(proformaInstance?.courier*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00"/></td>
+          </tr>
+        </g:if>
+        <g:if test="${discountAmount  > 0}">
+          <tr class="${((detailsSize+2) % 2) == 0?'odd':'even'}">
+            <td colspan="3" style="color: red"><g:message code="proforma.discountAmount" default="Discount" /> <g:formatNumber  number="${proformaInstance?.discount}" format="0.00" /> %</td>
+            <td class="currencyDiscountValue"><g:formatNumber number="${discountAmount}" format="0.00" />%</td>
+          </tr>
+        </g:if>
+        <g:if test="${proformaInstance?.client?.ivaResponsibleType == 'inscripto'}">
+          <tr class="${((detailsSize+3) % 2) == 0?'odd':'even'}">
+            <td colspan="3"><g:message code="proforma.iva" default="IVA" args="${ [21] }"/></td>
+            <td style="text-align: right"><g:formatNumber number="${(totalAmount*0.21)}" format="U\$S 0.00" /></td>
+          </tr>
+       </g:if>
+        <tr class="${((detailsSize+4) % 2) == 0?'odd':'even'}">
+          <td colspan="3"><g:message code="proforma.totalAmount" default="Total Amount" /></td>
+          <td style="text-align: right"><g:formatNumber number="${totalAmount}" format="U\$S 0.00" /></td>
+        </tr>
+        <tr class="${((detailsSize+5) % 2) == 0?'odd':'even'}">
+          <td colspan="3"><b><g:message code="proforma.totalAmount" default="Total Amount" /></b></td>
+          <td style="text-align: right"><b><g:formatNumber number="${(totalAmount*proformaInstance?.dollarValue)}" format="\$ 0.00" /></b></td>
+        </tr>
+      </tbody>
+    </table>
+  </g:if>
 
-        </table>
-      </div>
-
-      <h4><g:message code="proforma.number"/> ${proformaInstance?.id}</h4>
-      <g:if test="${proformaInstance?.details?.size()> 0}">
-        <div id="detailListPanel" class="list">
-          <table style="margin-top: 5px;" border="1">
-            <thead>
-              <tr>
-
-                <th><g:message code="proformaDetail.product" default="Product" /></th>
-
-            <th><g:message code="proformaDetail.quantity" default="Quantity" /></th>
-
-            <th><g:message code="product.price" default="Price" /></th>
-
-            <th><g:message code="proformaDetail.total" default="Total" /></th>
-            </tr>
-            </thead>
-            <tbody>
-            <g:each in="${proformaInstance.details}" status="i" var="proformaDetail">
-              <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-
-                <td>${fieldValue(bean:proformaDetail, field: "productName")}</td>
-
-                <td>${fieldValue(bean:proformaDetail, field: "quantity")}</td>
-
-                <td style="text-align:right"><g:formatNumber number="${proformaDetail?.price}" format="U\$S 0.00"/></td>
-
-              <td style="text-align:right"><g:formatNumber number="${proformaDetail?.total}" format="U\$S 0.00"/></td>
-              </tr>
-            </g:each>
-            <g:set var="detailsSize" value="${proformaInstance.details.size()}" />
-            <tr class="${(detailsSize % 2) == 0?'odd':'even'}" style="border-top:1px solid #ddd">
-              <td colspan="3"><g:message code="proforma.totalproducts" default="Total Products" /></td>
-            <td style="text-align:right"><g:formatNumber number="${totalDetails}" format="U\$S 0.00"/></td>
-            </tr>
-            <tr class="${((detailsSize+1) % 2) == 0?'odd':'even'}">
-              <td colspan="3"><g:message code="proforma.courier" default="Courier" /></td>
-            <td style="text-align:right"><g:formatNumber number="${proformaInstance?.courier}" format="U\$S 0.00"/></td>
-            </tr>
-            <g:if test="${discountAmount  > 0}">
-              <tr class="${((detailsSize+2) % 2) == 0?'odd':'even'}">
-                <td colspan="3" style="color:red"><g:message code="proforma.discountAmount" default="Discount" /> <g:formatNumber number="${proformaInstance?.discount}" format="0.00"/> %</td>
-              <td class="currencyDiscountValue"><g:formatNumber number="${discountAmount}" format="U\$S 0.00"/></td>
-              </tr>
-            </g:if>
-            <tr class="${((detailsSize+3) % 2) == 0?'odd':'even'}">
-              <td colspan="2">&nbsp;</td>
-              <td><b><g:message code="proforma.totalAmount" default="Total Amount" /></b></td>
-              <td style="text-align:right"><b><g:formatNumber number="${totalAmount}" format="U\$S 0.00"/></b></td>
-            </tr>
-            </tbody>
-          </table>
-      </g:if>
-
-      <br/>
-      <p>US DOLLARS:
-      <g:numToWords number="${totalAmount}" lang="en"/>
-      (<g:numToWords number="${totalAmount}" lang="es"/>)<br/>
-
-      <g:if test="${proformaInstance.patient?.country?.code == 'BR' || proformaInstance.client?.country?.code == 'BR'}">
-        Sales Condition: Letter of credit at sight, irrevocable, confirmed  and  issued by a first class bank. <br/>
-        Incoterm: Incoterms CPT. (Paraná, Brazil).<br/><br/>
-        Manufacturer: APOTEKET AB <br/>
-        Distributer: INNOVATIVE MEDICINES SA<br/>
-        Juan C. Gomez 1445 Ap. 505<br/>
-        Tel./Fax: (+ 598 2) 917 0953<br/>
-        Montevideo - Uruguay <br/><br/>
-        Port of Loading/Airport of Departure: Any port of Sweden. <br/>
-        Port of Discharge/Airport of destination: ${proformaInstance?.destinationAirport} <br/><br/>
-
-        NCM 30.04.90.99<br/><br/>
-      </g:if>
-      <g:else>
-        Sales Terms/Condiciones: 100% advanced payment. 100% pago adelantado.<br/>
-      </g:else>
-      a/c Innovative Medicines SA<br/>
-      Account Number/Cuenta Nro: 6410<br/>
-      Banco:Santander Uruguay (Swift BSCHUYMM)<br/>
-      Corresponsal en d&oacute;lares<br/>
-      Bank of New York, NY (Swift IRVTUS3N)<br/>
-      <ul>
-        <li>Valid proforma for 30 days. Proforma v&aacute;lida por 30 d&iacute;as.</li>
-
-        <li>No se entregar&aacute;n productos sin constancia de transferencia o efectivo pago.</li>
-
-        <li>Tiempo de entrega 20 días a partir de la aprobación de la proforma.</li>
-      </ul>
-
-      <g:if test="${proformaInstance.patient?.country?.code == 'BR' || proformaInstance.client?.country?.code == 'BR'}">
-        Peso Líquido, 60 caps = 15,84 gr (Vary 5 % +/-)</br>
-      </g:if>
+  <br />
+  <p>Importe expresado en d&oacute;lares estadounidenses <g:formatNumber number="${totalAmount}" format="U\$S 0.00" /> a fines impositivos<br/>
+     se expresan en pesos <g:formatNumber number="${(totalAmount*proformaInstance?.dollarValue)}" format="\$ 0.00" /> seg&uacute;n tipo de cambio
+     libre vendedor BNA del d&iacute;a <g:formatDate date="${proformaInstance?.createdAt}" format="dd/MM/yyyy"/>
+     de <g:formatNumber number="${proformaInstance?.dollarValue}" format="0.00" />.
+     <br/><br/>
+     <b>Importe en pesos:</b> <g:numToWords number="${totalAmount}" lang="es"/><br/>
+     <b>Condiciones de pago:</b> 100% pago a 20 d&iacute;as.<br/><br/>
+      
+    Banco: Galicia Sucursal.<br/>
+    N&deg; de cuenta: <b>4266-6 127-9</b><br />
+    CBU: <b>0070127920000004266695</b><br/><br/>
     </p>
+    <table border="0">
+      <tbody>
+        <tr>
+          <td>
+            <p>
+               Vitaflo Buenos Aires SA<br/>
+               Cabello 3627 (5&deg; A)<br/>
+               CP 1425 Ciudad de Buenos Aires
+            </p>
+          </td>
+          <td>
+            <p>
+              Tel/Fax: 4807-0999/4809-0549<br/>
+              E-mail: info@vitaflo/latam.com<br/>
+              Web: www.vitaflo/latam.com 
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
   <br/></br>
   <input type="button" class="print" onclick="window.print()" value="${message(code: 'print', 'default': 'print')}" />

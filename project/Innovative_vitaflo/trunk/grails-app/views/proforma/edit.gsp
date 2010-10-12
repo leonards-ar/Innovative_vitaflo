@@ -118,16 +118,17 @@
           </td>
           </tr>
 
-          <tr class="prop">
-            <td valign="top" class="name">
-              <label for="courier"><g:message code="proforma.courier" default="Courier" />:</label>
+          <g:if test="${grailsApplication.config.application.name == 'Innovative'}">
+            <tr class="prop">
+              <td valign="top" class="name">
+                <label for="courier"><g:message code="proforma.courier" default="Courier" />:</label>
+              </td>
+              <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'courier', 'errors')}">
+            <g:textField name="courier" value="${formatNumber(number:proformaInstance.courier, format:'0.00')}" />
+
             </td>
-            <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'courier', 'errors')}">
-          <g:textField name="courier" value="${formatNumber(number:proformaInstance.courier, format:'0.00')}" />
-
-          </td>
-          </tr>
-
+            </tr>
+          </g:if>
           <tr class="prop">
             <td valign="top" class="name">
               <label for="discount"><g:message code="proforma.discount" default="Discount" />:</label>
@@ -152,14 +153,14 @@
             <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'destinationAirport', 'errors')}">
           <g:textField name="destinationAirport" value="${proformaInstance.destinationAirport}" />
           </tr>
-          
+
           <tr class="prop">
-              <td valign="top" class="name">
-                  <label for="deliveryDate"><g:message code="proforma.deliveryDate" default="Date of delivery" />:</label>
-              </td>
-              <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'deliveryDate', 'errors')}">
-                  <g:datePicker default="none" noSelection="${['':message(code:'noselect.dash')]}" name="deliveryDate" value="${proformaInstance?.deliveryDate}" precision="day" years="${2007..2015}" />
-              </td>
+            <td valign="top" class="name">
+              <label for="deliveryDate"><g:message code="proforma.deliveryDate" default="Date of delivery" />:</label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'deliveryDate', 'errors')}">
+          <g:datePicker default="none" noSelection="${['':message(code:'noselect.dash')]}" name="deliveryDate" value="${proformaInstance?.deliveryDate}" precision="day" years="${2007..2015}" />
+          </td>
           </tr>          
           </tbody>
         </table>
