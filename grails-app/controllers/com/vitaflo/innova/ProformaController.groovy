@@ -276,8 +276,7 @@ class ProformaController extends BaseController {
         def clientEmail = proformaInstance.client.email
 
         render(view:'sendEmail', model:[proformaInstance: proformaInstance, totalDetails:totalDetails,
-                totalAmount:totalAmount, discountAmount: discountAmount, clientEmail:clientEmail])
-        
+                totalAmount:totalAmount, discountAmount: discountAmount, clientEmail:clientEmail, line1:params.line1, line2:params.line2, line3:params.line3])
     }
 
     def printProforma = {
@@ -293,11 +292,11 @@ class ProformaController extends BaseController {
       //Total Details
       def totalDetails = proformaInstance.getTotalDetails();
 
-      //Total Amount
-      def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
-
-      //Discount Amount
-      def discountAmount = proformaInstance.getDiscountAmount();
+        //Total Amount
+	  def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
+	  
+	  //Discount Amount
+	  def discountAmount = proformaInstance.getDiscountAmount();
 
       render(view:'print', model:[proformaInstance: proformaInstance, totalDetails:totalDetails,
               totalAmount:totalAmount, discountAmount: discountAmount])
@@ -310,11 +309,13 @@ class ProformaController extends BaseController {
 
         //Total Details
         def totalDetails = proformaInstance.getTotalDetails();
+
         //Total Amount
-        def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
-        //Discount Amount
+		def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;        
+		//Discount Amount
         def discountAmount = proformaInstance.getDiscountAmount();
 
+		
         if (!emailCmd.hasErrors()){
             try{
                 mailService.sendMail {
@@ -322,7 +323,7 @@ class ProformaController extends BaseController {
                     from grailsApplication.config.application.emailFromAddress
                     subject "Proforma ${proformaInstance.id}"
                     body (view:"/emails/${grailsApplication.config.application.template}Mail", model:[proformaInstance:proformaInstance, totalDetails:totalDetails, totalAmount:totalAmount,
-                            discountAmount: discountAmount])
+                            discountAmount: discountAmount, line1:params.line1, line2:params.line2, line3:params.line3])
 
                     flash.message = "proforma.emailsent"
                     flash.args = [proformaInstance.id, emailCmd.clientEmail]
@@ -339,7 +340,9 @@ class ProformaController extends BaseController {
         }
 
         render(view:'sendEmail', model:[proformaInstance: proformaInstance, totalDetails:totalDetails,
-                totalAmount:totalAmount, discountAmount: discountAmount, clientEmail:emailCmd.clientEmail])
+                totalAmount:totalAmount, discountAmount: discountAmount, clientEmail:emailCmd.clientEmail, line1:params.line1, line2:params.line2, line3:params.line3])
+      
+
     }
 
 

@@ -6,13 +6,14 @@ class Proforma {
 	Date createdAt = new Date()
 	Date deliveryDate
 	
-	Integer discount =0
-	Double courier =200.0
+	Integer discount=0
+	Double courier=0.0
 	String status = 'Creada'
 	Boolean donation = false
 	Patient patient
 	Client client
 	String destinationAirport
+	Double dollarValue=0.0
 	
 	static final def STATUS_LIST = ['Creada','Aprobada','Rechazada','Anulada']
 	
@@ -24,7 +25,8 @@ class Proforma {
 		status(inList:STATUS_LIST)
 		details(nullable:false,minSize:1)
 		destinationAirport(nullable:true)
-		deliveryDate(nullable:true, blank:true)		
+		deliveryDate(nullable:true, blank:true)	
+		dollarValue(nullable:true, blank:true)
 	}
 	
 	static mapping = {
@@ -34,9 +36,9 @@ class Proforma {
 	
 	static transients = ['totalAmount', 'totalDetails', 'discountAmount']
 	
-	Double getTotalAmount(){
+	Double getTotalAmount() {
 		
-		Double totalAmount = this.courier        
+		Double totalAmount = this.courier
 		
 		totalAmount += getTotalDetails()
 		
