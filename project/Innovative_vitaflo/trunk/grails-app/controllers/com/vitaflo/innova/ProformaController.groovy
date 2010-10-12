@@ -12,6 +12,7 @@ class ProformaController extends BaseController {
     def list = {
         rememberListState([max: 15, offset: 0, sort: 'id', order: 'desc'])
 
+        def filterCountry = params.selectedCountry?Country.findByCode(params.selectedCountry):null;
         def query = {
 
             if(params.status) {
@@ -20,20 +21,32 @@ class ProformaController extends BaseController {
             if(params.client && params.patient){
                 client {
                     eq('name', params.client)
-
-                    inList('country', session.countries)
+                    if(params.selectedCountry){
+                      eq('country', filterCountry)
+                    } else {
+                      inList('country', session.countries)
+                    }
                 }
                 patient {
                     def str = params.patient.split(',')
                     eq('lastName', str[0])
-                    inList('country', session.countries)
+                  
+                    if(params.selectedCountry){
+                      eq('country', filterCountry)
+                    } else {
+                      inList('country', session.countries)
+                    }
                 }
             } else
               if(params.client) {
                 client {
                     eq('name', params.client)
 
-                    inList('country', session.countries)
+                    if(params.selectedCountry){
+                      eq('country', filterCountry)
+                    } else {
+                      inList('country', session.countries)
+                    }
                 }
               } else
                 if(params.patient){
@@ -41,7 +54,11 @@ class ProformaController extends BaseController {
                     def str = params.patient.split(',')
                     eq('lastName', str[0])
 
-                    inList('country', session.countries)
+                    if(params.selectedCountry){
+                      eq('country', filterCountry)
+                    } else {
+                      inList('country', session.countries)
+                    }
                 }
                 } else {
                 or{
@@ -50,14 +67,22 @@ class ProformaController extends BaseController {
                             eq('name', params.client)
                         }
 
-                        inList('country', session.countries)
+                        if(params.selectedCountry){
+                          eq('country', filterCountry)
+                        } else {
+                          inList('country', session.countries)
+                        }
                     }
                     patient {
                         if(params.patient){
                             def str = params.patient.split(',')
                             eq('lastName', str[0])
                         }
-                        inList('country', session.countries)
+                        if(params.selectedCountry){
+                          eq('country', filterCountry)
+                        } else {
+                          inList('country', session.countries)
+                        }
                     }
 
                 }
@@ -79,25 +104,41 @@ class ProformaController extends BaseController {
               client {
                   eq('name', params.client)
 
-                  inList('country', session.countries)
+                    if(params.selectedCountry){
+                      eq('country', filterCountry)
+                    } else {
+                      inList('country', session.countries)
+                    }
               }
               patient {
                   def str = params.patient.split(',')
                   eq('lastName', str[0])
-                  inList('country', session.countries)
+                    if(params.selectedCountry){
+                      eq('country', filterCountry)
+                    } else {
+                      inList('country', session.countries)
+                    }
               }
           } else
             if(params.client) {
               client {
                   eq('name', params.client)
-                  inList('country', session.countries)
+                    if(params.selectedCountry){
+                      eq('country', filterCountry)
+                    } else {
+                      inList('country', session.countries)
+                    }
               }
             } else
               if(params.patient){
               patient {
                   def str = params.patient.split(',')
                   eq('lastName', str[0])
-                  inList('country', session.countries)
+                    if(params.selectedCountry){
+                      eq('country', filterCountry)
+                    } else {
+                      inList('country', session.countries)
+                    }
               }
               } else {
               or{
@@ -105,20 +146,28 @@ class ProformaController extends BaseController {
                       if(params.client){
                           eq('name', params.client)
                       }
+                    if(params.selectedCountry){
+                      eq('country', filterCountry)
+                    } else {
                       inList('country', session.countries)
+                    }
                   }
                   patient {
                       if(params.patient){
                           def str = params.patient.split(',')
                           eq('lastName', str[0])
                       }
+                    if(params.selectedCountry){
+                      eq('country', filterCountry)
+                    } else {
                       inList('country', session.countries)
+                    }
                   }
 
               }
           }
       }
-        [proformaInstanceList: proformas, proformaInstanceTotal: total, client: params.client, patient: params.patient, status: params.status]
+        [proformaInstanceList: proformas, proformaInstanceTotal: total, client: params.client, patient: params.patient, status: params.status, selectedCountry: params.selectedCountry]
     }
 
     private getPatientsForSelectList() {

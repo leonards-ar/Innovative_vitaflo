@@ -64,6 +64,10 @@
             <g:select name="status" from="${com.vitaflo.innova.Proforma.STATUS_LIST}" value="${status}" noSelection="['':'']" valueMessagePrefix="proforma.status.list"/>
           </td>
           <td>
+            <div><g:message code="patient.country"/> </div>
+          <g:select name="selectedCountry" from="${session?.countries}" optionKey="code" optionValue="name" noSelection="['':'']" value="${selectedCountry}"/>
+          </td>            
+          <td>
             <div>&nbsp;</div>
             <span class="button"><g:submitButton name="search" class="save" value="${message(code: 'find', 'default': 'Find')}" /></span>
           </td>
