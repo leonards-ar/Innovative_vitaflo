@@ -1,32 +1,49 @@
 dataSource {
 	pooled = true
-	driverClassName = "org.hsqldb.jdbcDriver"
-	username = "sa"
-	password = ""
+	driverClassName = "com.mysql.jdbc.Driver"
+	username = "vitaflo"
+	password = "java1234"
 }
 hibernate {
     cache.use_second_level_cache=true
     cache.use_query_cache=true
-    cache.provider_class='net.sf.ehcache.hibernate.EhCacheProvider'
+    cache.provider_class='com.opensymphony.oscache.hibernate.OSCacheProvider'
 }
 // environment specific settings
 environments {
 	development {
 		dataSource {
-			dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-			url = "jdbc:hsqldb:mem:devDB"
+                    // dbCreate = "create-drop" // one of 'create', 'create-drop','update'
+                    dbCreate = 'update'
+                    url = "jdbc:mysql://192.168.1.6/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
 		}
+                hibernate {
+                    show_sql=true
+                }
 	}
 	test {
 		dataSource {
 			dbCreate = "update"
-			url = "jdbc:hsqldb:mem:testDb"
+                        url = "jdbc:mysql://localhost/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
 		}
 	}
 	production {
 		dataSource {
 			dbCreate = "update"
-			url = "jdbc:hsqldb:file:prodDb;shutdown=true"
+                        url = "jdbc:mysql://localhost/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
+		}
+	}
+	vitaflo {
+		dataSource {
+			dbCreate = "update"
+                        url = "jdbc:mysql://localhost/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
+		}
+	}
+
+	innova {
+		dataSource {
+			dbCreate = "update"
+                        url = "jdbc:mysql://localhost/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
 		}
 	}
 }
