@@ -68,6 +68,7 @@
         <th><g:message code="patient.country" default="Country" /></th>
         <g:sortableColumn property="clientName" title="Client" params="${params}" titleKey="patient.client" />
         <g:sortableColumn property="pathology" title="Pathology" params="${params}" titleKey="patient.pathology" />
+        <th>&nbsp;</th>
         </tr>
         </thead>
         <tbody>
@@ -83,6 +84,8 @@
           <td>${fieldValue(bean: patientInstance, field: "client")}</td>
 
           <td>${fieldValue(bean: patientInstance, field: "pathology")}</td>
+          
+          <td><span class="menuButton"><g:link class="clinicalHistory" controller="clinicalHistory" action="list" id="${patientInstance.id}"><g:message code="proforma.clinicalHistory" default="Clinical History"/></g:link></span></td>
 
           </tr>
         </g:each>

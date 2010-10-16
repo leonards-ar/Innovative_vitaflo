@@ -1,11 +1,7 @@
 package com.vitaflo.innova
 
-import org.grails.plugins.springsecurity.service.AuthenticateService
-
 class PatientController extends BaseController {
 
-    def authenticateService
-    
     def index = { redirect(action: "list", params: params) }
 
     // the delete, save and update actions only accept POST requests

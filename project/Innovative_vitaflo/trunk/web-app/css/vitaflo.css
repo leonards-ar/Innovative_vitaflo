@@ -98,3 +98,14 @@ div.autocomplete ul li {
     padding-left: 25px;
 }
 
+.menuButton a.patient {
+    background: url(../images/skin/group.png) center left no-repeat;
+    color: #333;
+    padding-left: 25px;
+}
+
+.menuButton a.clinicalHistory {
+    background: url(../images/skin/tag_green.png) center left no-repeat;
+    color: #333;
+    padding-left: 25px;
+}

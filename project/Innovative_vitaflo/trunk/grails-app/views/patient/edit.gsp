@@ -176,16 +176,6 @@
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="clinicalHistory"><g:message code="patient.clinicalHistory" default="Clinical History" />:</label>
-            </td>
-            <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'clinicalHistory', 'errors')}">
-          <g:textField name="clinicalHistory" value="${fieldValue(bean: patientInstance, field: 'clinicalHistory')}" />
-
-          </td>
-          </tr>
-
-          <tr class="prop">
-            <td valign="top" class="name">
               <label for="adverseEvent"><g:message code="patient.adverseEvent" default="Adverse Event" />:</label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'adverseEvent', 'errors')}">
