@@ -81,6 +81,43 @@ auditLog {
     verbose = false
 }
 
+fckeditor {
+    
+    upload {
+        basedir = ""
+        baseurl = ""
+        overwrite = false
+        link {
+            browser = false
+            upload = false
+            allowed = []
+            denied = ['html', 'htm', 'php', 'php2', 'php3', 'php4', 'php5',
+                      'phtml', 'pwml', 'inc', 'asp', 'aspx', 'ascx', 'jsp',
+                      'cfm', 'cfc', 'pl', 'bat', 'exe', 'com', 'dll', 'vbs', 'js', 'reg',
+                      'cgi', 'htaccess', 'asis', 'sh', 'shtml', 'shtm', 'phtm']
+        }
+        image {
+            browser = false
+            upload = false
+            allowed = ['jpg', 'gif', 'jpeg', 'png']
+            denied = []
+        }
+        flash {
+            browser = false
+            upload = false
+            allowed = ['swf']
+            denied = []
+        }
+        media {
+            browser = false
+            upload = false
+            allowed = ['mpg','mpeg','avi','wmv','asf','mov']
+            denied = []
+        }
+    }
+}
+
+
 // log4j configuration
 log4j = {
     // Example of changing the log pattern for the default console

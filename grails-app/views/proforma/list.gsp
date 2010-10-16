@@ -7,6 +7,7 @@
     <title><g:message code="proforma.list" default="Proforma List" /></title>
   <g:javascript library="prototype" />
   <g:javascript library="scriptaculous" />
+  <export:resource/>
   <g:javascript>
 
     var listStatus=new Array();
@@ -129,6 +130,9 @@
     <div class="paginateButtons">
       <g:paginate total="${proformaInstanceTotal}" params="${params}"/>
     </div>
+    <div class="buttons">
+    <export:formats formats="['excel']" params="${params}"/>
+    </div>    
   </div>
 </body>
 </html>

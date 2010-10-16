@@ -167,8 +167,24 @@ class ProformaController extends BaseController {
               }
           }
       }
-        [proformaInstanceList: proformas, proformaInstanceTotal: total, client: params.client, patient: params.patient, status: params.status, selectedCountry: params.selectedCountry]
-    }
+
+      if (params?.format && params.format != "html") {
+        response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
+        response.setHeader("Content-disposition", "attachment; filename=proformas.${params.format}")
+        def exportCriteria = Proforma.createCriteria()
+        def exportProformas = exportCriteria.list(query)
+
+        List fields = ["id", "client", "patient", "status", "createdAt"]
+        def idLabel = g.message(code: "proforma.id")
+        def clientLabel = g.message(code: "proforma.client")
+        def patientLabel = g.message(code: "proforma.patient")
+        def statusLabel = g.message(code: "proforma.status")
+        def dateLabel = g.message(code: "proforma.createdAt")
+        Map labels = ["id": "${idLabel}", "client": "${clientLabel}", "patient": "${patientLabel}", "status": "${statusLabel}", "createdAT": "${dateLabel}"]
+        exportService.export(params.format, response.outputStream, exportProformas, fields, labels, [:], [:])
+      }
+      [proformaInstanceList: proformas, proformaInstanceTotal: total, client: params.client, patient: params.patient, status: params.status, selectedCountry: params.selectedCountry]
+  }
 
     private getPatientsForSelectList() {
         Patient.withCriteria {
