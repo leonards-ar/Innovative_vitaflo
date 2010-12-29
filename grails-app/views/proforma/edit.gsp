@@ -22,44 +22,42 @@
     }
 
     function updateComponents(e) {
-    var client = e.responseText.evalJSON().client;
+	    var client = e.responseText.evalJSON().client;
+	
+	    if (client != null) {
+		    for (i = 0; i < $('client.id').options.length; i++) {
+			    if ($('client.id').options[i].value == client) {
+				    $('client.id').options[i].selected = true;
+				    break;
+		    	}
+	    	}
+	    } else {
+	    	$('client.id').options.selectedIndex = 0;
+	    }
+	
+	    $('addDailyDose').value = e.responseText.evalJSON().dose;
+	
+	    var units = e.responseText.evalJSON().doseUnit;
+	
+	    if (units != null) {
+	    	for (i = 0; i < $('addDoseUnit').options.length; i++) {
+	    		if ($('addDoseUnit').options[i].value == units) {
+	    			$('addDoseUnit').options[i].selected = true;
+	    			break;
+	    		}
+	    	}
+	    } else {
+	    	$('addDoseUnit').options.selectedIndex = 0;
+	    }
 
-    if (client != null) {
-    for (i = 0; i < $('client.id').options.length; i++) {
-    if ($('client.id').options[i].value == client) {
-    $('client.id').options[i].selected = true;
-    break;
-    }
-    }
-    } else {
-    $('client.id').options.selectedIndex = 0;
-    }
-
-    $('addDailyDose').value = e.responseText.evalJSON().dose;
-
-    var units = e.responseText.evalJSON().doseUnit;
-
-    if (units != null) {
-    for (i = 0; i < $('addDoseUnit').options.length; i++) {
-    if ($('addDoseUnit').options[i].value == units) {
-    $('addDoseUnit').options[i].selected = true;
-    break;
-    }
-    }
-    } else {
-    $('addDoseUnit').options.selectedIndex = 0;
-    }
-
-    }
-
-    function updateAddPrice(e)
-    {
-    document.getElementById('addPrice').value = e.responseText;
     }
 
-    function updateProformaDetailsPrice(e, index)
-    {
-    document.getElementById('prices['+index+']').value = e.responseText;
+    function updateAddPrice(e){
+	    document.getElementById('addPrice').value = e.responseText;
+    }
+
+    function updateProformaDetailsPrice(e, index){
+    	document.getElementById('prices['+index+']').value = e.responseText;
     }
 
   </g:javascript>
