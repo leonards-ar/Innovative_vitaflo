@@ -8,7 +8,7 @@
   <g:javascript>
 
     function print() {
-    window.open("<g:createLink action='printProforma' id='${proformaInstance?.id}'/>","printWindow${proformaInstance?.id}","menubar=1,location=0,resizable=1,scrollbars=1,width=650,height=600,top=50,left=550");
+    window.open("<g:createLink action='previewProforma' id='${proformaInstance?.id}'/>","printWindow${proformaInstance?.id}","menubar=1,location=0,resizable=1,scrollbars=1,width=650,height=680,top=50,left=550");
     }
   </g:javascript>
 </head>

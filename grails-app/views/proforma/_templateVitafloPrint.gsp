@@ -32,12 +32,35 @@
       <td>
        <table>
         <tbody>
-          <tr class="prop">
-            <td valign="baseline" class="name" style="vertical-align: middle;">
-             ${line1}<br/>
-             ${line2}<br/>
-             ${line3}
-           </td>
+        <tr class="prop">
+
+        <g:if test="${printAction=='preview'}">
+        <g:form url="[controller:'proforma',action:'printProforma']">
+          <g:hiddenField name="id" value="${proformaInstance?.id}" />
+          <td valign="baseline" class="name" style="vertical-align: middle;">
+            <table>
+            <tr>
+	            <td>
+			          <g:textField name="line1" size="40" value="${line1}" /><br/>
+			          <g:textField name="line2" size="40" value="${line2}" /><br/>
+			          <g:textField name="line3" size="40" value="${line3}" />
+		          </td>
+		          <td valign="baseline" class="name" style="vertical-align: middle;">
+					      <span class="button"><g:submitButton name="printProforma" class="print" value="${message(code: 'preview', 'default': 'Preview')}" /></span>
+              </td>
+          </tr>
+      </table>
+      </td>
+    </g:form>	          
+          
+        </g:if>
+        <g:else>
+          <td valign="baseline" class="name" style="vertical-align: middle;">
+          ${line1}<br/>
+          ${line2}<br/>
+          ${line3}
+         </td>
+        </g:else>           
           </tr>
          </tbody>
        </table>           
@@ -78,21 +101,21 @@
             </td>
 
             <td class="currencyValue"><g:formatNumber
-              number="${(proformaDetail?.price*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00" /></td>
+              number="${(proformaDetail?.price*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" /></td>
 
             <td class="currencyValue"><g:formatNumber
-              number="${(proformaDetail?.total*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00" /></td>
+              number="${(proformaDetail?.total*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" /></td>
           </tr>
         </g:each>
         <g:set var="detailsSize" value="${proformaInstance.details.size()}" />
         <tr class="${(detailsSize % 2) == 0?'odd':'even'}" style="border-top: 1px solid #ddd">
           <td colspan="3"><g:message code="proforma.totalproducts" default="Total Products" /></td>
-          <td class="currencyValue"><g:formatNumber number="${(totalDetails*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00" /></td>
+          <td class="currencyValue"><g:formatNumber number="${(totalDetails*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" /></td>
         </tr>
         <g:if test="${proformaInstance?.courier  > 0}">
           <tr class="${((detailsSize+1) % 2) == 0?'odd':'even'}">
             <td colspan="3"><g:message code="proforma.courier" default="Courier" /></td>
-            <td class="currencyValue"><g:formatNumber number="${(proformaInstance?.courier*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00"/></td>
+            <td class="currencyValue"><g:formatNumber number="${(proformaInstance?.courier*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00"/></td>
           </tr>
         </g:if>
         <g:if test="${discountAmount  > 0}">
@@ -125,7 +148,7 @@
      libre vendedor BNA del d&iacute;a <g:formatDate date="${proformaInstance?.createdAt}" format="dd/MM/yyyy"/>
      de <g:formatNumber number="${proformaInstance?.dollarValue}" format="0.00" />.
      <br/><br/>
-     <b>Importe en pesos:</b> <g:numToWords number="${totalAmount}" lang="es"/><br/>
+     <b>Importe en pesos:</b> <g:numToWords number="${totalAmount*proformaInstance?.dollarValue}" lang="es"/><br/>
      <b>Condiciones de pago:</b> 100% pago a 20 d&iacute;as.<br/><br/>
       
     Banco: Galicia Sucursal.<br/>
@@ -155,8 +178,10 @@
 
   </div>
   <br/></br>
-  <input type="button" class="print" onclick="window.print()" value="${message(code: 'print', 'default': 'print')}" />
-  <input type="button" class="print" onclick="window.close()" value="${message(code: 'close', 'default': 'close')}" />
+  <g:if test="${printAction!='preview'}">
+    <input type="button" class="print" onclick="window.print()" value="${message(code: 'print', 'default': 'Print')}" />  
+  </g:if>
+  <input type="button" class="print" onclick="window.close()" value="${message(code: 'close', 'default': 'Close')}" />
 
 </div>
 </body>
