@@ -6,6 +6,7 @@
         <meta name="layout" content="main" />
         <title><g:message code="purchase.edit" default="Edit Purchase" /></title>
         <g:javascript library="prototype" />
+        <g:javascript library="purchaseFunctions" />
         <script type="text/javascript" language="JavaScript">
           function submitRemoveInvoice(index)
           {

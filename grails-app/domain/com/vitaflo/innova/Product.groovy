@@ -5,7 +5,8 @@ class Product {
 
     String name
     String description
-    Double price=0.0
+    Double selPrice=0.0
+	Double buyPrice=0.0
     Double presentation
     String doseUnit
     String comercialName
@@ -26,6 +27,8 @@ class Product {
 
     static mapping = {
         table 'products'
+		selPrice columne: 'sel_price'
+		buyPrice column: 'buy_price'
     }
 
     static transients = ['deliveryPeriod']

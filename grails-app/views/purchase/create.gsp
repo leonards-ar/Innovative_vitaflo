@@ -6,6 +6,7 @@
         <meta name="layout" content="main" />
         <title><g:message code="purchase.create" default="Create Purchase" /></title>
         <g:javascript library="prototype" />
+        <g:javascript library="purchaseFunctions" />
         <script type="text/javascript" language="JavaScript">
           function submitRemoveInvoice(index)
           {
@@ -116,7 +117,7 @@
                         </tbody>
                     </table>
                 </div>
-                <g:render template="invoicePurchase" model="[purchaseInstance:purchaseInstance, invoices:invoices]"/>
+                <div id="detailListPanel"><g:render template="purchaseDetailList" model="[purchaseDetailList:purchaseDetailList]"/></div>
                 <div class="buttons">
                     <span class="button"><g:submitButton name="create" class="save" value="${message(code: 'create', 'default': 'Create')}" /></span>
                 </div>

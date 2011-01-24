@@ -59,7 +59,9 @@
 
         <g:sortableColumn property="presentation" title="Presentation" titleKey="product.presentation" />
 
-        <g:sortableColumn property="price" title="Price" titleKey="product.price" />
+        <g:sortableColumn property="selPrice" title="Price" titleKey="product.selprice" />
+        
+		<g:sortableColumn property="buyPrice" title="Price" titleKey="product.buyprice" />        
 
         <th><g:message code="product.supplier" default="Supplier" /></th>
         </tr>
@@ -74,7 +76,9 @@
 
           <td>${fieldValue(bean: productInstance, field: "presentation")} ${fieldValue(bean: productInstance, field: "doseUnit")}</td>
 
-          <td class="currencyValue"><g:formatNumber number="${productInstance?.price}" format="0.00"/></td>
+          <td class="currencyValue"><g:formatNumber number="${productInstance?.selPrice}" format="0.00"/></td>
+          
+          <td class="currencyValue"><g:formatNumber number="${productInstance?.buyPrice}" format="0.00"/></td>
 
           <td>${fieldValue(bean: productInstance, field: "supplier")}</td>
 

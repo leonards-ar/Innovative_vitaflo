@@ -11,7 +11,7 @@ class Purchase implements Comparable {
 
     Supplier supplier
 
-    static hasMany = [invoices:Invoice]
+    static hasMany = [details:PurchaseDetail]
 
     static final def STATUS_LIST = ['Paid','Pending','Free']
 
@@ -26,14 +26,14 @@ class Purchase implements Comparable {
         amount(nullable:false,min:0.01d)
         status(inList:STATUS_LIST)
         supplier(nullable:false, blank:false)
-        invoices(nullable:false,minSize:1)
+        details(nullable:false,minSize:1)
     }
 
     static mapping = {
         table 'purchases'
         codeNumber column:'code'
         creationDate column:'date'
-        invoices cascade: 'save-update'
+        details cascade:'all, delete-orphan'
     }
 
     String toString(){

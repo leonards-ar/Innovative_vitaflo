@@ -1,4 +1,6 @@
 package com.vitaflo.innova
+import grails.converters.JSON
+
 
 class PurchaseController extends BaseController {
 
@@ -11,10 +13,8 @@ class PurchaseController extends BaseController {
         rememberListState([max: 15, offset: 0, sort: 'expireDate', order: 'desc'])
 
         def query = {
-			projections {
-				distinct("id")
-			}
-            if(params.codeNumber) {
+
+			if(params.codeNumber) {
                 eq('codeNumber', params.codeNumber)
             }
 
@@ -26,20 +26,6 @@ class PurchaseController extends BaseController {
 
             if(params.status) {
                 eq('status', params.status)
-            }
-
-            invoices {
-                proforma{
-                    or {
-                        client {
-                            inList('country', session.countries)
-                        }
-                        patient {
-                            inList('country', session.countries)
-                        }
-
-                    }
-                }
             }
         }
 
@@ -47,16 +33,12 @@ class PurchaseController extends BaseController {
 
         def total = criteria.count(query)
 
-        def purchasesIds = Purchase.withCriteria{
+        def purchases = Purchase.withCriteria{
 
             maxResults(params.max?.toInteger())
             firstResult(params.offset?.toInteger())
             order(params.sort, params.order)
 
-			projections {
-				distinct("id")
-			}
-			
             if(params.codeNumber) {
                 eq('codeNumber', params.codeNumber)
             }
@@ -71,51 +53,40 @@ class PurchaseController extends BaseController {
                 eq('status', params.status)
             }
 
-            invoices {
-                proforma{
-                    or {
-                        client {
-                            inList('country', session.countries)
-                        }
-                        patient {
-                            inList('country', session.countries)
-                        }
-
-                    }
-                }
-            }
         }
 		
-		def purchases = Purchase.getAll(purchasesIds)
-      
         [purchaseInstanceList: purchases, purchaseInstanceTotal: total, codeNumber:params.codeNumber, supplier:params.supplier, status:params.status]
     }
 
     def create = {
         def purchaseInstance = new Purchase()
         purchaseInstance.properties = params
-        def invoices = getInvoicesForSelect()
-        return [purchaseInstance: purchaseInstance, invoices:invoices]
+
+        return [purchaseInstance: purchaseInstance]
     }
 
-    def save = { PurchaseInvoicesCommand invoicesCmd ->
+    def save = { UpdatePurchaseDetailsListCommand updateCommand ->
+
         def purchaseInstance = new Purchase(params)
+		
+        List purchaseDetailList = updateCommand.createPurchaseDetailsList()
 
-        invoicesCmd.invoicesCommand.each { invoiceId ->
-            def invoice = Invoice.get(invoiceId)
-            purchaseInstance.addToInvoices(invoice)
+        purchaseDetailList.each {purchaseDetail ->
+            purchaseInstance.addToDetails(purchaseDetail)
         }
 
-        if (!purchaseInstance.hasErrors() && purchaseInstance.save()) {
-            flash.message = "purchase.created"
-            flash.args = [purchaseInstance.id]
-            flash.defaultMessage = "Purchase ${purchaseInstance.id} created"
-            redirect(action: "show", id: purchaseInstance.id)
+        if (!purchaseInstance.hasErrors()){
+
+            if (purchaseInstance.save()){
+                flash.message = "purchase.created"
+                flash.args = [purchaseInstance.id]
+                flash.defaultMessage = "purchase ${purchaseInstance.id} created"
+                redirect(action: "show", id: purchaseInstance.id)
+            }
         }
-        else {
-            purchaseInstance.invoices*.discard()
-            render(view: "create", model: [purchaseInstance: purchaseInstance])
-        }
+
+        render(view: "create", model: [purchaseInstance: purchaseInstance, purchaseDetailList: purchaseDetailList])
+        
     }
 
     def show = {
@@ -125,34 +96,8 @@ class PurchaseController extends BaseController {
             flash.args = [params.id]
             flash.defaultMessage = "Purchase not found with id ${params.id}"
             redirect(action: "list")
-        }
-        else {
-            def invoices = Invoice.withCriteria{
-                order('number', 'asc')
-                isNull('purchase')
-                proforma{
-                    or {
-                        client {
-                            if (params.client) {
-                                eq('name', params.client)
-                            }
-
-                            inList('country', session.countries)
-                        }
-                        patient {
-                            if (params.patient) {
-                                def str = params.patient.split(',')
-                                eq('lastName', str[0])
-                            }
-                            inList('country', session.countries)
-                        }
-
-                    }
-                }
-            }
-            return [purchaseInstance: purchaseInstance, invoices:invoices]
-
-        }
+        } 
+        return [purchaseInstance: purchaseInstance]
     }
 
     def edit = {
@@ -253,6 +198,26 @@ class PurchaseController extends BaseController {
         }
     }
 
+	def addDetail = { UpdatePurchaseDetailsListCommand updateCommand, AddPurchaseDetailsListCommand addCommand ->
+		List purchaseDetailList = updateCommand.createPurchaseDetailsList()
+		
+		if (!addCommand.hasErrors()){
+			def purchaseDetail = addCommand.createNewPurchaseDetail()
+			purchaseDetailList.add(purchaseDetail)
+			render (template:"purchaseDetailList", model:[purchaseDetailList:purchaseDetailList])
+		}else{
+			addCommand.updateAddProductPrice()
+			render (template:"purchaseDetailList", model:[addCommand:addCommand, purchaseDetailList:purchaseDetailList, amount:'250'])
+		}
+	}
+
+
+	def removeDetail = { UpdatePurchaseDetailsListCommand updateCommand ->
+		List purchaseDetailList = updateCommand.createPurchaseDetailsList()
+		int i = params.id.toInteger()
+		purchaseDetailList.remove(i)
+		render (template:"purchaseDetailList", model:[purchaseDetailList:purchaseDetailList])
+	}
 
     def addInvoiceForCreate = { PurchaseInvoicesCommand invoicesCmd ->
         def purchaseInstance = new Purchase(params)       
@@ -362,7 +327,7 @@ class PurchaseController extends BaseController {
 		return Invoice.withCriteria{
 			order('number', 'asc')
 			isNull('purchase')
-			proforma{
+			purchase{
 				or {
 					client {
 						if (params.client) {
@@ -383,6 +348,18 @@ class PurchaseController extends BaseController {
 			}
 		}
 	}
+	
+    def updatePrice ={
+        double price = 0d
+        if (params.addProductId != ''){
+            def auxProduct = Product.get(params.addProductId)
+            price = auxProduct.getBuyPrice()
+        }
+        
+        render formatNumber(number:price,format:"#.##")
+    }
+
+		
 }
 
 class PurchaseInvoicesCommand{
@@ -398,4 +375,61 @@ class PurchaseInvoicesCommand{
         
         return invoiceList
     }
+}
+
+class AddPurchaseDetailsListCommand {
+	Long addProductId
+	Integer addQuantity
+	Double addDailyDose
+	String addDoseUnit
+	Double addPrice
+
+
+	static constraints = {
+		addProductId(nullable:false)
+		addQuantity(nullable:false, min:1)
+		addDailyDose(nullable:true, min:0.1d)
+		addDoseUnit(nullable:true, inList: com.vitaflo.innova.ProformaDetail.UNIT_LIST)
+		addPrice(nullable:false, min:0d)
+	}
+
+	PurchaseDetail createNewPurchaseDetail(){
+		def auxProduct = Product.get(addProductId)
+		def purchaseDetail = new PurchaseDetail(product:auxProduct, quantity:addQuantity, dailyDose:addDailyDose, doseUnit:addDoseUnit, price:addPrice)
+
+		return purchaseDetail
+	}
+
+	void updateAddProductPrice(){
+
+		addPrice = 0d
+		if (addProductId != null && addProductId != ''){
+			def auxProduct = Product.get(addProductId)
+			addPrice = auxProduct.getBuyPrice()
+		}
+	}
+
+}
+
+
+class UpdatePurchaseDetailsListCommand {
+	List productIds = []
+	List quantities = []
+	List detailsIds = []
+	List prices = []
+	
+
+	List createPurchaseDetailsList(){
+		List purchaseDetailList = []
+		productIds.eachWithIndex(){ productId, i->
+			def auxProduct = Product.get(productId)
+			def purchaseDetail = new PurchaseDetail(product:auxProduct, quantity:quantities[i], price:prices[i].replace(',','.').toDouble())
+			if(detailsIds[i]!=''){
+				purchaseDetail.id = detailsIds[i].toLong()
+			}
+			purchaseDetailList.add(purchaseDetail)
+		}
+
+		return purchaseDetailList
+	}
 }
