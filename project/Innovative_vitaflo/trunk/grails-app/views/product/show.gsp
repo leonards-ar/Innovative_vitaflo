@@ -46,8 +46,13 @@
             </tr>
 
             <tr class="prop">
-              <td valign="top" class="name"><g:message code="product.price" default="Price" />:</td>
-              <td valign="top" class="value">${fieldValue(bean: productInstance, field: "price")}</td>
+              <td valign="top" class="name"><g:message code="product.selprice" default="Sel Price" />:</td>
+              <td valign="top" class="value">${fieldValue(bean: productInstance, field: "selPrice")}</td>
+            </tr>
+
+            <tr class="prop">
+              <td valign="top" class="name"><g:message code="product.buyprice" default="Buy Price" />:</td>
+              <td valign="top" class="value">${fieldValue(bean: productInstance, field: "buyPrice")}</td>
             </tr>
 
             <tr class="prop">

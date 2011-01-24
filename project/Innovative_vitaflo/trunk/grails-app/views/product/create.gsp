@@ -58,13 +58,24 @@
 
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="price"><g:message code="product.price" default="Price" />:</label>
+                                    <label for="selPrice"><g:message code="product.selprice" default="Sel Price" />:</label>
                                 </td>
-                                <td valign="top" class="value ${hasErrors(bean: productInstance, field: 'price', 'errors')}">
-                                    <g:textField name="price" value="${fieldValue(bean: productInstance, field: 'price')}" />
+                                <td valign="top" class="value ${hasErrors(bean: productInstance, field: 'selPrice', 'errors')}">
+                                    <g:textField name="selPrice" value="${fieldValue(bean: productInstance, field: 'selPrice')}" />
 
                                 </td>
                             </tr>
+                            
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="buyPrice"><g:message code="product.buyprice" default="Buy Price" />:</label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: productInstance, field: 'buyPrice', 'errors')}">
+                                    <g:textField name="buyPrice" value="${fieldValue(bean: productInstance, field: 'buyPrice')}" />
+
+                                </td>
+                            </tr>
+                            
 
                             <tr class="prop">
                                 <td valign="top" class="name">

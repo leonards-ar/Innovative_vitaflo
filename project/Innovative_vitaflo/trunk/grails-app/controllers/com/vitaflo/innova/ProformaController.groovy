@@ -220,7 +220,7 @@ class ProformaController extends BaseController {
 
         def proformaInstance = new Proforma(params)
         List proformaDetailList = updateCommand.createProformaDetailsList()
-
+		
         proformaDetailList.each {proformaDetail ->
             proformaInstance.addToDetails(proformaDetail)
         }
@@ -624,7 +624,7 @@ class ProformaController extends BaseController {
         double price = 0d
         if (params.addProductId != ''){
             def auxProduct = Product.get(params.addProductId)
-            price = auxProduct.getPrice()
+            price = auxProduct.getSelPrice()
         }
         
         render formatNumber(number:price,format:"#.##")
@@ -670,7 +670,7 @@ class AddProformaDetailsListCommand {
         addPrice = 0d
         if (addProductId != null && addProductId != ''){
             def auxProduct = Product.get(addProductId)
-            addPrice = auxProduct.getPrice()
+            addPrice = auxProduct.getSelPrice()
         }
     }
 
