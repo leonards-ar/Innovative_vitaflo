@@ -16,6 +16,7 @@ class Patient {
     String deliveryAddress
     String physician
     String clinicalStatus
+    String clinicalHistory
     String adverseEvent
     String status = 'Enabled'
     String initials
@@ -27,8 +28,6 @@ class Patient {
     Float orderedQuantity
     String reimbursement
 
-    static hasMany = [clinicalHistories: ClinicalHistory]
-  
     static transients = ['startNTBC', 'product', 'lastOrderedDate', 'orderedQuantity', 'reimbursement']
 
     static final def UNIT_LIST = ['mg', 'ml']
@@ -45,6 +44,7 @@ class Patient {
         deliveryAddress(nullable:true)
         physician(nullable:true)
         clinicalStatus(nullable:true)
+        clinicalHistory(nullable:true)
         adverseEvent(nullable:true)
         status(nullable:false, blank:false, inList:['Enabled','Disabled','Deleted'])
         initials(blank:false)

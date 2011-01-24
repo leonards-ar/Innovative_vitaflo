@@ -7,30 +7,6 @@
   <g:javascript library="scriptaculous"/>
   <g:javascript library="FusionCharts"/>
   <g:javascript library="FusionChartsDOM"/>
-  <g:javascript>
-    function updateList(box, product) {
-      var element = $('selProductList').value;
-      var array = $w(element);
-      if(box.checked){
-
-            if(array.indexOf(product) < 0){
-              $('selProductList').value += product + ' ';
-            } else {
-              alert('element exists: ' + product);  
-            }
-        } else {
-          $('selProductList').value = '';
-          for(var index = 0; index < array.length; index++){
-              if(array[index]!=product){
-                  $('selProductList').value += array[index] + ' ';
-              }
-          }
-        }
-
-        $('searchForm').submit();
-
-    }
-  </g:javascript>
 </head>
 <body>
 <div class="nav">
@@ -74,29 +50,96 @@
         </tr>
       </table>
 
-      <g:hiddenField name="selProductList" value="${selProductList}"/>
     </g:form>
 
   </div>
-  <br/>
-  <div id="searchBox">
-    <table>
+  <br/><br/>
+  <div id="sales_tables">
+    <table width="100%">
       <tr>
-      <g:each in="${productList}" status="i" var="product">
-        <td><g:checkBox name="product${product?.id}" value="${selProductList.split(' ').collect{it.toLong()}.contains(product?.id)}" onclick="updateList(this,'${product?.id}')"/></td>
-        <td>${product?.shortName()}</td>
-        <g:if test="${( (i+1) % 5) == 0}">
-          </tr><tr>
-        </g:if>
-      </g:each>
+        <td>
+          <table width="10">
+            <thead>
+            <tr>
+              <th><g:message code="salesReportByProduct.report.product" default="Product"/></th>
+              <g:each in="${monthList}" status="i" var="date">
+                <th><g:formatDate date="${date}" format="MM/yyyy"/></th>
+              </g:each>
+
+            </tr>
+            </thead>
+            <tbody>
+            <g:each in="${salesMap}" status="i" var="entry">
+
+              <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
+                <td>${entry.key}</td>
+                <g:each in="${entry.value}" status="j" var="salesInstance">
+                  <td class="currencyValue">${formatNumber(number: salesInstance?.amount, format: "0.00")}</td>
+                </g:each>
+
+              </tr>
+            </g:each>
+
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+
+        <td>
+          <fusioncharts chartType="MSColumn3D" width="900" height="300" SWFPath="${createLinkTo(dir: 'Charts/')}">
+            <data><!--[CDATA[${sXml}
+        ]]--></data>
+          </fusioncharts>
+
+        </td>
       </tr>
     </table>
   </div>
+  <div id="charts">
+    <div id="sales_tables">
+      <table width="100%">
+        <tr>
+        <td>
+          <table width="10">
+            <thead>
+            <tr>
+              <th><g:message code="salesReportByProduct.report.product" default="Product"/></th>
+              <g:each in="${monthList}" status="i" var="date">
+                <th><g:formatDate date="${date}" format="M/yyyy"/></th>
+              </g:each>
 
-  <br/>
+            </tr>
+            </thead>
+            <tbody>
+            <g:each in="${qtyMap}" status="i" var="entry">
 
-  <div id="saleByProductChart">
-    <g:render template="salesByProduct" model="[proformaDetailList:proformaDetailList]"/>
+              <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
+                <td>${entry.key}</td>
+                <g:each in="${entry.value}" status="j" var="salesInstance">
+                  <td class="currencyValue">${formatNumber(number: salesInstance?.amount, format: "0")}</td>
+                </g:each>
+
+              </tr>
+            </g:each>
+
+            </tbody>
+          </table>
+        </td>
+      </tr>
+        
+        <tr>
+          <td>
+            <fusioncharts chartType="MSColumn3D" width="900" SWFPath="${createLinkTo(dir: 'Charts/')}">
+              <data><!--[CDATA[${qXml}
+            ]]--></data>
+            </fusioncharts>
+
+          </td>
+        </tr>
+      </table>
+    </div>
+
   </div>
 </div>
 </body>

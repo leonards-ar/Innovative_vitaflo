@@ -36,12 +36,12 @@ grails.converters.encoding="UTF-8"
 grails.enable.native2ascii = true
 
 // set per-environment serverURL stem for creating absolute links
-        application.emailFromAddress = "Vitaflo-Sistema@vitaflo.com.ar"
-        application.name = "Vitaflo"
-        application.cssFile = "vitaflo.css"
-        application.logoFile = "vitaflo-logo.gif"
-        application.template = "templateVitaflo"
-        application.favicon = "vitaflo-favicon.ico"
+        application.emailFromAddress = "Innova-Sistema@vitaflo.com.ar"
+        application.name = "Innovative"
+        application.cssFile = "innova.css"
+        application.logoFile = "innovative-logo.gif"
+        application.template = "templateInnova"
+        application.favicon = "innova-favicon.ico"
 
 environments {
     vitaflo {
@@ -80,43 +80,6 @@ environments {
 auditLog {
     verbose = false
 }
-
-fckeditor {
-    
-    upload {
-        basedir = ""
-        baseurl = ""
-        overwrite = false
-        link {
-            browser = false
-            upload = false
-            allowed = []
-            denied = ['html', 'htm', 'php', 'php2', 'php3', 'php4', 'php5',
-                      'phtml', 'pwml', 'inc', 'asp', 'aspx', 'ascx', 'jsp',
-                      'cfm', 'cfc', 'pl', 'bat', 'exe', 'com', 'dll', 'vbs', 'js', 'reg',
-                      'cgi', 'htaccess', 'asis', 'sh', 'shtml', 'shtm', 'phtm']
-        }
-        image {
-            browser = false
-            upload = false
-            allowed = ['jpg', 'gif', 'jpeg', 'png']
-            denied = []
-        }
-        flash {
-            browser = false
-            upload = false
-            allowed = ['swf']
-            denied = []
-        }
-        media {
-            browser = false
-            upload = false
-            allowed = ['mpg','mpeg','avi','wmv','asf','mov']
-            denied = []
-        }
-    }
-}
-
 
 // log4j configuration
 log4j = {

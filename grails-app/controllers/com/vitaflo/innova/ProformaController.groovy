@@ -12,7 +12,6 @@ class ProformaController extends BaseController {
     def list = {
         rememberListState([max: 15, offset: 0, sort: 'id', order: 'desc'])
 
-        def filterCountry = params.selectedCountry?Country.findByCode(params.selectedCountry):null;
         def query = {
 
             if(params.status) {
@@ -21,32 +20,20 @@ class ProformaController extends BaseController {
             if(params.client && params.patient){
                 client {
                     eq('name', params.client)
-                    if(params.selectedCountry){
-                      eq('country', filterCountry)
-                    } else {
-                      inList('country', session.countries)
-                    }
+
+                    inList('country', session.countries)
                 }
                 patient {
                     def str = params.patient.split(',')
                     eq('lastName', str[0])
-                  
-                    if(params.selectedCountry){
-                      eq('country', filterCountry)
-                    } else {
-                      inList('country', session.countries)
-                    }
+                    inList('country', session.countries)
                 }
             } else
               if(params.client) {
                 client {
                     eq('name', params.client)
 
-                    if(params.selectedCountry){
-                      eq('country', filterCountry)
-                    } else {
-                      inList('country', session.countries)
-                    }
+                    inList('country', session.countries)
                 }
               } else
                 if(params.patient){
@@ -54,11 +41,7 @@ class ProformaController extends BaseController {
                     def str = params.patient.split(',')
                     eq('lastName', str[0])
 
-                    if(params.selectedCountry){
-                      eq('country', filterCountry)
-                    } else {
-                      inList('country', session.countries)
-                    }
+                    inList('country', session.countries)
                 }
                 } else {
                 or{
@@ -67,22 +50,14 @@ class ProformaController extends BaseController {
                             eq('name', params.client)
                         }
 
-                        if(params.selectedCountry){
-                          eq('country', filterCountry)
-                        } else {
-                          inList('country', session.countries)
-                        }
+                        inList('country', session.countries)
                     }
                     patient {
                         if(params.patient){
                             def str = params.patient.split(',')
                             eq('lastName', str[0])
                         }
-                        if(params.selectedCountry){
-                          eq('country', filterCountry)
-                        } else {
-                          inList('country', session.countries)
-                        }
+                        inList('country', session.countries)
                     }
 
                 }
@@ -104,41 +79,25 @@ class ProformaController extends BaseController {
               client {
                   eq('name', params.client)
 
-                    if(params.selectedCountry){
-                      eq('country', filterCountry)
-                    } else {
-                      inList('country', session.countries)
-                    }
+                  inList('country', session.countries)
               }
               patient {
                   def str = params.patient.split(',')
                   eq('lastName', str[0])
-                    if(params.selectedCountry){
-                      eq('country', filterCountry)
-                    } else {
-                      inList('country', session.countries)
-                    }
+                  inList('country', session.countries)
               }
           } else
             if(params.client) {
               client {
                   eq('name', params.client)
-                    if(params.selectedCountry){
-                      eq('country', filterCountry)
-                    } else {
-                      inList('country', session.countries)
-                    }
+                  inList('country', session.countries)
               }
             } else
               if(params.patient){
               patient {
                   def str = params.patient.split(',')
                   eq('lastName', str[0])
-                    if(params.selectedCountry){
-                      eq('country', filterCountry)
-                    } else {
-                      inList('country', session.countries)
-                    }
+                  inList('country', session.countries)
               }
               } else {
               or{
@@ -146,45 +105,21 @@ class ProformaController extends BaseController {
                       if(params.client){
                           eq('name', params.client)
                       }
-                    if(params.selectedCountry){
-                      eq('country', filterCountry)
-                    } else {
                       inList('country', session.countries)
-                    }
                   }
                   patient {
                       if(params.patient){
                           def str = params.patient.split(',')
                           eq('lastName', str[0])
                       }
-                    if(params.selectedCountry){
-                      eq('country', filterCountry)
-                    } else {
                       inList('country', session.countries)
-                    }
                   }
 
               }
           }
       }
-
-      if (params?.format && params.format != "html") {
-        response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
-        response.setHeader("Content-disposition", "attachment; filename=proformas.${params.format}")
-        def exportCriteria = Proforma.createCriteria()
-        def exportProformas = exportCriteria.list(query)
-
-        List fields = ["id", "client", "patient", "status", "createdAt"]
-        def idLabel = g.message(code: "proforma.id")
-        def clientLabel = g.message(code: "proforma.client")
-        def patientLabel = g.message(code: "proforma.patient")
-        def statusLabel = g.message(code: "proforma.status")
-        def dateLabel = g.message(code: "proforma.createdAt")
-        Map labels = ["id": "${idLabel}", "client": "${clientLabel}", "patient": "${patientLabel}", "status": "${statusLabel}", "createdAT": "${dateLabel}"]
-        exportService.export(params.format, response.outputStream, exportProformas, fields, labels, [:], [:])
-      }
-      [proformaInstanceList: proformas, proformaInstanceTotal: total, client: params.client, patient: params.patient, status: params.status, selectedCountry: params.selectedCountry]
-  }
+        [proformaInstanceList: proformas, proformaInstanceTotal: total, client: params.client, patient: params.patient, status: params.status]
+    }
 
     private getPatientsForSelectList() {
         Patient.withCriteria {
@@ -341,32 +276,10 @@ class ProformaController extends BaseController {
         def clientEmail = proformaInstance.client.email
 
         render(view:'sendEmail', model:[proformaInstance: proformaInstance, totalDetails:totalDetails,
-                totalAmount:totalAmount, discountAmount: discountAmount, clientEmail:clientEmail, line1:params.line1, line2:params.line2, line3:params.line3])
+                totalAmount:totalAmount, discountAmount: discountAmount, clientEmail:clientEmail])
+        
     }
 
-	def previewProforma = {
-		def proformaInstance = Proforma.get(params.id)
-		
-			  if (!proformaInstance) {
-				  flash.message = "proforma.not.found"
-				  flash.args = [params.id]
-				  flash.defaultMessage = "Proforma not found with id ${params.id}"
-				  redirect(action: "list")
-			  }
-		
-			  //Total Details
-			  def totalDetails = proformaInstance.getTotalDetails();
-		
-				//Total Amount
-			  def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
-			  
-			  //Discount Amount
-			  def discountAmount = proformaInstance.getDiscountAmount();
-		
-			  render(view:'print', model:[proformaInstance: proformaInstance, totalDetails:totalDetails,
-					  totalAmount:totalAmount, discountAmount: discountAmount, printAction: 'preview'])
-		
-	}
     def printProforma = {
       def proformaInstance = Proforma.get(params.id)
 
@@ -380,15 +293,14 @@ class ProformaController extends BaseController {
       //Total Details
       def totalDetails = proformaInstance.getTotalDetails();
 
-        //Total Amount
-	  def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
-	  
-	  //Discount Amount
-	  def discountAmount = proformaInstance.getDiscountAmount();
+      //Total Amount
+      def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
+
+      //Discount Amount
+      def discountAmount = proformaInstance.getDiscountAmount();
 
       render(view:'print', model:[proformaInstance: proformaInstance, totalDetails:totalDetails,
-              totalAmount:totalAmount, discountAmount: discountAmount, line1:params.line1, 
-			  line2:params.line2, line3:params.line3, printAction:'print'])
+              totalAmount:totalAmount, discountAmount: discountAmount])
 
     }
   
@@ -398,13 +310,11 @@ class ProformaController extends BaseController {
 
         //Total Details
         def totalDetails = proformaInstance.getTotalDetails();
-
         //Total Amount
-		def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;        
-		//Discount Amount
+        def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
+        //Discount Amount
         def discountAmount = proformaInstance.getDiscountAmount();
 
-		
         if (!emailCmd.hasErrors()){
             try{
                 mailService.sendMail {
@@ -412,7 +322,7 @@ class ProformaController extends BaseController {
                     from grailsApplication.config.application.emailFromAddress
                     subject "Proforma ${proformaInstance.id}"
                     body (view:"/emails/${grailsApplication.config.application.template}Mail", model:[proformaInstance:proformaInstance, totalDetails:totalDetails, totalAmount:totalAmount,
-                            discountAmount: discountAmount, line1:params.line1, line2:params.line2, line3:params.line3])
+                            discountAmount: discountAmount])
 
                     flash.message = "proforma.emailsent"
                     flash.args = [proformaInstance.id, emailCmd.clientEmail]
@@ -429,9 +339,7 @@ class ProformaController extends BaseController {
         }
 
         render(view:'sendEmail', model:[proformaInstance: proformaInstance, totalDetails:totalDetails,
-                totalAmount:totalAmount, discountAmount: discountAmount, clientEmail:emailCmd.clientEmail, line1:params.line1, line2:params.line2, line3:params.line3])
-      
-
+                totalAmount:totalAmount, discountAmount: discountAmount, clientEmail:emailCmd.clientEmail])
     }
 
 

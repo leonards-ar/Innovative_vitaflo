@@ -31,7 +31,6 @@ security {
     /client/**=ROLE_ADMIN,ROLE_USER
     /client/create=ROLE_ADMIN,ROLE_USER
     /client/edit=ROLE_ADMIN,ROLE_USER
-    /clinicalhistory/**=ROLE_ADMIN,ROLE_USER
     /drug/**=ROLE_ADMIN,ROLE_USER
     /login/**=IS_AUTHENTICATED_ANONYMOUSLY
     /patient/**=ROLE_ADMIN,ROLE_USER

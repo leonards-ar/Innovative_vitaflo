@@ -195,7 +195,7 @@ class ReportController {
       lastDate.setTime(params.fromDate)
     }
 
-    List productList = Invoice.executeQuery("select distinct pr from Invoice i inner join i.proforma p inner join p.details d inner join d.product pr where i.date >= :lastDate and i.date <= :actualDate order by pr.name", [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()])
+    List productList = Invoice.executeQuery("select distinct pr from Invoice i inner join i.proforma p inner join p.details d inner join d.product pr where i.date >= :lastDate and i.date <= :actualDate", [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()])
 
     List monthList = Invoice.executeQuery("select distinct year(i.date), month(i.date) from Invoice i where i.date >= :lastDate and i.date <= :actualDate order by year(i.date), month(i.date) ", [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()])
 
@@ -229,25 +229,17 @@ class ReportController {
     Map productMoneySalesMap = [:]
     Map productQtySalesMap = [:]
 
-
-    def selectedProductIds = (params.selProductList)? params.selProductList : ""
-
     productList.each {p ->
+      parameters.put("product", p)
+      List moneySales = Invoice.executeQuery(salesSelect.toString(), parameters)
+      List salesList = createSalesByPorductList(moneySales, monthList)
 
+      productMoneySalesMap.put(p.shortName() , salesList)
 
-      def putProduct = (!params.selProductList) || (selectedProductIds?.split(' ').collect{it.toLong()}.contains(p.id))
-      if(putProduct){
-          parameters.put("product", p)
-          List moneySales = Invoice.executeQuery(salesSelect.toString(), parameters)
-          List salesList = createSalesByPorductList(moneySales, monthList)
-          if(!params.selProductList) selectedProductIds += p.id + " "
+      List qtySales = Invoice.executeQuery(qtySelect.toString(), parameters)
+      List qtyList = createSalesByPorductList(qtySales, monthList)
+      productQtySalesMap.put(p.shortName(), qtyList)
 
-          productMoneySalesMap.put(p.shortName() , salesList)
-
-          List qtySales = Invoice.executeQuery(qtySelect.toString(), parameters)
-          List qtyList = createSalesByPorductList(qtySales, monthList)
-          productQtySalesMap.put(p.shortName(), qtyList)
-      }
     }
 
     def sXml = createSalesByProductReportXml(productMoneySalesMap, monthList)
@@ -265,10 +257,7 @@ class ReportController {
       formatMonthList.add(date)
     })
 
-    return [salesMap: productMoneySalesMap, sXml: sXml, qtyMap: productQtySalesMap, qXml: qXml,
-            monthList: formatMonthList, fromDate: lastDate, toDate: actualDate,
-            patient: params.patient, supplier: params.supplier,
-            productList: productList, selProductList: selectedProductIds]
+    return [salesMap: productMoneySalesMap, sXml: sXml, qtyMap: productQtySalesMap, qXml: qXml, monthList: formatMonthList, fromDate: lastDate, toDate: actualDate, patient: paramspatient, supplier: paramssupplier]
 
   }
 
@@ -289,7 +278,7 @@ class ReportController {
     StringBuilder dataset = new StringBuilder();
     monthList.each({item ->
       Calendar date = Calendar.instance
-      date.set(Calendar.MONTH, item[1].toInteger() - 1)
+      date.set(Calendar.MONTH, item[1])
       date.set(Calendar.YEAR, item[0])
       category.append("<category name='${formatDate(date: date, format: 'MMM yyyy')}'/>")
     })
