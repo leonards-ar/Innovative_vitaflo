@@ -344,6 +344,29 @@ class ProformaController extends BaseController {
                 totalAmount:totalAmount, discountAmount: discountAmount, clientEmail:clientEmail, line1:params.line1, line2:params.line2, line3:params.line3])
     }
 
+	def previewProforma = {
+		def proformaInstance = Proforma.get(params.id)
+		
+			  if (!proformaInstance) {
+				  flash.message = "proforma.not.found"
+				  flash.args = [params.id]
+				  flash.defaultMessage = "Proforma not found with id ${params.id}"
+				  redirect(action: "list")
+			  }
+		
+			  //Total Details
+			  def totalDetails = proformaInstance.getTotalDetails();
+		
+				//Total Amount
+			  def totalAmount = (!proformaInstance.donation)?proformaInstance.getTotalAmount():0;
+			  
+			  //Discount Amount
+			  def discountAmount = proformaInstance.getDiscountAmount();
+		
+			  render(view:'print', model:[proformaInstance: proformaInstance, totalDetails:totalDetails,
+					  totalAmount:totalAmount, discountAmount: discountAmount, printAction: 'preview'])
+		
+	}
     def printProforma = {
       def proformaInstance = Proforma.get(params.id)
 
@@ -364,7 +387,8 @@ class ProformaController extends BaseController {
 	  def discountAmount = proformaInstance.getDiscountAmount();
 
       render(view:'print', model:[proformaInstance: proformaInstance, totalDetails:totalDetails,
-              totalAmount:totalAmount, discountAmount: discountAmount])
+              totalAmount:totalAmount, discountAmount: discountAmount, line1:params.line1, 
+			  line2:params.line2, line3:params.line3, printAction:'print'])
 
     }
   

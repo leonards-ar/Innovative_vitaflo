@@ -81,11 +81,11 @@
 					</td>
 
 					<td style="text-align: right">
-					 <g:formatNumber	number="${(proformaDetail?.price*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00" />
+					 <g:formatNumber	number="${(proformaDetail?.price*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" />
 					</td>
 
 					<td style="text-align: right">
-					 <g:formatNumber number="${(proformaDetail?.total*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00" />
+					 <g:formatNumber number="${(proformaDetail?.total*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" />
 				  </td>
 				</tr>
 			</g:each>
@@ -95,7 +95,7 @@
 				  <g:message code="proforma.totalproducts" default="Total Products" />
 				</td>
 				<td style="text-align: right">
-				  <g:formatNumber number="${(totalDetails*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00" />
+				  <g:formatNumber number="${(totalDetails*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" />
 			  </td>
 			</tr>
       <g:if test="${proformaInstance?.courier  > 0}">
@@ -104,7 +104,7 @@
             <g:message code="proforma.courier" default="Courier" />
           </td>
           <td style="text-align: right">
-            <g:formatNumber number="${(proformaInstance?.courier *((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?0.79 : 1))}" format="U\$S 0.00" />
+            <g:formatNumber number="${(proformaInstance?.courier *((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" />
           </td>
         </tr>
      </g:if>			
@@ -139,7 +139,7 @@
      libre vendedor BNA del d&iacute;a <g:formatDate date="${proformaInstance?.createdAt}" format="dd/MM/yyyy"/>
      de <g:formatNumber number="${proformaInstance?.dollarValue}" format="0.00" />.
      <br/><br/>
-     <b>Importe en pesos:</b> <g:numToWords number="${totalAmount}" lang="es"/><br/>
+     <b>Importe en pesos:</b> <g:numToWords number="${totalAmount*proformaInstance?.dollarValue}" lang="es"/><br/>
      <b>Condiciones de pago:</b> 100% pago a 20 d&iacute;as.<br/><br/>
       
     Banco: Galicia Sucursal.<br/>
