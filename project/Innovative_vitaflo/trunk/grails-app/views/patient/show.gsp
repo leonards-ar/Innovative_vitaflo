@@ -114,13 +114,6 @@
 
             </tr>
 
-            <!--tr class="prop">
-              <td valign="top" class="name"><g:message code="patient.clinicalHistory" default="Clinical History" />:</td>
-
-            <td valign="top" class="value">${fieldValue(bean: patientInstance, field: "clinicalHistory")}</td>
-
-            </tr-->
-
             <tr class="prop">
               <td valign="top" class="name"><g:message code="patient.adverseEvent" default="Adverse Event" />:</td>
 
