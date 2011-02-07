@@ -46,7 +46,6 @@
       <g:hiddenField name="detailsIds[${i}]" value="${fieldValue(bean: purchaseDetail, field: 'id')}"/>
       <g:select name="productIds[${i}]" from="${com.vitaflo.innova.Product.list([sort:'name', order:'asc'])}" optionKey="id"
                 value="${purchaseDetail.product?.id}"
-				disabled="true"
                 noSelection="['':'Seleccione...']"
                 onchange="${remoteFunction(controller:'purchase', action:'updatePrice',onSuccess:'updatePurchaseDetailsPrice(e,'+i+')', params:'\'addProductId=\'  + this.value')}"
                 />
