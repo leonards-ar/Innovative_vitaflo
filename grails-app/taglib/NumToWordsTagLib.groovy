@@ -1,10 +1,13 @@
+import java.math.BigDecimal;
+
 import com.mindprod.inwords.*
 class NumToWordsTagLib {
     
     def numToWords ={attrs ->
-        long dollars = Math.floor(attrs.number?.toDouble())
-        long cents = Math.floor((attrs.number?.toDouble() - dollars) * 100d )
-        
+		BigDecimal amount = new BigDecimal(attrs.number)
+        long dollars = amount.longValue()//attrs.number?.toDouble())
+        long cents = amount.subtract(new BigDecimal(dollars)).multiply(new BigDecimal(100))  //attrs.number?.toDouble() - (dollars * 1.00f)) * 100d
+		
         StringBuilder wordAmount = new StringBuilder()
         if(attrs.lang =='en') {
             def americanEnglish = new AmericanEnglish()
