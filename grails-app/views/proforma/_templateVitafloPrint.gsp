@@ -148,7 +148,7 @@
      libre vendedor BNA del d&iacute;a <g:formatDate date="${proformaInstance?.createdAt}" format="dd/MM/yyyy"/>
      de <g:formatNumber number="${proformaInstance?.dollarValue}" format="0.00" />.
      <br/><br/>
-     <b>Importe en pesos:</b> <g:numToWords number="${totalAmount*proformaInstance?.dollarValue}" lang="es"/><br/>
+     <b>Importe en pesos:</b> <g:numToWords number="${formatNumber(number:totalAmount*proformaInstance?.dollarValue, format:'0.00')}" lang="es"/><br/>
      <b>Condiciones de pago:</b> 100% pago a 20 d&iacute;as.<br/><br/>
       
     Banco: Galicia Sucursal.<br/>
@@ -168,8 +168,8 @@
           <td>
             <p>
               Tel/Fax: 4807-0999/4809-0549<br/>
-              E-mail: info@vitaflo/latam.com<br/>
-              Web: www.vitaflo/latam.com 
+              E-mail: info@vitaflo-latam.com<br/>
+              Web: www.vitaflo-latam.com 
             </p>
           </td>
         </tr>
