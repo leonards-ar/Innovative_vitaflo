@@ -31,7 +31,7 @@ class Patient {
   
     static transients = ['startNTBC', 'product', 'lastOrderedDate', 'orderedQuantity', 'reimbursement']
 
-    static final def UNIT_LIST = ['mg', 'ml']
+    static final def UNIT_LIST = ['sobres', 'sachets']
 
     static constraints = {
         firstName(blank:false, nullable:true)
