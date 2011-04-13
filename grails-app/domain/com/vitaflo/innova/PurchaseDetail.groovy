@@ -9,7 +9,7 @@ class PurchaseDetail {
 
     static belongsTo = [purchase: Purchase]
 
-    static final def UNIT_LIST = ['mg', 'ml']
+    static final def UNIT_LIST = ['sobres', 'sachets']
 
     static constraints = {
         quantity(nullable:false, min:1)
