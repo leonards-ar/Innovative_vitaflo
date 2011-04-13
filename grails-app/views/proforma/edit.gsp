@@ -6,6 +6,8 @@
     <meta name="layout" content="main" />
     <title><g:message code="proforma.edit" default="Edit Proforma" /></title>
   <g:javascript library="prototype" />
+  <g:javascript library="popup"/>
+    
   <g:javascript>
     function submitForm(name)
     {
@@ -68,6 +70,17 @@
     <span class="menuButton"><g:link class="list" action="list"><g:message code="proforma.list" default="Proforma List" /></g:link></span>
     <span class="menuButton"><g:link class="create" action="create"><g:message code="proforma.new" default="New Proforma" /></g:link></span>
   </div>
+
+  <!--cotizacion-dolar.com.ar
+120x125px classic CD--> <div id="cardumen" style="display:none; position:absolute; border: 1px solid
+rgb(90, 90, 90); background: rgb(176, 180, 160) none repeat scroll 0%
+50%; text-align: center; width:
+120px; height: 75px; line-height: 100%;" align="center">
+<a target="_blank" href="http://www.dolarhoy.com/" alt="DolarHoy" title="DolarHoy.com" >
+<img src="http://www.dolaronline.com/" border="0" alt="DolarHoy.com">
+</a> 
+</div> <!-- fin código -->
+  
   <div class="body">
     <h1><g:message code="proforma.edit" default="Edit Proforma" /></h1>
     <g:if test="${flash.message}">
@@ -144,6 +157,19 @@
           <g:checkBox name="donation" value="${proformaInstance.donation}"/>
           </td>
           </tr>
+          <g:if test="${grailsApplication.config.application.name != 'Innovative'}">
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="dollarValue"><g:message code="proforma.dollarValue" default="Dollar Value"/>:</label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'dollarValue', 'errors')}">
+          <g:textField name="dollarValue" value="${formatNumber(number:proformaInstance?.dollarValue, format:'0.00')}" />
+           <a onmouseover="ShowContent('cardumen'); return true;" onmouseout="HideContent('cardumen'); return true;" href="javascript:ShowContent('cardumen')">
+           <g:message code="proforma.dollar.cotiz" default="Show Dollar Value"/>
+           </a>          
+          </td>
+          </tr>          
+          </g:if>          
           <tr>
             <td valign="top" class="name">
               <label for="destinationAirport"><g:message code="proforma.destinationAirport" default="Port of Discharge"/>:</label>
