@@ -287,12 +287,17 @@ class InvoiceController extends BaseController {
   }
 
   def List findAllProformasWithNoInvoice() {
+	def invoices = Invoice.findAll()
+	
     List proformasWithNoInvoice = []
     proformasWithNoInvoice = Proforma.withCriteria {
       eq('status', 'Aprobada')
-      not {
-        inList('id', Invoice.findAll().collect {it.proforma.id})
-      }
+	  
+	  if(invoices.size() > 0) {
+	      not {
+	        inList('id', invoices.collect {it.proforma.id})
+	      }
+	  }
       or {
         patient {
           inList('country', session.countries)
