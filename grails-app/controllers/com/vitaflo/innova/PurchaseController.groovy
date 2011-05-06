@@ -109,8 +109,8 @@ class PurchaseController extends BaseController {
             redirect(action: "list")
         }
         else {
-			def invoices = getInvoicesForSelect()
-            return [purchaseInstance: purchaseInstance, invoices:invoices]
+			def purchaseDetailList = purchaseInstance.details
+            return [purchaseInstance: purchaseInstance, purchaseDetailList:purchaseDetailList]
         }
     }
 
