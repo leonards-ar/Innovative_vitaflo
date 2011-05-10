@@ -570,11 +570,19 @@ class ProformaController extends BaseController {
         
         proformaInstance.status = params.proformaStatus
 
-        proformaInstance.save()
 
-        def data = []
-        data = [status:params.proformaStatus,proformaId:params.id]
-        render data as JSON
+        if(!proformaInstance.hasErrors()&& proformaInstance.save(flush:true)) {
+			def data = []
+			data = [status:proformaInstance.status,proformaId:params.id]
+			render data as JSON
+
+		} else {
+			println("Falló al guardar");
+			proformaInstance.errors.each{ println it}
+			redirect(action: "list", params:params)
+
+		}
+
         //redirect(action: "list", params:params)
     }
     

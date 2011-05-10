@@ -52,7 +52,7 @@ class Proforma {
 	}
 	
 	Double getTotalDetails(){
-		return this.details.sum{it.total}
+		return (this.details)?this.details.sum{it.total}:0.0
 	}
 	
 	Double calculateDiscount(Double amount){
