@@ -114,7 +114,8 @@ class PurchaseController extends BaseController {
         }
     }
 
-    def update = { PurchaseInvoicesCommand invoicesCmd ->
+    def update = { UpdatePurchaseDetailsListCommand updateCommand ->
+		
         def purchaseInstance = Purchase.get(params.id)
 
         if (purchaseInstance) {
@@ -130,18 +131,36 @@ class PurchaseController extends BaseController {
             purchaseInstance.properties = params
 
             //We need to apply the delete manually as the update provided by the scaffolding didn't work out of the box with sets.
-            def invoicesToRemove = []
+			
+			List updatedDetailList = updateCommand.createPurchaseDetailsList()
 
-            purchaseInstance.invoices.each { invoice ->
-                def auxInvoiceId = invoicesCmd.invoicesCommand.find{(it.toLong()) == invoice.id}
-                if (!auxInvoiceId){
-                    invoicesToRemove.add(invoice)
+			updatedDetailList.each { updateDetail ->
+				if (updateDetail.id){
+					def auxPurchaseDetail = purchaseInstance.details.find{it.id == updateDetail.id}
+					auxPurchaseDetail.quantity = updateDetail.quantity
+					auxPurchaseDetail.price = updateDetail.price
+					auxPurchaseDetail.product = updateDetail.product
+				}
+            }
+			
+            List removeDetails = []
+            
+            purchaseInstance.details.each { purchaseDetail ->
+                def auxUpdatedDetail = updatedDetailList.find{it.id == purchaseDetail.id}
+                if (!auxUpdatedDetail){
+                    removeDetails.add(purchaseDetail)
                 }
             }
-
-            invoicesToRemove.each { invoice ->
-                purchaseInstance.removeFromInvoices(auxInvoice)
+			
+              removeDetails.each { detailToRemove ->
+                purchaseInstance.removeFromDetails(detailToRemove)
             }
+			  
+			updatedDetailList.each {updatedDetail ->
+				  if (updatedDetail.id == null){
+					  purchaseInstance.addToDetails(updatedDetail)
+				  }
+			}
             //End of the manual removal
             
             if (!purchaseInstance.hasErrors() && purchaseInstance.save(flush:true)) {
