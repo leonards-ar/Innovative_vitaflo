@@ -8,6 +8,20 @@
         <g:javascript library="prototype" />
         <g:javascript library="purchaseFunctions" />
         <script type="text/javascript" language="JavaScript">
+
+	        function submitForm(name)
+	        {
+	            document.purchaseForm.action = name;
+	            document.purchaseForm.submit();
+	        }
+	
+	        function submitDeleteForm(){
+	            if (confirm('${message(code: 'delete.confirm', 'default': 'Are you sure?')}')) {
+	             submitForm('delete');
+	            } else {
+	             return false;
+	            }
+	        }        
           function submitRemoveInvoice(index)
           {
             document.purchaseForm.action = 'removeInvoiceForUpdate';
@@ -122,8 +136,8 @@
                 </div>
                 <div id="detailListPanel"><g:render template="purchaseDetailList" model="[purchaseDetailList:purchaseDetailList]"/></div>
                 <div class="buttons">
-                    <span class="button"><g:actionSubmit class="save" action="update" value="${message(code: 'update', 'default': 'Update')}" /></span>
-                    <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'delete', 'default': 'Delete')}" onclick="return confirm('${message(code: 'delete.confirm', 'default': 'Are you sure?')}');" /></span>
+                    <span class="button"><g:submitButton class="save" name="update" value="${message(code: 'update', 'default': 'Update')}" onclick="return submitForm('update')"/></span>
+                    <span class="button"><g:submitButton class="delete" name="delete" value="${message(code: 'delete', 'default': 'Delete')}" onclick="return submitDeleteForm()" /></span>
                 </div>
             </g:form>
         </div>
