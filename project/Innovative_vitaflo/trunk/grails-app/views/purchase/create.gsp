@@ -97,16 +97,6 @@
 
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="amount"><g:message code="purchase.amount" default="Amount" />:</label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: purchaseInstance, field: 'amount', 'errors')}">
-                                    <g:textField name="amount" value="${fieldValue(bean: purchaseInstance, field: 'amount')}" />
-
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
                                     <label for="status"><g:message code="purchase.status" default="Status" />:</label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: purchaseInstance, field: 'status', 'errors')}">
@@ -117,7 +107,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="detailListPanel"><g:render template="purchaseDetailList" model="[purchaseDetailList:purchaseDetailList]"/></div>
+                <div id="detailListPanel"><g:render template="purchaseDetailList" model="[purchaseDetailList:purchaseDetailList, amount: purchaseInstance?.amount]"/></div>
                 <div class="buttons">
                     <span class="button"><g:submitButton name="create" class="save" value="${message(code: 'create', 'default': 'Create')}" /></span>
                 </div>

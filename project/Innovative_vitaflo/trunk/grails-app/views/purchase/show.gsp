@@ -98,6 +98,10 @@
 					<th><g:message code="proformaDetail.quantity" default="Quantity" /></th>
 
 					<th><g:message code="product.price" default="Price" /></th>
+					
+          <th><g:message code="proformaDetail.lot" default="Batch Number" /></th>
+      
+          <th><g:message code="purchase.expiredDate" default="Expired Date" /></th>                
 
 					<th><g:message code="proformaDetail.total" default="Total" /></th>
 
@@ -111,6 +115,10 @@
 		                <td>${fieldValue(bean:purchaseDetail, field: "quantity")}</td>
 		
 		                <td class="currencyValue"><g:formatNumber number="${purchaseDetail?.price}" format="0.00"/></td>
+		                
+		                <td>${fieldValue(bean:purchaseDetail, field:"lot")}</td>
+		                
+		                <td>${fieldValue(bean:purchaseDetail, field:"expiredDate") }</td>
 		
 		                <td class="currencyValue"><g:formatNumber number="${purchaseDetail?.total}" format="0.00"/></td>
 					</tr>
