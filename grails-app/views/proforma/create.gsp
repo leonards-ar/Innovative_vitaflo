@@ -173,7 +173,15 @@ rgb(90, 90, 90); background: rgb(176, 180, 160) none repeat scroll 0%
             <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'deliveryDate', 'errors')}">
           <g:datePicker default="none" noSelection="${['':message(code:'noselect.dash')]}" name="deliveryDate" value="${proformaInstance?.deliveryDate}" precision="day" years="${2007..2015}" />
           </td>
-          </tr>          
+          </tr>
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="paymentConditions"><g:message code="proforma.paymentcondition" default="Payment Conditions" />:</label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'paymentConditions', 'errors')}">
+            <g:textField name="paymentConditions" value="${proformaInstance?.paymentConditions}" />
+          </td>
+          </tr>                    
           </tbody>
         </table>
       </div>
