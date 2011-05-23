@@ -13,6 +13,7 @@ class Proforma {
 	Patient patient
 	Client client
 	String destinationAirport
+	Integer paymentConditions = 20
 	Double dollarValue=0.0
 	
 	static final def STATUS_LIST = ['Creada','Aprobada','Rechazada','Anulada']
@@ -27,6 +28,7 @@ class Proforma {
 		destinationAirport(nullable:true)
 		deliveryDate(nullable:true, blank:true)	
 		dollarValue(nullable:true, blank:true)
+		paymentConditions(nullable:false, blank:false, default:20)
 	}
 	
 	static mapping = {

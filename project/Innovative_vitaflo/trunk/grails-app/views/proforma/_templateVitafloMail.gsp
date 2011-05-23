@@ -155,7 +155,7 @@
 	   de <g:formatNumber number="${proformaInstance?.dollarValue}" format="0.00" />.
 	   <br/><br/>
 	   <b>Importe en pesos:</b> <g:numToWords number="${formatNumber(number:totalAmount*proformaInstance?.dollarValue, format:'0.00')}" lang="es"/><br/>
-	   <b>Condiciones de pago:</b> 100% pago a 20 d&iacute;as.<br/><br/>
+	   <b>Condiciones de pago:</b> 100% pago a ${proformaInstance?.paymentConditions} d&iacute;as.<br/><br/>
 	    
 		Banco: Galicia Sucursal.<br/>
 		N&deg; de cuenta: <b>4266-6 127-9</b><br />
