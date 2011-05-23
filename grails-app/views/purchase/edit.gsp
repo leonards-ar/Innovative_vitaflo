@@ -6,7 +6,9 @@
         <meta name="layout" content="main" />
         <title><g:message code="purchase.edit" default="Edit Purchase" /></title>
         <g:javascript library="prototype" />
+        <g:javascript library="scriptaculous" />
         <g:javascript library="purchaseFunctions" />
+        
         <script type="text/javascript" language="JavaScript">
 
 	        function submitForm(name)
@@ -113,16 +115,6 @@
                             
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="amount"><g:message code="purchase.amount" default="Amount" />:</label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: purchaseInstance, field: 'amount', 'errors')}">
-                                    <g:textField name="amount" value="${formatNumber(number:purchaseInstance?.amount , format:'0.00')}" />
-
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
                                     <label for="status"><g:message code="purchase.status" default="Status" />:</label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: purchaseInstance, field: 'status', 'errors')}">
@@ -134,7 +126,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="detailListPanel"><g:render template="purchaseDetailList" model="[purchaseDetailList:purchaseDetailList]"/></div>
+                <div id="detailListPanel"><g:render template="purchaseDetailList" model="[purchaseDetailList:purchaseDetailList, amount: purchaseInstance?.amount]"/></div>
                 <div class="buttons">
                     <span class="button"><g:submitButton class="save" name="update" value="${message(code: 'update', 'default': 'Update')}" onclick="return submitForm('update')"/></span>
                     <span class="button"><g:submitButton class="delete" name="delete" value="${message(code: 'delete', 'default': 'Delete')}" onclick="return submitDeleteForm()" /></span>

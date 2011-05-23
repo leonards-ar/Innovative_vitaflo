@@ -140,6 +140,8 @@ class PurchaseController extends BaseController {
 					auxPurchaseDetail.quantity = updateDetail.quantity
 					auxPurchaseDetail.price = updateDetail.price
 					auxPurchaseDetail.product = updateDetail.product
+					auxPurchaseDetail.lot = updateDetail.lot
+					auxPurchaseDetail.expiredDate = updateDetail.expiredDate
 				}
             }
 			
@@ -223,10 +225,12 @@ class PurchaseController extends BaseController {
 		if (!addCommand.hasErrors()){
 			def purchaseDetail = addCommand.createNewPurchaseDetail()
 			purchaseDetailList.add(purchaseDetail)
-			render (template:"purchaseDetailList", model:[purchaseDetailList:purchaseDetailList])
+			def amount = 0
+			purchaseDetailList.each{purchaseDetailItem -> amount += (purchaseDetailItem.price * purchaseDetailItem.quantity)}
+			render (template:"purchaseDetailList", model:[purchaseDetailList:purchaseDetailList, amount:amount])
 		}else{
 			addCommand.updateAddProductPrice()
-			render (template:"purchaseDetailList", model:[addCommand:addCommand, purchaseDetailList:purchaseDetailList, amount:'250'])
+			render (template:"purchaseDetailList", model:[addCommand:addCommand, purchaseDetailList:purchaseDetailList, amount:params.amount])
 		}
 	}
 
@@ -235,7 +239,9 @@ class PurchaseController extends BaseController {
 		List purchaseDetailList = updateCommand.createPurchaseDetailsList()
 		int i = params.id.toInteger()
 		purchaseDetailList.remove(i)
-		render (template:"purchaseDetailList", model:[purchaseDetailList:purchaseDetailList])
+		def amount = 0
+		purchaseDetailList.each{purchaseDetailItem -> amount += (purchaseDetailItem.price * purchaseDetailItem.quantity)}
+		render (template:"purchaseDetailList", model:[purchaseDetailList:purchaseDetailList, amount:amount])
 	}
 
     def addInvoiceForCreate = { PurchaseInvoicesCommand invoicesCmd ->
@@ -399,22 +405,22 @@ class PurchaseInvoicesCommand{
 class AddPurchaseDetailsListCommand {
 	Long addProductId
 	Integer addQuantity
-	Double addDailyDose
-	String addDoseUnit
 	Double addPrice
+	String addLot
+	Date addExpiredDate
 
 
 	static constraints = {
 		addProductId(nullable:false)
 		addQuantity(nullable:false, min:1)
-		addDailyDose(nullable:true, min:0.1d)
-		addDoseUnit(nullable:true, inList: com.vitaflo.innova.ProformaDetail.UNIT_LIST)
 		addPrice(nullable:false, min:0d)
+		addLot(nullable:true)
+		addExpiredDate(nullable:true)
 	}
 
-	PurchaseDetail createNewPurchaseDetail(){
+	ProductStock createNewPurchaseDetail(){
 		def auxProduct = Product.get(addProductId)
-		def purchaseDetail = new PurchaseDetail(product:auxProduct, quantity:addQuantity, dailyDose:addDailyDose, doseUnit:addDoseUnit, price:addPrice)
+		def purchaseDetail = new ProductStock(product:auxProduct, quantity:addQuantity, price:addPrice, lost:addLot, expiredDate: addExpiredDate)
 
 		return purchaseDetail
 	}
@@ -436,13 +442,15 @@ class UpdatePurchaseDetailsListCommand {
 	List quantities = []
 	List detailsIds = []
 	List prices = []
+	List lots = []
+	List expiredDates = []
 	
 
 	List createPurchaseDetailsList(){
 		List purchaseDetailList = []
 		productIds.eachWithIndex(){ productId, i->
 			def auxProduct = Product.get(productId)
-			def purchaseDetail = new PurchaseDetail(product:auxProduct, quantity:quantities[i], price:prices[i].replace(',','.').toDouble())
+			def purchaseDetail = new ProductStock(product:auxProduct, quantity:quantities[i], price:prices[i].replace(',','.').toDouble(), lot:lots[i], expiredDate: expiredDates[i])
 			if(detailsIds[i]!=''){
 				purchaseDetail.id = detailsIds[i].toLong()
 			}

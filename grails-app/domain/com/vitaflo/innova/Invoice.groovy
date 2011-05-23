@@ -10,8 +10,6 @@ class Invoice implements Comparable {
     String status = 'Pendiente'
     Double amount
 
-    Purchase purchase
-    
     static belongsTo = [proforma:Proforma]
 
     static final def STATUS_LIST = ['Pendiente','Pagada', 'Entregada']
