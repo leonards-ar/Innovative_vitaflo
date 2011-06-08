@@ -420,7 +420,7 @@ class AddPurchaseDetailsListCommand {
 
 	ProductStock createNewPurchaseDetail(){
 		def auxProduct = Product.get(addProductId)
-		def purchaseDetail = new ProductStock(product:auxProduct, quantity:addQuantity, price:addPrice, lost:addLot, expiredDate: addExpiredDate)
+		def purchaseDetail = new ProductStock(product:auxProduct, quantity:addQuantity, price:addPrice, lot:addLot, expiredDate: addExpiredDate)
 
 		return purchaseDetail
 	}
