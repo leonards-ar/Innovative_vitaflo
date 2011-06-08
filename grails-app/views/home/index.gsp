@@ -31,9 +31,9 @@
       <span class="menuButton">
         <g:link controller="purchase" action="list"><g:message code="innova.bar.purchase"/></g:link>
       </span>
-      <span class="menuButton">
+      <!--  span class="menuButton">
         <g:link controller="productStock" action="list"><g:message code="innova.bar.stock"/></g:link>
-      </span>      
+      </span-->      
       </g:ifAnyGranted>
       <g:ifAnyGranted role="ROLE_REPORT,ROLE_ACCOUNTANT">
         <span class="menuButton">
