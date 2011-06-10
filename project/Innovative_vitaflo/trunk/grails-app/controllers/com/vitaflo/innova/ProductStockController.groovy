@@ -24,7 +24,7 @@ class ProductStockController {
 			stock.add(item);
 		}
 		
-        [productStockInstanceList: stock, productStockInstanceTotal: Product.count()]
+        return [productStockInstanceList: stock, productStockInstanceTotal: Product.count()]
     }
 
     def create = {
