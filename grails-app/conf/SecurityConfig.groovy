@@ -46,7 +46,7 @@ security {
     /invoice/create=ROLE_ADMIN,ROLE_USER
     /invoice/edit=ROLE_ADMIN,ROLE_USER
     /purchase/**=ROLE_ADMIN,ROLE_USER
-  	/productstock/**=ROLE_ADMIN,ROLE_USER
+    /productstock/**=ROLE_ADMIN,ROLE_USER
     /report/**=ROLE_REPORT,ROLE_ACCOUNTANT
     /report/consolidatedreport=ROLE_REPORT,ROLE_ACCOUNTANT
     /**/create=ROLE_ADMIN
