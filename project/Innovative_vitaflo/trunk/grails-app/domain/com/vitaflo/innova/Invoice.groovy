@@ -9,8 +9,10 @@ class Invoice implements Comparable {
     String number
     String status = 'Pendiente'
     Double amount
-
-    static belongsTo = [proforma:Proforma]
+	Proforma proforma
+	
+	static hasMany = [soldProducts: ProductStock]
+    static belongsTo = ProductStock
 
     static final def STATUS_LIST = ['Pendiente','Pagada', 'Entregada']
 
@@ -24,7 +26,6 @@ class Invoice implements Comparable {
            }
         })
         proforma(nullable:false, unique:true)
-        purchase(nullable:true)
         deliveryDate(nullable:true, blank:true)
     }
 
@@ -39,10 +40,9 @@ class Invoice implements Comparable {
         return this.number
     }
 
-    //TODO: Resolve how to apply i18n without penalize performance.
-    String getViewPurchase(){
-        return "${this.number} - Proforma: ${this.proforma}"
-    }
+	def products() {
+		proforma.products()
+	}
 
     int compareTo(other) {
         if(other instanceof Invoice) {
