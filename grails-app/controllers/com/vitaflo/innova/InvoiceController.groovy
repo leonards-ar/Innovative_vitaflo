@@ -162,6 +162,9 @@ class InvoiceController extends BaseController {
     // end the workaround
 
     if (!invoiceInstance.hasErrors() && invoiceInstance.save()) {
+      //Update Stock
+		def products = invoiceInstance.products()
+		println "products sold: ${products}"
       if (invoiceInstance.proforma.patient) {
         patientProductStockService.updatePatientProductStock(invoiceInstance);
       }
@@ -320,5 +323,14 @@ class InvoiceController extends BaseController {
     }
 
     render formatNumber(number: amount, format: "#.##")
+  }
+  
+  private updateStock(Invoice invoiceInstance) {
+	  def products = invoiceInstance.products();
+	  products.each { item ->
+		  List stock = ProductStock.executeQuery("from ProductStock p where (p.expiredDate > ? or p.expiredDate is null and (p.buy-p.sold) > 0 and p.product = ? order by p.expiredDate", [Calendar.instance.getTime(), item.product])
+		  print "******** stock ${stock}"
+	  }
+		  
   }
 }
