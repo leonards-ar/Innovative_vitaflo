@@ -36,7 +36,7 @@ environments {
 	vitaflo {
 		dataSource {
 			dbCreate = "update"
-                        url = "jdbc:mysql://192.168.1.6/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
+                        url = "jdbc:mysql://localhost/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
 		}
 	}
 
