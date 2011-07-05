@@ -61,9 +61,6 @@ class Proforma {
 		return amount * (this.discount/100d)
 	}
 	
-	def products(){
-		details.collect{[product:it.product,quantity:it.quantity]}
-	}
 	
 	String toString(){
 		return "${this.id} - ${this.client} - ${(this.patient)?this.patient:'---'}"

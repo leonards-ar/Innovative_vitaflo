@@ -31,7 +31,7 @@
       <span class="menuButton">
         <g:link controller="purchase" action="list"><g:message code="innova.bar.purchase"/></g:link>
       </span>
-      <span class="menuButton">
+      <  span class="menuButton">
         <g:link controller="productStock" action="list"><g:message code="innova.bar.stock"/></g:link>
       </span>      
       </g:ifAnyGranted>
