@@ -127,7 +127,7 @@
         <g:if test="${proformaInstance?.client?.ivaResponsibleType == 'inscripto'}">
           <tr class="${((detailsSize+3) % 2) == 0?'odd':'even'}">
             <td colspan="3"><g:message code="proforma.iva" default="IVA" args="${ [21] }"/></td>
-            <td style="text-align: right"><g:formatNumber number="${(totalAmount*0.21)}" format="U\$S 0.00" /></td>
+            <td style="text-align: right"><g:formatNumber number="${(totalAmount*(0.21/1.21))}" format="U\$S 0.00" /></td>
           </tr>
        </g:if>
         <tr class="${((detailsSize+4) % 2) == 0?'odd':'even'}">
