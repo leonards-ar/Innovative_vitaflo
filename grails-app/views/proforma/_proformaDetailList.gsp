@@ -47,7 +47,7 @@
     <g:each in="${proformaDetailList}" status="i" var="proformaDetail">
       <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
       <td valign="top" class="value">
-      <g:hiddenField name="detailsIds[${i}]" value="${fieldValue(bean: proformaDetail, field: 'id')}"/>
+      <g:hiddenField name="detailsIds[${i}]" value="${formatNumber(number:proformaDetail?.id, format:'###.##')}"/>
       <g:select name="productIds[${i}]" from="${com.vitaflo.innova.Product.list([sort:'name', order:'asc'])}" optionKey="id"
                 value="${proformaDetail.product?.id}"
                 noSelection="['':'Seleccione...']"
