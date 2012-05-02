@@ -129,9 +129,8 @@ rgb(90, 90, 90); background: rgb(176, 180, 160) none repeat scroll 0%
           </td>
           </tr>
 
-          <g:if test="${grailsApplication.config.application.name == 'Innovative'}">
-            <tr class="prop">
-              <td valign="top" class="name">
+          <tr class="prop">
+	          <td valign="top" class="name">
                 <label for="courier"><g:message code="proforma.courier" default="Courier" />:</label>
               </td>
               <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'courier', 'errors')}">
@@ -139,8 +138,7 @@ rgb(90, 90, 90); background: rgb(176, 180, 160) none repeat scroll 0%
 
             </td>
             </tr>
-          </g:if>
-          <tr class="prop">
+         <tr class="prop">
             <td valign="top" class="name">
               <label for="discount"><g:message code="proforma.discount" default="Discount" />:</label>
             </td>
