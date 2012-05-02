@@ -64,7 +64,7 @@
 
           </tr>
 
-          <g:if test="${grailsApplication.config.application.name == 'Innovative'}">
+          <g:if test="${proformaInstance?.courier > 0}">
             <tr class="prop">
               <td valign="top" class="name"><g:message code="proforma.courier" default="Courier" />:</td>
 
@@ -131,7 +131,7 @@
               <td colspan="4"><g:message code="proforma.totalproducts" default="Total Products" /></td>
             <td class="currencyValue"><g:formatNumber number="${totalDetails}" format="0.00"/></td>
             </tr>
-            <g:if test="${grailsApplication.config.application.name == 'Innovative'}">
+            <g:if test="${proformaInstance?.courier > 0}">
               <tr class="${((detailsSize+1) % 2) == 0?'odd':'even'}">
                 <td colspan="4"><g:message code="proforma.courier" default="Courier" /></td>
               <td class="currencyValue"><g:formatNumber number="${proformaInstance?.courier}" format="0.00"/></td>
