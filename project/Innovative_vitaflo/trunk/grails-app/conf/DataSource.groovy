@@ -7,7 +7,7 @@ dataSource {
 hibernate {
     cache.use_second_level_cache=true
     cache.use_query_cache=true
-    cache.provider_class='com.opensymphony.oscache.hibernate.OSCacheProvider'
+    cache.provider_class='net.sf.ehcache.hibernate.EhCacheProvider'
 }
 // environment specific settings
 environments {
@@ -39,7 +39,12 @@ environments {
                         url = "jdbc:mysql://localhost/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
 		}
 	}
-
+	medgen {
+		dataSource {
+			dbCreate = "update"
+						url = "jdbc:mysql://192.168.1.6/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
+		}
+	}
 	innova {
 		dataSource {
 			dbCreate = "update"
