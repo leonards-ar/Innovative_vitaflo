@@ -40,6 +40,14 @@ environments {
 		}
 	}
 
+	medgen {
+		dataSource {
+			dbCreate = "update"
+						url = "jdbc:mysql://labs.mindpool.com.ar/medgen_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
+		}
+	}
+
+
 	innova {
 		dataSource {
 			dbCreate = "update"
