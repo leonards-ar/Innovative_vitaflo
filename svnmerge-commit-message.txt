@@ -1,8 +1,0 @@
-Merged revisions 2192 via svnmerge from 
-http://labs.mindpool.com.ar/svn/src_repo/project/Innovative_vitaflo/trunk
-
-........
-  r2192 | federico | 2012-05-02 01:50:15 -0300 (Wed, 02 May 2012) | 1 line
-  
-  Add Shipping Costs to the Proforma
-........
