@@ -42,7 +42,10 @@
         url="[controller:'proforma',action:'list']">
         <table>
           <tr>
-            <td></td>
+            <td>
+              <div><g:message code="proforma.id"/></div>
+              <g:textField name="codeNumber" value="${codeNumber}" />
+            </td>
             <td>
               <div><g:message code="proforma.client"/> </div>
 
@@ -103,7 +106,7 @@
         <g:each in="${proformaInstanceList}" status="i" var="proformaInstance">
           <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
             <td>${i + params.offset.toInteger() + 1}</td>
-            <td><g:link action="show" id="${proformaInstance.id}">${fieldValue(bean: proformaInstance, field: "id")}</g:link></td>
+            <td><g:link action="show" id="${proformaInstance.id}"><g:formatNumber number="${proformaInstance?.id}" format="000" /></g:link></td>
 
           <td>${proformaInstance?.client}</td>
 
