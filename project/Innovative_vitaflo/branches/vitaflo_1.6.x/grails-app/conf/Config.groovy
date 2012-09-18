@@ -54,6 +54,16 @@ environments {
         application.template = "templateVitaflo"
         application.favicon = "vitaflo-favicon.ico"
     }
+	medgen {
+		grails.serverURL = "http://www.changeme.com"
+		grails.app.context = "/medgen"
+		application.emailFromAddress = "Medgen-Sistema@medgen.com.ar"
+		application.name = "Medgen"
+		application.cssFile = "vitaflo.css"
+		application.logoFile = "medgen-logo.jpg"
+		application.template = "templateVitaflo"
+		application.favicon = "medgen-favicon.ico"
+	}
     innova {
         grails.serverURL = "http://www.changeme.com"
         grails.app.context = "/innova"

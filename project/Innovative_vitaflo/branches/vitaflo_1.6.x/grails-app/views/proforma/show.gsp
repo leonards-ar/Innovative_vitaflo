@@ -32,7 +32,7 @@
             <tr class="prop">
               <td valign="top" class="name"><g:message code="proforma.id" default="Id" />:</td>
 
-          <td valign="top" class="value">${fieldValue(bean: proformaInstance, field: "id")}</td>
+          <td valign="top" class="value"><g:formatNumber number="${proformaInstance?.id}" format="000" /></td>
 
           </tr>
 
