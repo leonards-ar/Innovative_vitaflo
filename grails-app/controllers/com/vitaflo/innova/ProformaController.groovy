@@ -14,7 +14,9 @@ class ProformaController extends BaseController {
 
         def filterCountry = params.selectedCountry?Country.findByCode(params.selectedCountry):null;
         def query = {
-
+            if(params.codeNumber){
+                eq('id', Long.parseLong(params.codeNumber))
+            }
             if(params.status) {
                 eq('status', params.status)
             }
@@ -96,7 +98,10 @@ class ProformaController extends BaseController {
             maxResults(params.max?.toInteger())
             firstResult(params.offset?.toInteger())
             order(params.sort, params.order)
-            
+
+          if(params.codeNumber){
+                eq('id', Long.parseLong(params.codeNumber))
+          }
           if(params.status) {
               eq('status', params.status)
           }
@@ -183,7 +188,7 @@ class ProformaController extends BaseController {
         Map labels = ["id": "${idLabel}", "client": "${clientLabel}", "patient": "${patientLabel}", "status": "${statusLabel}", "createdAT": "${dateLabel}"]
         exportService.export(params.format, response.outputStream, exportProformas, fields, labels, [:], [:])
       }
-      [proformaInstanceList: proformas, proformaInstanceTotal: total, client: params.client, patient: params.patient, status: params.status, selectedCountry: params.selectedCountry]
+      [proformaInstanceList: proformas, proformaInstanceTotal: total, codeNumber:params.codeNumber, client: params.client, patient: params.patient, status: params.status, selectedCountry: params.selectedCountry]
   }
 
     private getPatientsForSelectList() {

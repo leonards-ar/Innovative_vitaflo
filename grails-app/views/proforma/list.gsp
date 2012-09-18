@@ -42,7 +42,10 @@
         url="[controller:'proforma',action:'list']">
         <table>
           <tr>
-            <td></td>
+            <td>
+              <div><g:message code="proforma.id"/></div>
+              <g:textField name="codeNumber" value="${codeNumber}" />
+            </td>
             <td>
               <div><g:message code="proforma.client"/> </div>
 
