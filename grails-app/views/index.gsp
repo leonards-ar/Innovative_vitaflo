@@ -8,7 +8,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Innova ERP</title>
+    <title>Vitaflo ERP</title>
   </head>
   <body>
     ${response.sendRedirect("home/index")}
