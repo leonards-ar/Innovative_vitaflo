@@ -207,7 +207,8 @@ class PatientProductStockService {
                 distinct("email")
             }
             isNotNull("email")
-
+			like("email", '%@%')
+			
             if(patientProductStock?.patient?.country != null) {
                 countries {
                     eq("id", patientProductStock?.patient?.country?.id)
