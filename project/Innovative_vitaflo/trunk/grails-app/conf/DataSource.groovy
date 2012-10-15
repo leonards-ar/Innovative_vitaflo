@@ -15,7 +15,7 @@ environments {
 		dataSource {
                     // dbCreate = "create-drop" // one of 'create', 'create-drop','update'
                     dbCreate = 'update'
-                    url = "jdbc:mysql://192.168.1.6/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
+                    url = "jdbc:mysql://spmdb/vitaflo_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
 		}
                 hibernate {
                     show_sql=true
