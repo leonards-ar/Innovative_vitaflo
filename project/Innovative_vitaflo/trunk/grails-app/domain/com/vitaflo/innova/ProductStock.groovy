@@ -11,8 +11,6 @@ class ProductStock {
 	Date expiredDate
 	String lot
 	
-	static hasMany =  [invoices:Invoice]
-	
 	static belongsTo = [purchase: Purchase]
 
 	static final def UNIT_LIST = ['sobres', 'sachets']
