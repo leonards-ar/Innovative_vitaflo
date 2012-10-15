@@ -12,7 +12,6 @@ class Patient {
     Date birth
     Double dose
     String doseUnit
-    String pathology
     String deliveryAddress
     String physician
     String clinicalStatus
@@ -27,9 +26,9 @@ class Patient {
     Float orderedQuantity
     String reimbursement
 
-    static hasMany = [clinicalHistories: ClinicalHistory]
+    static hasMany = [clinicalHistories: ClinicalHistory, pathologies: Pathology]
   
-    static transients = ['startNTBC', 'product', 'lastOrderedDate', 'orderedQuantity', 'reimbursement']
+    static transients = ['startNTBC', 'product', 'lastOrderedDate', 'orderedQuantity', 'reimbursement', 'pathology']
 
     static final def UNIT_LIST = ['sobres', 'sachets']
 
@@ -66,4 +65,8 @@ class Patient {
         return "${this.lastName}, ${this.firstName}"
    }
 
+   Pathology getPathology() {
+	   def it = this.pathologies?.iterator();
+	   return it?.hasNext() ? it?.next() : null
+   }
 }

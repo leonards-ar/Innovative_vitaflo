@@ -26,7 +26,7 @@ class User implements Serializable {
         countries joinTable:[name:'user_to_countries']
     }
 
-    String toString(){
+    String toString() {
         return username
     }
 }
