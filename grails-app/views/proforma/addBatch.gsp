@@ -84,7 +84,7 @@
                             <td>${fieldValue(bean:proformaDetail, field: "quantity")}</td>
 
                             <td valign="top" class="value">
-                              <g:textField name="batchNumbers[${i}]" value="${addBatchCmd.batchNumbers[i]}"/>
+                              <g:select name="batchNumbers[${i}]" value="${addBatchCmd?.batchNumbers[i]}" from="${batchList[i]}" noSelection="['':'']" />
                             </td>
                         </tr>
                     </g:each>

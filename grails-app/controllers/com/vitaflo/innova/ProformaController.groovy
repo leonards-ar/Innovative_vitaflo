@@ -178,12 +178,16 @@ class ProformaController extends BaseController {
         }
 
         def batchNumbers = []
+        def batchList = []
+        String query = "select p.lot from ProductStock p where "
         proformaInstance.details.eachWithIndex{obj, i->
             batchNumbers[i] = obj.lot
+            List list = ProductStock.executeQuery("select distinct(p.lot) from ProductStock p where (p.expiredDate > ? or p.expiredDate is null)and p.lot is not null and p.product = ?", [Calendar.instance.getTime(), obj.product])
+            batchList[i] = list
         }
 
         AddBatchNumberCommand addBatchCmd = new AddBatchNumberCommand(invoiceId: params.invoiceId, batchNumbers:batchNumbers)
-        render(view:'addBatch', model:[proformaInstance: proformaInstance, addBatchCmd:addBatchCmd])
+        render(view:'addBatch', model:[proformaInstance: proformaInstance, addBatchCmd:addBatchCmd, batchList: batchList])
     }
 
     def updateBatch = {AddBatchNumberCommand addBatchCmd ->
@@ -203,17 +207,28 @@ class ProformaController extends BaseController {
             redirect(action:"addBatch",  id: proformaInstance.id)
         }
 
-        //Updating the batch numbers in the proforma
-        proformaInstance.details.eachWithIndex{obj, i->
-            obj.lot = addBatchCmd.batchNumbers[i]
-        }
-
-        //Persisting the proforma
-        if (!proformaInstance.hasErrors() && proformaInstance.save()) {
-            flash.message = "batch.updated"
-            flash.args = [params.id]
-            flash.defaultMessage = "Batch number for proforma ${params.id} updated"
-            redirect(controller:"invoice", action: "show", id: addBatchCmd.invoiceId)
+        ProductStock.withTransaction{ status ->
+            //Updating the batch numbers in the proforma
+            def productStockList = []
+            proformaInstance.details.eachWithIndex{obj, i->
+                obj.lot = addBatchCmd.batchNumbers[i]
+                
+                def productStock = ProductStock.findByLot(addBatchCmd.batchNumbers[i]);
+                productStock.sold += obj.quantity
+                
+                productStockList << productStock
+                
+            }
+    
+            //Persisting the proforma
+            if (!proformaInstance.hasErrors() && proformaInstance.save()) {
+                flash.message = "batch.updated"
+                flash.args = [params.id]
+                flash.defaultMessage = "Batch number for proforma ${params.id} updated"
+                redirect(controller:"invoice", action: "show", id: addBatchCmd.invoiceId)
+            } else {
+                status.setRollbackOnly()
+            }
         }
         
         render(view:'addBatch', model:[proformaInstance: proformaInstance, addBatchCmd:addBatchCmd])
