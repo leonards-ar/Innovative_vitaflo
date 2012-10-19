@@ -34,6 +34,9 @@ security {
     /clinicalhistory/**=ROLE_ADMIN,ROLE_USER
     /drug/**=ROLE_ADMIN,ROLE_USER
     /login/**=IS_AUTHENTICATED_ANONYMOUSLY
+    /pathology/**=ROLE_USER, ROLE_ADMIN
+    /pathology/create=ROLE_ADMIN
+    /pathology/edit=ROLE_ADMIN
     /patient/**=ROLE_ADMIN,ROLE_USER
     /patient/create=ROLE_ADMIN,ROLE_USER
     /patient/edit=ROLE_ADMIN,ROLE_USER

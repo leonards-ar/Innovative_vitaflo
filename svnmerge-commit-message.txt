@@ -1,8 +1,8 @@
-Merged revisions 2192 via svnmerge from 
-http://labs.mindpool.com.ar/svn/src_repo/project/Innovative_vitaflo/trunk
+Merged revisions 2094 via svnmerge from 
+https://mindpool.sourcerepo.com/mindpool/repo/project/Innovative_innova/trunk
 
 ........
-  r2192 | federico | 2012-05-02 01:50:15 -0300 (Wed, 02 May 2012) | 1 line
+  r2094 | federico | 2011-07-08 01:00:47 -0300 (vie, 08 jul 2011) | 1 line
   
-  Add Shipping Costs to the Proforma
+  Added pathology ABM to innova
 ........
