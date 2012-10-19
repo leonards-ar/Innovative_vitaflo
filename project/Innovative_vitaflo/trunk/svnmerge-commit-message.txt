@@ -1,8 +1,0 @@
-Merged revisions 2094 via svnmerge from 
-https://mindpool.sourcerepo.com/mindpool/repo/project/Innovative_innova/trunk
-
-........
-  r2094 | federico | 2011-07-08 01:00:47 -0300 (vie, 08 jul 2011) | 1 line
-  
-  Added pathology ABM to innova
-........
