@@ -17,5 +17,11 @@ class Pathology {
 		
     }
 	
+	String toString() {
+		return "${this.name}"
+	}
 	
+	def toStringWithDose() {
+		return "${this.name} - (${this.minDose} - ${this.maxDose})"
+	}
 }
