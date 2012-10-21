@@ -206,6 +206,7 @@ class PatientProductStockService {
             projections {
                 distinct("email")
             }
+			eq("enabled", true)
             isNotNull("email")
 			like("email", '%@%')
 			
