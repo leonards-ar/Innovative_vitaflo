@@ -37,7 +37,6 @@ class Patient {
         doseUnit(nullable:true, inList:UNIT_LIST)
 		weight(nullable:true, min:1.00d, max:1000.00d)
         birth(nullable:true)
-        pathology(nullable:true)
         deliveryAddress(nullable:true)
         physician(nullable:true)
         clinicalStatus(nullable:true)
@@ -63,9 +62,10 @@ class Patient {
 	}
 	
 	//Returns true if the dosePerWeight is between the minDose and the MaxDose of the Pathology
+	//Returns true if the dosePerWeight is between the minDose and the MaxDose of the Pathology
 	def isRegularDose() {
-		if(!pathology || !pathology?.minDose || !pathology.maxDose) return true
-		return (getDosePerWeight() >= pathology?.minDose && getDosePerWeight() <= pathology?.maxDose)
+		if(!this.getPathology()) return true
+		return (getDosePerWeight() >= getPathology()?.minDose && getDosePerWeight() <= getPathology()?.maxDose)
 	}
 
    String toString(){
