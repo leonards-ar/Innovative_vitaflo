@@ -101,7 +101,6 @@
                       <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'delete', 'default': 'Delete')}" onclick="return confirm('${message(code: 'delete.confirm', 'default': 'Are you sure?')}');" /></span>
                     </g:if>
                     <span class="menuButton"><g:link class="create" controller="proforma" action="addBatch" id="${invoiceInstance?.proforma?.id}" params="[invoiceId:invoiceInstance.id]"><g:message code="proforma.addBatch" default="Add Batch"/></g:link></span>
-                    <span class="button"><g:link class="printLink" action="printRemito"><g:message code="proforma.print" default="Print Remito"/></g:link></span>
                 </div>
             </g:form>
         </div>
