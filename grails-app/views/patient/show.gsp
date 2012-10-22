@@ -155,7 +155,7 @@
 					code="patient.pathology" default="Pathology" />:</td>
 
 				<td valign="top" class="value">
-				${patientInstance?.pathology.toStringWithDose()}
+				${patientInstance?.pathology?.toStringWithDose()}
 				</td>
 
 			</tr>
