@@ -1,4 +1,3 @@
-
 <%@ page import="com.vitaflo.innova.Patient" %>
 <html>
   <head>
@@ -19,6 +18,22 @@
     function fillInitials() {
       $('initials').value = $('firstName').value.substring(0,1) + $('lastName').value.substring(0,1);
     }
+    
+	function handleAdverseEvent() {
+		if($("adverseEventReported").checked == true) {
+			$("adverseEventDIV").show(); 
+		} else {
+			$("adverseEventDIV").hide(); 
+		}
+	}
+	
+	function handleSimilarProblemsInFamily() {
+		if($("similarProblemsInFamily").checked == true) {
+			$("similarProblemsInFamilyDIV").show(); 
+		} else {
+			$("similarProblemsInFamilyDIV").hide(); 
+		}
+	}    
   </g:javascript>
 </head>
 <body>
@@ -49,9 +64,8 @@
                 <label for="firstName"><g:message code="patient.firstName" default="First Name" />:</label>
               </td>
               <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'firstName', 'errors')}">
-          <g:textField name="firstName" value="${fieldValue(bean: patientInstance, field: 'firstName')}" onChange="fillInitials" />
-
-          </td>
+          		<g:textField name="firstName" size="45" maxlength="45" value="${fieldValue(bean: patientInstance, field: 'firstName')}" onChange="fillInitials()"/>
+          	</td>
           </tr>
 
           <tr class="prop">
@@ -59,7 +73,7 @@
               <label for="lastName"><g:message code="patient.lastName" default="Last Name" />:</label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'lastName', 'errors')}">
-          <g:textField name="lastName" value="${fieldValue(bean: patientInstance, field: 'lastName')}" onChange="fillInitials"/>
+          <g:textField name="lastName" size="45" maxlength="45" value="${fieldValue(bean: patientInstance, field: 'lastName')}" onChange="fillInitials()" />
 
           </td>
           </tr>
@@ -69,7 +83,7 @@
               <label for="initials"><g:message code="patient.initials" default="Initials" />:</label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'initials', 'errors')}">
-          <g:textField name="initials" value="${fieldValue(bean: patientInstance, field: 'initials')}" />
+          <g:textField name="initials" size="5" maxlength="10" value="${fieldValue(bean: patientInstance, field: 'initials')}" />
 
           </td>
           </tr>
@@ -86,11 +100,57 @@
 
           <tr class="prop">
             <td valign="top" class="name">
+              <label for="weight"><g:message code="patient.weight" default="Weight" />:</label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'weight', 'errors')}">
+          <g:textField name="weight" value="${formatNumber(number:patientInstance?.weight,format:'0.00')}" />
+
+
+          </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
               <label for="phone"><g:message code="patient.phone" default="Phone" />:</label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'phone', 'errors')}">
-          <g:textField name="phone" value="${fieldValue(bean: patientInstance, field: 'phone')}" />
+          <g:textField name="phone" size="45" maxlength="45" value="${fieldValue(bean: patientInstance, field: 'phone')}" />
+          </td>
+          </tr>
 
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="cellphone"><g:message code="patient.cellphone" default="Cellphone" />:</label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'cellphone', 'errors')}">
+          <g:textField name="cellphone" size="45" maxlength="45" value="${fieldValue(bean: patientInstance, field: 'cellphone')}" />
+          </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="email"><g:message code="patient.email" default="Email" />:</label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'email', 'errors')}">
+          <g:textField name="email" size="45" maxlength="45" value="${fieldValue(bean: patientInstance, field: 'email')}" />
+          </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="motherCellphone"><g:message code="patient.motherCellphone" default="Mother's Cellphone" />:</label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'motherCellphone', 'errors')}">
+          <g:textField name="motherCellphone" size="45" maxlength="45" value="${fieldValue(bean: patientInstance, field: 'motherCellphone')}" />
+          </td>
+          </tr>
+
+          <tr class="prop">
+            <td valign="top" class="name">
+              <label for="fatherCellphone"><g:message code="patient.fatherCellphone" default="Father's Cellphone" />:</label>
+            </td>
+            <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'fatherCellphone', 'errors')}">
+          <g:textField name="fatherCellphone" size="45" maxlength="45" value="${fieldValue(bean: patientInstance, field: 'fatherCellphone')}" />
           </td>
           </tr>
 
@@ -99,7 +159,7 @@
               <label for="contactName"><g:message code="patient.contactName" default="Contact Name" />:</label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'contactName', 'errors')}">
-          <g:textField name="contactName" value="${fieldValue(bean: patientInstance, field: 'contactName')}" />
+          <g:textField name="contactName" size="45" maxlength="45" value="${patientInstance?.contactName}" />
 
           </td>
           </tr>
@@ -109,10 +169,11 @@
               <label for="deliveryAddress"><g:message code="patient.deliveryAddress" default="Delivery Address" />:</label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'deliveryAddress', 'errors')}">
-          <g:textArea name="deliveryAddress" value="${patientInstance?.deliveryAddress}" style="width:200;height:70" />
+          <g:textArea name="deliveryAddress" value="${patientInstance?.deliveryAddress}" maxlength="255" style="width:280;height:70"/>
 
           </td>
           </tr>
+
 
           <tr class="prop">
             <td valign="top" class="name">
@@ -140,8 +201,8 @@
             </td>
             <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'dose', 'errors')}">
               <g:textField name="dose" value="${formatNumber(number:patientInstance?.dose, format:'#.##')}" />
-              <g:select name="doseUnit" from="${com.vitaflo.innova.Patient.UNIT_LIST}" value="${fieldValue(bean: patientInstance, field: 'doseUnit')}" noSelection="['':'']"/>
-          </td>
+              <g:select name="doseUnit" from="${com.vitaflo.innova.Patient.UNIT_LIST}"  value="${fieldValue(bean: patientInstance, field: 'doseUnit')}" noSelection="['':'']"/>
+            </td>
           </tr>
 
           <tr class="prop">
@@ -158,7 +219,7 @@
               <label for="physician"><g:message code="patient.physician" default="Physician" />:</label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'physician', 'errors')}">
-          <g:textField name="physician" value="${fieldValue(bean: patientInstance, field: 'physician')}" />
+          <g:textField name="physician" maxlength="255" size="45" value="${fieldValue(bean: patientInstance, field: 'physician')}" />
 
           </td>
           </tr>
@@ -168,21 +229,44 @@
               <label for="clinicalStatus"><g:message code="patient.clinicalStatus" default="Clinical Status" />:</label>
             </td>
             <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'clinicalStatus', 'errors')}">
-          <g:textField name="clinicalStatus" value="${fieldValue(bean: patientInstance, field: 'clinicalStatus')}" />
+          <g:textArea name="clinicalStatus" maxlength="255" value="${fieldValue(bean: patientInstance, field: 'clinicalStatus')}" style="width:280;height:70"/>
 
           </td>
           </tr>
 
           <tr class="prop">
             <td valign="top" class="name">
-              <label for="adverseEvent"><g:message code="patient.adverseEvent" default="Adverse Event" />:</label>
+              <label for="observations"><g:message code="patient.observations" default="Observations" />:</label>
             </td>
-            <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'adverseEvent', 'errors')}">
-          <g:textField name="adverseEvent" value="${fieldValue(bean: patientInstance, field: 'adverseEvent')}" />
+            <td valign="top" class="value ${hasErrors(bean: patientInstance, field: 'observations', 'errors')}">
+          <g:textArea name="observations" maxlength="255" value="${fieldValue(bean: patientInstance, field: 'observations')}" style="width:280;height:70"/>
 
           </td>
           </tr>
+          
+          <tr class="prop">
+              <td valign="top" class="name">
+                  <label for="adverseEventReported"><g:message code="patient.adverseEvent" default="Reported Adverse Event" />:</label>
+              </td>
+              <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'adverseEventReported', 'errors')}">
+                  <g:checkBox id="adverseEventReported" name="adverseEventReported" value="${patientInstance?.adverseEventReported}" onChange="handleAdverseEvent()"/>
+                  <div id="adverseEventDIV" style="${patientInstance?.adverseEventReported ? '' : 'display:none'}">
+                  <g:textArea name="adverseEvent" maxlength="255" value="${fieldValue(bean: patientInstance, field: 'adverseEvent')}" style="width:280;height:70"/>
+                  </div>
+              </td>
+          </tr>
 
+          <tr class="prop">
+              <td valign="top" class="name">
+                  <label for="similarProblemsInFamily"><g:message code="patient.similarProblemsInFamily" default="Similiar Problems in Family" />:</label>
+              </td>
+              <td valign="top" class="value ${hasErrors(bean: userInstance, field: 'similarProblemsInFamily', 'errors')}">
+                  <g:checkBox id="similarProblemsInFamily" name="similarProblemsInFamily" value="${patientInstance?.similarProblemsInFamily}" onChange="handleSimilarProblemsInFamily()"/>
+                  <div id="similarProblemsInFamilyDIV" style="${patientInstance?.similarProblemsInFamily ? '' : 'display:none'}">
+                  <g:textArea name="similarProblemsInFamilyDescription" maxlength="255" value="${fieldValue(bean: patientInstance, field: 'similarProblemsInFamilyDescription')}" style="width:280;height:70"/>
+                  </div>
+              </td>
+          </tr>
 
           </tbody>
         </table>
