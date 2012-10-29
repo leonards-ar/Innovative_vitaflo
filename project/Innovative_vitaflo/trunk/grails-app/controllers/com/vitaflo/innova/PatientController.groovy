@@ -125,6 +125,14 @@ class PatientController extends BaseController {
 			addPathologies(patientInstance)
 		}
 		
+		if(!patientInstance.isAdverseEventReported()) {
+			patientInstance.setAdverseEvent(null);
+		}
+
+		if(!patientInstance.isSimilarProblemsInFamily()) {
+			patientInstance.setSimilarProblemsInFamilyDescription(null);
+		}
+		
 		if (!patientInstance.hasErrors() && patientInstance.save()) {
 			flash.message = "patient.created"
 			flash.args = [patientInstance.id]
@@ -210,6 +218,14 @@ class PatientController extends BaseController {
 	
 			if(!patientInstance.hasErrors()) {
 				addPathologies(patientInstance)
+			}
+
+			if(!patientInstance.isAdverseEventReported()) {
+				patientInstance.setAdverseEvent(null);
+			}
+	
+			if(!patientInstance.isSimilarProblemsInFamily()) {
+				patientInstance.setSimilarProblemsInFamilyDescription(null);
 			}
 			
 			if (!patientInstance.hasErrors() && patientInstance.save()) {

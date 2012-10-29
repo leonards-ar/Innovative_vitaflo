@@ -61,16 +61,19 @@
 					default="Birth" />:</td>
 
 				<td valign="top" class="value"><g:formatDate
-					date="${patientInstance?.birth}" format="dd/MM/yyyy" /></td>
-
+					date="${patientInstance?.birth}" format="dd/MM/yyyy" />&nbsp;&nbsp;&nbsp;&nbsp;
+					<g:if test="${patientInstance?.birth}">
+					(<g:message code="patient.age" default="Birth" />:&nbsp;<g:message code="patient.age.format" args="${[patientInstance?.ageYears,patientInstance?.ageMonths ] }" />)			
+					</g:if>
+				</td>
 			</tr>
-
+			
 			<tr class="prop">
 				<td valign="top" class="name"><g:message code="patient.weight"
 					default="Weight" />:</td>
 
 				<td valign="top" class="value">
-				${fieldValue(bean: patientInstance, field: "weight")}
+				${formatNumber(number:patientInstance?.weight,format:'0.00')}
 				</td>
 
 			</tr>
@@ -81,6 +84,46 @@
 
 				<td valign="top" class="value">
 				${fieldValue(bean: patientInstance, field: "phone")}
+				</td>
+
+			</tr>
+
+			<tr class="prop">
+				<td valign="top" class="name"><g:message code="patient.cellphone"
+					default="Cellphone" />:</td>
+
+				<td valign="top" class="value">
+				${fieldValue(bean: patientInstance, field: "cellphone")}
+				</td>
+
+			</tr>
+
+			<tr class="prop">
+				<td valign="top" class="name"><g:message code="patient.email"
+					default="Email" />:</td>
+
+				<td valign="top" class="value">
+				${fieldValue(bean: patientInstance, field: "email")}
+				</td>
+
+			</tr>
+
+			<tr class="prop">
+				<td valign="top" class="name"><g:message code="patient.motherCellphone"
+					default="Mother's Cellphone" />:</td>
+
+				<td valign="top" class="value">
+				${fieldValue(bean: patientInstance, field: "motherCellphone")}
+				</td>
+
+			</tr>
+
+			<tr class="prop">
+				<td valign="top" class="name"><g:message code="patient.fatherCellphone"
+					default="Father's Cellphone" />:</td>
+
+				<td valign="top" class="value">
+				${fieldValue(bean: patientInstance, field: "fatherCellphone")}
 				</td>
 
 			</tr>
@@ -121,7 +164,7 @@
 
 				<td valign="top" class="value"><g:link controller="client"
 					action="show" id="${patientInstance?.client?.id}">
-					${patientInstance?.client?.encodeAsHTML()}
+					${patientInstance?.client}
 				</g:link></td>
 
 			</tr>
@@ -182,13 +225,39 @@
 
 			<tr class="prop">
 				<td valign="top" class="name"><g:message
-					code="patient.adverseEvent" default="Adverse Event" />:</td>
+					code="patient.observations" default="Observations" />:</td>
 
 				<td valign="top" class="value">
-				${fieldValue(bean: patientInstance, field: "adverseEvent")}
+				${fieldValue(bean: patientInstance, field: "observations")}
 				</td>
 
 			</tr>
+
+			<tr class="prop">
+				<td valign="top" class="name"><g:message
+					code="patient.adverseEvent" default="Reported Adverse Event" />:</td>
+
+				<td valign="top" class="value">
+				<g:if test="${patientInstance.isAdverseEventReported()}">
+				<img src="${createLinkTo(dir: 'images', file: 'warning.png')}" alt="${message(code: 'patient.adverseEvent', 'default': 'Reported Adverse Event')}" align="middle" />
+				${fieldValue(bean: patientInstance, field: "adverseEvent")}
+				</g:if>
+				</td>
+
+			</tr>
+			
+			<tr class="prop">
+				<td valign="top" class="name"><g:message
+					code="patient.similarProblemsInFamily" default="Similiar Problems in Family" />:</td>
+
+				<td valign="top" class="value">
+				<g:if test="${patientInstance.isSimilarProblemsInFamily()}">
+				${fieldValue(bean: patientInstance, field: "similarProblemsInFamilyDescription")}
+				</g:if>
+				</td>
+
+			</tr>
+						
 			<tr>
 				<td colspan="3">
 				<table>
