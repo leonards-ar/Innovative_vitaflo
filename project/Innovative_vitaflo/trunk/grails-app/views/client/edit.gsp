@@ -33,7 +33,7 @@
                   <label for="name"><g:message code="client.name" default="Name"/>:</label>
                 </td>
                 <td valign="top" class="value ${hasErrors(bean: clientInstance, field: 'name', 'errors')}">
-            <g:textField name="name" value="${clientInstance.name}"/>
+            <g:textField name="name" value="${clientInstance.name}" maxlength="100"/>
 
             </td>
             </tr>
@@ -43,7 +43,7 @@
                 <label for="address"><g:message code="client.address" default="Address"/>:</label>
               </td>
               <td valign="top" class="value ${hasErrors(bean: clientInstance, field: 'address', 'errors')}">
-            <g:textField name="address" value="${fieldValue(bean: clientInstance, field: 'address')}"/>
+            <g:textField name="address" value="${fieldValue(bean: clientInstance, field: 'address')}" maxlength="45"/>
 
             </td>
             </tr>
@@ -53,7 +53,7 @@
                 <label for="phone"><g:message code="client.phone" default="Phone"/>:</label>
               </td>
               <td valign="top" class="value ${hasErrors(bean: clientInstance, field: 'phone', 'errors')}">
-            <g:textField name="phone" value="${fieldValue(bean: clientInstance, field: 'phone')}"/>
+            <g:textField name="phone" value="${fieldValue(bean: clientInstance, field: 'phone')}" maxlength="45"/>
 
             </td>
             </tr>
@@ -63,7 +63,7 @@
                 <label for="email"><g:message code="client.email" default="Email"/>:</label>
               </td>
               <td valign="top" class="value ${hasErrors(bean: clientInstance, field: 'email', 'errors')}">
-            <g:textField name="email" value="${fieldValue(bean: clientInstance, field: 'email')}"/>
+            <g:textField name="email" value="${fieldValue(bean: clientInstance, field: 'email')}" maxlength="45"/>
 
             </td>
             </tr>
@@ -72,8 +72,8 @@
               <td valign="top" class="name">
                 <label for="contact"><g:message code="client.contact" default="Contact"/>:</label>
               </td>
-              <td valign="top" class="value ${hasErrors(bean: clientInstance, field: 'contact', 'errors')}">
-            <g:textField name="contact" value="${fieldValue(bean: clientInstance, field: 'contact')}"/>
+              <td valign="top" class="value ${hasErrors(bean: clientInstance, field: 'contact', 'errors')}" >
+            <g:textField name="contact" value="${fieldValue(bean: clientInstance, field: 'contact')}" maxlength="45"/>
 
             </td>
             </tr>
@@ -83,7 +83,7 @@
                 <label for="cuit"><g:message code="client.cuit" default="CUIT" />:</label>
               </td>
               <td valign="top" class="value ${hasErrors(bean: clientInstance, field: 'cuit', 'errors')}">
-            <g:textField name="cuit" value="${fieldValue(bean: clientInstance, field: 'cuit')}" />
+            <g:textField name="cuit" value="${fieldValue(bean: clientInstance, field: 'cuit')}" maxlength="255"/>
 
             </td>
             </tr>
