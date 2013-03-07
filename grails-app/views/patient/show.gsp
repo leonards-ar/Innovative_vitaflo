@@ -291,6 +291,35 @@
 				</table>
 				</td>
 			</tr>
+      <tr>
+        <td colspan="3">
+        <table>
+          <thead>
+            <tr>
+              <th><g:message code="innova.products" default="Otros Productos" /></th>
+              <th><g:message code="patient.lastOrderedDate"
+                default="Last Ordered Date" /></th>
+              <th><g:message code="patient.deadline" default="Deadline" /></th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <g:each in="${innovaProductList}" status="i" var="patientProductStock">
+
+              
+              <tr>
+                <td valign="top" class="value">
+                ${patientProductStock?.name?.encodeAsHTML()}
+                </td>
+                <td valign="top" class="value">${patientProductStock?.lastOrdered}</td>
+                <td valign="top" class="value">${patientProductStock?.deadline}</td>
+              </tr>
+            </g:each>
+          </tbody>
+        </table>
+        </td>
+      </tr>			
 		</tbody>
 	</table>
 	</div>
