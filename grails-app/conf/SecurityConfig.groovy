@@ -55,9 +55,11 @@ security {
     /**/create=ROLE_ADMIN
     /**/edit=ROLE_ADMIN
     /emails/**=ROLE_ADMIN, ROLE_USER
+    /remotepatient/**=IS_AUTHENTICATED_ANONYMOUSLY
     /index = IS_AUTHENTICATED_ANONYMOUSLY
     /error = IS_AUTHENTICATED_ANONYMOUSLY
     /**=IS_AUTHENTICATED_ANONYMOUSLY
+    
     """
 
   useSecurityEventListener = true
