@@ -1,5 +1,9 @@
 package com.vitaflo.innova
 
+import com.sun.org.omg.SendingContext.CodeBasePackage.URLSeqHelper;
+
+import grails.converters.JSON
+
 class PatientController extends BaseController {
 	def patientProductStockService
 	
@@ -183,7 +187,17 @@ class PatientController extends BaseController {
 				else productIndicator.add("green")
 			}
 			patientInstance.pathology
-			return [patientInstance: patientInstance, productStockList:patientProductStockList, productIndicator:productIndicator]
+            
+            def urls = grailsApplication.config.application.urls
+            
+            def productList = []
+            urls.each { urlstr ->
+                def url = new URL(urlstr + "remotePatient/getProducts?firstname=${patientInstance.firstName}&lastname=${patientInstance.lastName}");
+                def response = JSON.parse(url.newReader())
+                productList.add(response);
+            }
+ 
+			return [patientInstance: patientInstance, productStockList:patientProductStockList, productIndicator:productIndicator, innovaProductList: productList]
 		}
 	}
 	
