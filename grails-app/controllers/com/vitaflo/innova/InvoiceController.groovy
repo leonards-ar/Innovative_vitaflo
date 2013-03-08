@@ -1,7 +1,9 @@
 package com.vitaflo.innova
 
+
 class InvoiceController extends BaseController {
   def patientProductStockService
+  def pdfRenderingService
 
   def index = { redirect(action: "list", params: params) }
 
@@ -323,6 +325,25 @@ class InvoiceController extends BaseController {
     }
 
     render formatNumber(number: amount, format: "#.##")
+  }
+  
+  
+  def printInvoice = {
+          def invoice = Invoice.get(params.id)
+          
+          def proformaInstance = invoice?.proforma
+          
+          def clientInstance = proformaInstance?.client
+          def patientInstance = proformaInstance?.patient
+          
+          pdfRenderingService.render(template: "/invoice/invoiceTemplate", model:[proformaInstance:proformaInstance, clientInstance: clientInstance, patientInstance: patientInstance] + [controller: this], response)
+//          def fos= new FileOutputStream('NewTestFile.pdf')
+//          
+//            fos.write(bytes.toByteArray())
+//            fos.close()
+//  
+//          render(template: "/invoice/invoiceTemplate", params: [clientInstance: clientInstance, patientInstance: patientInstance])
+      
   }
   
   private updateStock(Invoice invoiceInstance) {
