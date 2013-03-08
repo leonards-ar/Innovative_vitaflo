@@ -60,6 +60,33 @@ div.autocomplete ul li {
     font-size: 9px;
 }
 
+div.clientInfo{
+	  top:7.4cm;
+	  left:4.6cm;
+    padding:2px;
+    font-size: 12px
+}
+
+div.iva{
+    top:10cm;
+    left:4.6cm;
+    padding:2px;
+    font-size: 12px
+}
+
+div.cuit{
+    top:10.8cm;
+    left:4.6cm;
+    padding:2px;
+    font-size: 12px
+}
+
+div.products{
+    top:12.5cm;
+    left:4.6cm;
+    padding:2px;
+    font-size: 12px
+}
 .currencyValue {
     text-align:right;
 }
