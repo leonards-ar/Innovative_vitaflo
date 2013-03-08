@@ -65,6 +65,7 @@ environments {
 		application.logoFile = "medgen-logo.jpg"
 		application.template = "templateVitaflo"
 		application.favicon = "medgen-favicon.ico"
+        application.urls = ["http://localhost:8081/innova", "http://localhost:8081/vitaflo"]
 	}
     innova {
         grails.serverURL = "http://www.changeme.com"
@@ -75,6 +76,7 @@ environments {
         application.logoFile = "innovative-logo.gif"
         application.template = "templateInnova"
         application.favicon = "innova-favicon.ico"
+        application.urls = ["http://localhost:8081/vitaflo", "http://localhost:8081/medgen"]
     }
     production {
         grails.serverURL = "http://www.changeme.com"
