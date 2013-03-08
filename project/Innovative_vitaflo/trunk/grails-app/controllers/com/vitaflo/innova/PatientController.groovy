@@ -192,11 +192,12 @@ class PatientController extends BaseController {
             
             def productList = []
             urls.each { urlstr ->
-                def url = new URL(urlstr + "remotePatient/getProducts?firstname=${patientInstance.firstName}&lastname=${patientInstance.lastName}");
+                def url = new URL(urlstr + "/remotePatient/getProducts?firstname=${patientInstance.firstName.encodeAsURL()}&lastname=${patientInstance.lastName.encodeAsURL()}");
                 def response = JSON.parse(url.newReader())
-                productList.add(response);
+
+                response.each { element -> productList.add(element) }
             }
- 
+            
 			return [patientInstance: patientInstance, productStockList:patientProductStockList, productIndicator:productIndicator, innovaProductList: productList]
 		}
 	}

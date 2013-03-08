@@ -296,7 +296,7 @@
         <table>
           <thead>
             <tr>
-              <th><g:message code="innova.products" default="Otros Productos" /></th>
+              <th><g:message code="patient.otherproduct" default="Other Products" /></th>
               <th><g:message code="patient.lastOrderedDate"
                 default="Last Ordered Date" /></th>
               <th><g:message code="patient.deadline" default="Deadline" /></th>
@@ -305,15 +305,15 @@
           </thead>
           <tbody>
 
-            <g:each in="${innovaProductList}" status="i" var="patientProductStock">
+            <g:each in="${innovaProductList}" status="i" var="productList">
 
               
               <tr>
                 <td valign="top" class="value">
-                ${patientProductStock?.name?.encodeAsHTML()}
+                ${productList?.name?.encodeAsHTML()}
                 </td>
-                <td valign="top" class="value">${patientProductStock?.lastOrdered}</td>
-                <td valign="top" class="value">${patientProductStock?.deadline}</td>
+                <td valign="top" class="value">${productList?.lastOrdered}</td>
+                <td valign="top" class="value">${productList?.deadline}</td>
               </tr>
             </g:each>
           </tbody>
