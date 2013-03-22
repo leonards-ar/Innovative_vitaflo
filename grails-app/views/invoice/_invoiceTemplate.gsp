@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-      <title>hijodeputa</title>
+      <title>printInvoice</title>
       <style  type="text/css">
         @page {
           size: 210mm 297mm;
