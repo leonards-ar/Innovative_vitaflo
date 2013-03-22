@@ -54,7 +54,7 @@ environments {
         application.logoFile = "vitaflo-logo.gif"
         application.template = "templateVitaflo"
         application.favicon = "vitaflo-favicon.ico"
-        application.urls = ["http://localhost:8081/innova", "http://localhost:8081/medgen"]
+        application.urls = ["http://localhost:8080/innova", "http://localhost:8080/medgen"]
     }
 	medgen {
 		grails.serverURL = "http://www.changeme.com"
@@ -65,7 +65,7 @@ environments {
 		application.logoFile = "medgen-logo.jpg"
 		application.template = "templateVitaflo"
 		application.favicon = "medgen-favicon.ico"
-        application.urls = ["http://localhost:8081/innova", "http://localhost:8081/vitaflo"]
+        application.urls = ["http://localhost:8080/innova", "http://localhost:8080/vitaflo"]
 	}
     innova {
         grails.serverURL = "http://www.changeme.com"
@@ -76,7 +76,7 @@ environments {
         application.logoFile = "innovative-logo.gif"
         application.template = "templateInnova"
         application.favicon = "innova-favicon.ico"
-        application.urls = ["http://localhost:8081/vitaflo", "http://localhost:8081/medgen"]
+        application.urls = ["http://localhost:8080/vitaflo", "http://localhost:8080/medgen"]
     }
     production {
         grails.serverURL = "http://www.changeme.com"
