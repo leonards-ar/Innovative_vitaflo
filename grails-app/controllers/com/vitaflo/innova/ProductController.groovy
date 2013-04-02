@@ -123,20 +123,29 @@ class ProductController extends BaseController {
 
     def delete = {
         def productInstance = Product.get(params.id)
+		
         if (productInstance) {
-            try {
-                productInstance.delete()
-                flash.message = "product.deleted"
-                flash.args = [params.id]
-                flash.defaultMessage = "Product ${params.id} deleted"
-                redirect(action: "list")
-            }
-            catch (org.springframework.dao.DataIntegrityViolationException e) {
-                flash.message = "product.not.deleted"
-                flash.args = [params.id]
-                flash.defaultMessage = "Product ${params.id} could not be deleted"
-                redirect(action: "show", id: params.id)
-            }
+			def proformaDetails = ProformaDetail.findByProduct(productInstance)
+			if(!proformaDetails){
+	            try {
+	                productInstance.delete()
+	                flash.message = "product.deleted"
+	                flash.args = [params.id]
+	                flash.defaultMessage = "Product ${params.id} deleted"
+	                redirect(action: "list")
+	            }
+	            catch (org.springframework.dao.DataIntegrityViolationException e) {
+	                flash.message = "product.not.deleted"
+	                flash.args = [params.id]
+	                flash.defaultMessage = "Product ${params.id} could not be deleted"
+	                redirect(action: "show", id: params.id)
+	            }
+			} else {
+				flash.message = "product.associated"
+				flash.defaulMessage="Product with id {0} can't be deleted. It has other elements associated."
+				flash.args = {params.id}
+				redirect(action: "list")
+			}
         }
         else {
             flash.message = "product.not.found"
