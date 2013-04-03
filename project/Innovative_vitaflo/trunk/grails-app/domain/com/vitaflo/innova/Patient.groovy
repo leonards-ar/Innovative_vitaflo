@@ -71,7 +71,7 @@ class Patient {
     }
 	
 	def getDosePerWeight() {
-		if(weight) return dose/weight
+		if(weight && dose) return dose/weight
 		
 		return 0.0
 	}
