@@ -32,7 +32,7 @@
 
       <td>
         <fusioncharts chartType="MSColumn3D" width="900" height="300" SWFPath="${createLinkTo(dir: 'Charts/')}">
-          <data><!--[CDATA[${sXml}
+          <data><!--[CDATA[<%=sXml%>
       ]]--></data>
         </fusioncharts>
 
@@ -75,7 +75,7 @@
       <tr>
         <td>
           <fusioncharts chartType="MSColumn3D" width="900" SWFPath="${createLinkTo(dir: 'Charts/')}">
-            <data><!--[CDATA[${qXml}
+            <data><!--[CDATA[<%=qXml%>
           ]]--></data>
           </fusioncharts>
 
