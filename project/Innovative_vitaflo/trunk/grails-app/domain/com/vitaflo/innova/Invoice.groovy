@@ -11,8 +11,7 @@ class Invoice implements Comparable {
     Double amount
 	Proforma proforma
 	
-	static hasMany = [soldProducts: ProductStock]
-    static belongsTo = ProductStock
+    static hasMany = [soldProducts: InvoiceDetail]
 
     static final def STATUS_LIST = ['Pendiente','Pagada', 'Entregada']
 

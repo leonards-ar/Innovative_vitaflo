@@ -6,12 +6,43 @@
         <meta name="layout" content="main" />
         <title><g:message code="invoice.create" default="Create Invoice" /></title>
         <g:javascript library="prototype" />
-          <script type="text/javascript" language="JavaScript">
+        <g:javascript library="scriptaculous" />
+        <g:javascript>  
+          var showProductStockLink = '${createLink(action:"showProductStock")}';
+          
           function updateProformaAmount(e)
           {
             document.createInvoice.amount.value = e.responseText;
           }
-        </script>
+          
+          function updateAddPrice(e){
+            var object = JSON.parse(e.responseText);
+            var lots = object.lotList;
+            if(lots.size() > 0){
+	            $('addLot').options.length=lots.size();
+	   			for(i=0;i < lots.size();i++){
+	      			$('addLot').options[i] = new Option(lots[i], lots[i]);
+	   			}
+	            
+	          	$('addPrice').value = object.price;
+          	}
+          }
+          
+          function updateInvoiceDetailsPrice(e, index){
+          	document.getElementById('prices['+index+']').value = e.responseText;
+          }
+          
+          function showStock(productId){
+          	new Ajax.Updater('showStockDetail', showProductStockLink, 
+          	{method: 'post', 
+          	 parameters:'addProductId=' + productId,
+          	 onSuccess:$('showStockDetail').appear()
+          		});
+          	new Draggable('showStockDetail');
+          }
+        </g:javascript>
+        
+        
 
 
     </head>
@@ -30,6 +61,7 @@
                 <g:renderErrors bean="${invoiceInstance}" as="list" />
             </div>
             </g:hasErrors>
+            <div id="showStockDetail" style="display:none;position:absolute;top:150;left:80;z-index:10;background:#f7f7f7;"></div>
             <g:form name="createInvoice" action="save" method="post" >
                 <div class="dialog">
                     <table>
@@ -101,6 +133,9 @@
                         </tbody>
                     </table>
                 </div>
+                
+      			<div id="detailListPanel" /><g:render template="invoiceDetailList" model="[invoiceDetailList:invoiceDetailList]"/></div>
+      			                
                 <div class="buttons">
                     <span class="button"><g:submitButton name="create" class="save" value="${message(code: 'create', 'default': 'Create')}" /></span>
                 </div>

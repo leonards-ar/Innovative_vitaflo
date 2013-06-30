@@ -1,5 +1,5 @@
 package com.vitaflo.innova
-
+import grails.converters.JSON
 
 class InvoiceController extends BaseController {
   def patientProductStockService
@@ -325,6 +325,32 @@ class InvoiceController extends BaseController {
     }
 
     render formatNumber(number: amount, format: "#.##")
+  }
+  
+  def updatePrice ={
+	  double price = 0d
+	  List lotList
+	  if (params.addProductId != ''){
+		  def auxProduct = Product.get(params.addProductId)
+		  lotList = ProductStock.executeQuery("select p.lot from ProductStock p where p.product = ? and p.quantity > p.sold and (p.expiredDate > ? or p.expiredDate is null) order by p.expiredDate asc", [auxProduct, Calendar.instance.getTime()])
+		  price = auxProduct.getSelPrice()
+		  
+	  }
+	  
+	  def responseData = [price: formatNumber(number:price,format:"#.##"),lotList:lotList]
+	  render responseData as JSON
+  }
+  
+  def showProductStock = {
+	  def product = Product.get(params.addProductId.toLong())
+	  List queryList = ProductStock.executeQuery("select p.product, sum(p.quantity) as quantity, sum(p.sold) as sold, p.lot, p.expiredDate from ProductStock p where p.product = ? and p.quantity > p.sold and (p.expiredDate > ? or p.expiredDate is null) group by p.lot order by p.expiredDate asc", [product, Calendar.instance.getTime()])
+	  List productStockList = []
+	  queryList.collect{ item ->
+		     def stock = new ProductStock(product:item[0],quantity:item[1],sold:item[2],lot:item[3],expiredDate:item[4])
+			 productStockList.add(stock)
+		  }
+	  render (view: 'showProductStock', model:[productStockList: productStockList, productStockListCount: productStockList.size(), productName:product?.name])
+	  
   }
   
   
