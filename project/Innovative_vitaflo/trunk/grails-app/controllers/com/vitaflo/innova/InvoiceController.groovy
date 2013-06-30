@@ -1,4 +1,6 @@
 package com.vitaflo.innova
+import java.util.List;
+
 import grails.converters.JSON
 
 class InvoiceController extends BaseController {
@@ -209,6 +211,19 @@ class InvoiceController extends BaseController {
       return [invoiceInstance: invoiceInstance, proformasToSelect: proformasToSelect]
     }
   }
+  
+  def addDetail = { UpdateInvoiceDetailsListCommand updateCommand, AddInvoiceDetailsListCommand addCommand ->
+	  List invoiceDetailList = updateCommand.createInvoiceDetailsList()
+	  
+	  if (!addCommand.hasErrors()){
+		  def invoiceDetail = addCommand.createNewInvoiceDetail()
+		  invoiceDetailList.add(invoiceDetail)
+		  render (template:"invoiceDetailList", model:[invoiceDetailList:invoiceDetailList])
+	  }else{
+		  addCommand.updateAddProductPrice()
+		  render (template:"invoiceDetailList", model:[addCommand:addCommand, invoiceDetailList:invoiceDetailList])
+	  }
+  }
 
   def update = {
 
@@ -381,3 +396,75 @@ class InvoiceController extends BaseController {
 		  
   }
 }
+
+class AddInvoiceDetailsListCommand {
+	Long addProductId
+	Integer addQuantity
+	Double addDailyDose
+	String addDoseUnit
+	String addLot
+	Double addPrice
+
+
+	static constraints = {
+		addProductId(nullable:false)
+		addQuantity(nullable:false, min:1)
+		addDailyDose(nullable:true, min:0.1d)
+		addLot(nullable:false)
+		addDoseUnit(nullable:true, inList: com.vitaflo.innova.ProformaDetail.UNIT_LIST)
+		addPrice(nullable:false, min:0d)
+		
+		addQuantity validator: {val, obj ->
+			def product = Product.get(obj.addProductId)
+			def productStock = ProductStock.findByProductAndLot(product, obj.addLot)
+			def total = productStock?.sold + val
+			
+			return total <= productStock?.quantity
+		}
+	}
+
+	InvoiceDetail createNewInvoiceDetail(){
+		def auxProduct = Product.get(addProductId)
+		def auxProductStock = ProductStock.findByProductAndLot(auxProduct, addLot)
+		def invoiceDetail = new InvoiceDetail(productStock:auxProductStock, quantity:addQuantity, dailyDose:addDailyDose, doseUnit:addDoseUnit, price:addPrice)
+
+		return invoiceDetail
+	}
+
+	void updateAddProductPrice(){
+
+		addPrice = 0d
+		if (addProductId != null && addProductId != ''){
+			def auxProduct = Product.get(addProductId)
+			addPrice = auxProduct.getSelPrice()
+		}
+	}
+
+}
+
+class UpdateInvoiceDetailsListCommand {
+	List productIds = []
+	List quantities = []
+	List dailyDoses = []
+	List doseUnits = []
+	List lots = []
+	List detailsIds = []
+	List prices = []
+	
+
+	List createInvoiceDetailsList(){
+		List invoiceDetailList = []
+		productIds.eachWithIndex(){ productId, i->
+			def auxProduct = Product.get(productId)
+			def auxProductStock = ProductStock.findByProductAndLot(auxProduct, lots[i])
+			def proformaDetail = new InvoiceDetail(productStock:auxProductStock, lot:lots[i],quantity:quantities[i], dailyDose:(dailyDoses[i])? dailyDoses[i].replace(',','.').toDouble():null, doseUnit: doseUnits[i], price:prices[i].replace(',','.').toDouble())
+			if(detailsIds[i]!=''){
+				invoiceDetail.id = detailsIds[i].toLong()
+			}
+			invoiceDetailList.add(proformaDetail)
+		}
+
+		return invoiceDetailList
+	}
+}
+
