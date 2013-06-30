@@ -40,6 +40,10 @@
           		});
           	new Draggable('showStockDetail');
           }
+          
+          function hideProductStock(){
+          	Effect.DropOut('showStockDetail');
+          }
         </g:javascript>
         
         
