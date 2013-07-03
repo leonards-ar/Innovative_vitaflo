@@ -41,7 +41,7 @@
         <g:select name="addDoseUnit" from="${com.vitaflo.innova.ProformaDetail.UNIT_LIST}" value="${fieldValue(bean: addCommand, field: 'addDoseUnit')}" noSelection="['':'']"/>
       </td>
       <td valign="top" class="value">
-         <g:select name="addLot" value="${addCommand?.addLot}" list="[]" noSelection="['':'']"/>
+         <g:select name="addLot" value="${addCommand?.addLot}" list="" noSelection="['':'']"/>
       </td>      
       <td class="value ${hasErrors(field: 'addPrice', 'errors')}" style="vertical-align:middle;">
         <g:textField id="addPrice" name="addPrice" value="${formatNumber(number:addCommand?.addPrice, format:'0.00')}" style="text-align:center;vertical-align:middle"/>
@@ -69,7 +69,7 @@
         <g:select name="doseUnits[${i}]" value="${fieldValue(bean: invoiceDetail, field: 'doseUnit')}" from="${com.vitaflo.innova.ProformaDetail.UNIT_LIST}" noSelection="['':'']"/>
       </td>
       <td valign="top" class="value">
-         <g:select name="lot[${i}]" value="${invoiceDetail?.productStock?.lot}" list="[]" noSelection="['':'']"/>
+         <g:textField name="lot[${i}]" value="${invoiceDetail?.productStock?.lot}"/>
       </td>
       
       <td class="value" style="vertical-align:middle;">

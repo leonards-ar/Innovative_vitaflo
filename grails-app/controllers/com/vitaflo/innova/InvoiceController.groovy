@@ -15,73 +15,9 @@ class InvoiceController extends BaseController {
   def list = {
     rememberListState([max: 15, offset: 0, sort: 'date', order: 'desc'])
 
-    def query = {
-
-      if (params.codeNumber) {
-        eq('number', params.codeNumber)
-      }
-
-      if (params.status) {
-        eq('status', params.status)
-      }
-
-      proforma {
-        if (params.client && params.patient) {
-          client {
-            eq('name', params.client)
-
-            inList('country', session.countries)
-          }
-          patient {
-            def str = params.patient.split(',')
-            eq('lastName', str[0])
-
-            inList('country', session.countries)
-          }
-        } else
-          if (params.client) {
-            client {
-              eq('name', params.client)
-
-              inList('country', session.countries)
-            }
-          } else
-            if (params.patient) {
-              patient {
-                def str = params.patient.split(',')
-                eq('lastName', str[0])
-
-                inList('country', session.countries)
-              }
-            } else {
-              or {
-                client {
-                  if (params.client) {
-                    eq('name', params.client)
-                  }
-
-                  inList('country', session.countries)
-                }
-                patient {
-                  if (params.patient) {
-                    def str = params.patient.split(',')
-                    eq('lastName', str[0])
-                  }
-                  inList('country', session.countries)
-                }
-
-              }
-            }
-      }
-    }
-
     def criteria = Invoice.createCriteria()
 
-    def total = criteria.count(query)
-
-    def invoices = Invoice.withCriteria {
-      maxResults(params.max?.toInteger())
-      firstResult(params.offset?.toInteger())
+    def invoices = criteria.ist(max:params.max?.toInteger(), offset:params.offset?.toInteger()) {
       order(params.sort, params.order)
 
       if (params.codeNumber) {
@@ -142,7 +78,7 @@ class InvoiceController extends BaseController {
       }
     }
 
-    [invoiceInstanceList: invoices, invoiceInstanceTotal: total, codeNumber: params.codeNumber, client: params.client, patient: params.patient, status: params.status]
+    [invoiceInstanceList: invoices, invoiceInstanceTotal: invoices.totalCount, codeNumber: params.codeNumber, client: params.client, patient: params.patient, status: params.status]
   }
 
   def create = {
@@ -154,9 +90,15 @@ class InvoiceController extends BaseController {
     return [invoiceInstance: invoiceInstance, proformasToSelect: proformasToSelect]
   }
 
-  def save = {
+  def save = {UpdateInvoiceDetailsListCommand updateCommand ->
 
     def invoiceInstance = new Invoice()
+	List invoiceDetailList = updateCommand.createProformaDetailsList()
+	
+	invoiceDetailList.each{invoiceDetail ->
+		invoiceInstance.addToSoldProducts(invoiceDetail)
+	}
+	
     // Workaround for http://jira.codehaus.org/browse/GRAILS-1793
     def excludes = []
     if ((!params.deliveryDate_month) && (!params.deliveryDate_day) && (!params.deliveryDate_year)) {
@@ -167,8 +109,7 @@ class InvoiceController extends BaseController {
 
     if (!invoiceInstance.hasErrors() && invoiceInstance.save()) {
       //Update Stock
-		def products = invoiceInstance.products()
-		println "products sold: ${products}"
+	  def products = invoiceInstance.products()
       if (invoiceInstance.proforma.patient) {
         patientProductStockService.updatePatientProductStock(invoiceInstance);
       }
@@ -179,7 +120,7 @@ class InvoiceController extends BaseController {
     }
     else {
       List proformasToSelect = findAllProformasWithNoInvoice()
-      render(view: "create", model: [invoiceInstance: invoiceInstance, proformasToSelect: proformasToSelect])
+      render(view: "create", model: [invoiceInstance: invoiceInstance, invoiceDetailList:invoiceDetailList, proformasToSelect: proformasToSelect])
     }
   }
 
@@ -347,7 +288,7 @@ class InvoiceController extends BaseController {
 	  List lotList
 	  if (params.addProductId != ''){
 		  def auxProduct = Product.get(params.addProductId)
-		  lotList = ProductStock.executeQuery("select p.lot from ProductStock p where p.product = ? and p.quantity > p.sold and (p.expiredDate > ? or p.expiredDate is null) order by p.expiredDate asc", [auxProduct, Calendar.instance.getTime()])
+		  lotList = getLots(auxProduct) 
 		  price = auxProduct.getSelPrice()
 		  
 	  }
@@ -394,6 +335,14 @@ class InvoiceController extends BaseController {
 		  print "******** stock ${stock}"
 	  }
 		  
+  }
+  
+  def List getLots(Product product){
+	  
+	  def lotList = ProductStock.executeQuery("select p.lot from ProductStock p where p.product = ? and p.quantity > p.sold and (p.expiredDate > ? or p.expiredDate is null) order by p.expiredDate asc", [product, Calendar.instance.getTime()])
+	  
+	  return lotList
+	  
   }
 }
 
