@@ -17,7 +17,7 @@ class InvoiceController extends BaseController {
 
     def criteria = Invoice.createCriteria()
 
-    def invoices = criteria.ist(max:params.max?.toInteger(), offset:params.offset?.toInteger()) {
+    def invoices = criteria.list(max:params.max?.toInteger(), offset:params.offset?.toInteger()) {
       order(params.sort, params.order)
 
       if (params.codeNumber) {
@@ -96,6 +96,8 @@ class InvoiceController extends BaseController {
 	List invoiceDetailList = updateCommand.createProformaDetailsList()
 	
 	invoiceDetailList.each{invoiceDetail ->
+		def productStock = ProductStock.findAllWhere(product: invoiceDetail?.productStock?.product, lot:invoiceDetail?.productStock?.lot)
+		
 		invoiceInstance.addToSoldProducts(invoiceDetail)
 	}
 	
@@ -299,7 +301,7 @@ class InvoiceController extends BaseController {
   
   def showProductStock = {
 	  def product = Product.get(params.addProductId.toLong())
-	  List queryList = ProductStock.executeQuery("select p.product, sum(p.quantity) as quantity, sum(p.sold) as sold, p.lot, p.expiredDate from ProductStock p where p.product = ? and p.quantity > p.sold and (p.expiredDate > ? or p.expiredDate is null) group by p.lot order by p.expiredDate asc", [product, Calendar.instance.getTime()])
+	  List queryList = ProductStock.executeQuery("select p.product, sum(p.quantity) as quantity, sum(p.sold) as sold, p.lot, p.expiredDate from ProductStock p where p.product = ? and p.quantity > p.sold and (p.expiredDate > ? or p.expiredDate is null) group by p.product,p.lot order by p.expiredDate asc", [product, Calendar.instance.getTime()])
 	  List productStockList = []
 	  queryList.collect{ item ->
 		     def stock = new ProductStock(product:item[0],quantity:item[1],sold:item[2],lot:item[3],expiredDate:item[4])
@@ -339,7 +341,18 @@ class InvoiceController extends BaseController {
   
   def List getLots(Product product){
 	  
-	  def lotList = ProductStock.executeQuery("select p.lot from ProductStock p where p.product = ? and p.quantity > p.sold and (p.expiredDate > ? or p.expiredDate is null) order by p.expiredDate asc", [product, Calendar.instance.getTime()])
+	  def lotList = ProductStock.createCriteria().list{
+		  projections {
+			  distinct("lot")
+		  }
+		  eq('product', product)
+		  geProperty('quantity','sold')
+		  or{
+			  gt('expiredDate',Calendar.instance.getTime())
+			  isNull('expiredDate')
+		  }
+
+	  }
 	  
 	  return lotList
 	  
@@ -364,8 +377,10 @@ class AddInvoiceDetailsListCommand {
 		addPrice(nullable:false, min:0d)
 		
 		addQuantity validator: {val, obj ->
-			def product = Product.get(obj.addProductId)
-			def productStock = ProductStock.findByProductAndLot(product, obj.addLot)
+			//def product = Product.get(obj.addProductId)
+			def productStockList = ProductStock.executeQuery("select p.product, sum(p.quantity) as quantity, sum(p.sold) as sold, p.lot, p.expiredDate from ProductStock p where p.product.id = ? and p.lot = ? group by p.product,p.lot", [obj.addProductId, obj.addLot])
+			def item = productStockList.get(0)
+			ProductStock productStock = new ProductStock(product:item[0],quantity:item[1],sold:item[2],lot:item[3],expiredDate:item[4])
 			def total = productStock?.sold + val
 			
 			return total <= productStock?.quantity
