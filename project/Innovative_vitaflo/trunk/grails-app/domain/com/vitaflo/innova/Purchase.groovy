@@ -11,7 +11,7 @@ class Purchase implements Comparable {
 
     Supplier supplier
 
-    static hasMany = [details:ProductStock]
+    static hasMany = [details:PurchaseDetail]
 
     static final def STATUS_LIST = ['Paid','Pending','Free']
 

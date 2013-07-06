@@ -49,23 +49,30 @@ class PurchaseController extends BaseController {
 
         def purchaseInstance = new Purchase(params)
 		
-        List purchaseDetailList = updateCommand.createPurchaseDetailsList()
-
-        purchaseDetailList.each {purchaseDetail ->
-            purchaseInstance.addToDetails(purchaseDetail)
+		Purchase.withTransaction{ status ->
+	        List purchaseDetailList = updateCommand.createPurchaseDetailsList()
+	
+	        purchaseDetailList.each {purchaseDetail ->
+				if(purchaseDetail?.productStock?.id == null){
+					purchaseDetail?.productStock.save()
+				}
+	            purchaseInstance.addToDetails(purchaseDetail)
+	        }
+	
+	        if (!purchaseInstance.hasErrors()){
+	
+	            if (purchaseInstance.save()){
+	                flash.message = "purchase.created"
+	                flash.args = [purchaseInstance.id]
+	                flash.defaultMessage = "purchase ${purchaseInstance.id} created"
+	                redirect(action: "show", id: purchaseInstance.id)
+	            }
+	        } else {
+				status.setRollbackOnly()
+				render(view: "create", model: [purchaseInstance: purchaseInstance, purchaseDetailList: purchaseDetailList])
+	        }
         }
-
-        if (!purchaseInstance.hasErrors()){
-
-            if (purchaseInstance.save()){
-                flash.message = "purchase.created"
-                flash.args = [purchaseInstance.id]
-                flash.defaultMessage = "purchase ${purchaseInstance.id} created"
-                redirect(action: "show", id: purchaseInstance.id)
-            }
-        }
-
-        render(view: "create", model: [purchaseInstance: purchaseInstance, purchaseDetailList: purchaseDetailList])
+        
         
     }
 
@@ -398,9 +405,13 @@ class AddPurchaseDetailsListCommand {
 		addExpiredDate(nullable:true)
 	}
 
-	ProductStock createNewPurchaseDetail(){
+	PurchaseDetail createNewPurchaseDetail(){
 		def auxProduct = Product.get(addProductId)
-		def purchaseDetail = new ProductStock(product:auxProduct, quantity:addQuantity, price:addPrice, lot:addLot, expiredDate: addExpiredDate)
+		def productStock = ProductStock.findByProductAndLot(auxProduct, addLot)
+		if(productStock == null) {
+			productStock = new ProductStock(product:auxProduct,lot:addLot,expiredDate:addExpiredDate)
+		}
+		def purchaseDetail = new PurchaseDetail(productStock:productStock, quantity:addQuantity, price:addPrice)
 
 		return purchaseDetail
 	}
@@ -430,7 +441,11 @@ class UpdatePurchaseDetailsListCommand {
 		List purchaseDetailList = []
 		productIds.eachWithIndex(){ productId, i->
 			def auxProduct = Product.get(productId)
-			def purchaseDetail = new ProductStock(product:auxProduct, quantity:quantities[i], price:prices[i].replace(',','.').toDouble(), lot:lots[i], expiredDate: expiredDates[i])
+			def productStock = ProductStock.findByProductAndLot(auxProduct, lots[i])
+			if(productStock == null) {
+				productStock = new ProductStock(product:auxProduct,lot:lots[i],expiredDate:expiredDates[i])
+			}
+			def purchaseDetail = new PurchaseDetail(productStock:productStock, quantity:quantities[i], price:prices[i].replace(',','.').toDouble(), lot:lots[i], expiredDate: expiredDates[i])
 			if(detailsIds[i]!=''){
 				purchaseDetail.id = detailsIds[i].toLong()
 			}
