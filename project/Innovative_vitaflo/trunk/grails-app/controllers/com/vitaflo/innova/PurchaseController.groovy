@@ -12,31 +12,11 @@ class PurchaseController extends BaseController {
     def list = {
         rememberListState([max: 15, offset: 0, sort: 'expireDate', order: 'desc'])
 
-        def query = {
-
-			if(params.codeNumber) {
-                eq('codeNumber', params.codeNumber)
-            }
-
-            if(params.supplier) {
-                supplier {
-                    eq('name', params.supplier)
-                }
-            }
-
-            if(params.status) {
-                eq('status', params.status)
-            }
-        }
-
         def criteria = Purchase.createCriteria()
 
-        def total = criteria.count(query)
 
-        def purchases = Purchase.withCriteria{
+        def purchases = criteria.list(max:params.max?.toInteger(), offset:params.offset?.toInteger()){
 
-            maxResults(params.max?.toInteger())
-            firstResult(params.offset?.toInteger())
             order(params.sort, params.order)
 
             if(params.codeNumber) {
@@ -55,7 +35,7 @@ class PurchaseController extends BaseController {
 
         }
 		
-        [purchaseInstanceList: purchases, purchaseInstanceTotal: total, codeNumber:params.codeNumber, supplier:params.supplier, status:params.status]
+        [purchaseInstanceList: purchases, purchaseInstanceTotal: purchases.totalCount, codeNumber:params.codeNumber, supplier:params.supplier, status:params.status]
     }
 
     def create = {
