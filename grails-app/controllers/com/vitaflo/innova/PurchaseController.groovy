@@ -121,46 +121,54 @@ class PurchaseController extends BaseController {
 			
 			List updatedDetailList = updateCommand.createPurchaseDetailsList()
 
-			updatedDetailList.each { updateDetail ->
-				if (updateDetail.id){
-					def auxPurchaseDetail = purchaseInstance.details.find{it.id == updateDetail.id}
-					auxPurchaseDetail.quantity = updateDetail.quantity
-					auxPurchaseDetail.price = updateDetail.price
-					auxPurchaseDetail.product = updateDetail.product
-					auxPurchaseDetail.lot = updateDetail.lot
-					auxPurchaseDetail.expiredDate = updateDetail.expiredDate
+			Purchase.withTransaction{status ->
+				updatedDetailList.each { updateDetail ->
+					if (updateDetail.id){
+						def auxPurchaseDetail = purchaseInstance.details.find{it.id == updateDetail.id}
+						def auxProductStock = auxPurchaseDetail.productStock
+						auxPurchaseDetail.quantity = updateDetail.quantity
+						auxPurchaseDetail.price = updateDetail.price
+						if(updateDetail.productStock.id == null){
+								updateDetail.productStock.save()
+								auxPurchaseDetail.productStock = updateDetail.productStock
+						}
+					}
+	            }
+				
+	            List removeDetails = []
+	            
+	            purchaseInstance.details.each { purchaseDetail ->
+	                def auxUpdatedDetail = updatedDetailList.find{it.id == purchaseDetail.id}
+	                if (!auxUpdatedDetail){
+	                    removeDetails.add(purchaseDetail)
+	                }
+	            }
+				
+	              removeDetails.each { detailToRemove ->
+	                purchaseInstance.removeFromDetails(detailToRemove)
+	            }
+				  
+				updatedDetailList.each {updatedDetail ->
+					  if (updatedDetail.id == null){
+						  if(updatedDetail?.productStock?.id == null){
+							  updatedDetail?.productStock.save()
+						  }
+						  purchaseInstance.addToDetails(updatedDetail)
+					  }
 				}
-            }
-			
-            List removeDetails = []
-            
-            purchaseInstance.details.each { purchaseDetail ->
-                def auxUpdatedDetail = updatedDetailList.find{it.id == purchaseDetail.id}
-                if (!auxUpdatedDetail){
-                    removeDetails.add(purchaseDetail)
-                }
-            }
-			
-              removeDetails.each { detailToRemove ->
-                purchaseInstance.removeFromDetails(detailToRemove)
-            }
-			  
-			updatedDetailList.each {updatedDetail ->
-				  if (updatedDetail.id == null){
-					  purchaseInstance.addToDetails(updatedDetail)
-				  }
-			}
-            //End of the manual removal
-            
-            if (!purchaseInstance.hasErrors() && purchaseInstance.save(flush:true)) {
-                purchaseInstance.clearErrors()
-                flash.message = "purchase.updated"
-                flash.args = [params.id]
-                flash.defaultMessage = "Purchase ${params.id} updated"
-                redirect(action: "show", id: purchaseInstance.id)
-            }
-            else {
-                render(view: "edit", model: [purchaseInstance: purchaseInstance])
+	            //End of the manual removal
+	            
+	            if (!purchaseInstance.hasErrors() && purchaseInstance.save(flush:true)) {
+	                purchaseInstance.clearErrors()
+	                flash.message = "purchase.updated"
+	                flash.args = [params.id]
+	                flash.defaultMessage = "Purchase ${params.id} updated"
+	                redirect(action: "show", id: purchaseInstance.id)
+	            }
+	            else {
+					status.setRollbackOnly()
+	                render(view: "edit", model: [purchaseInstance: purchaseInstance])
+	            }
             }
         }
         else {
@@ -444,8 +452,12 @@ class UpdatePurchaseDetailsListCommand {
 			def productStock = ProductStock.findByProductAndLot(auxProduct, lots[i])
 			if(productStock == null) {
 				productStock = new ProductStock(product:auxProduct,lot:lots[i],expiredDate:expiredDates[i])
+			} else {
+				if(productStock.expiredDate != expiredDates[i]) {
+					productStock.expiredDate = expiredDates[i]
+				}
 			}
-			def purchaseDetail = new PurchaseDetail(productStock:productStock, quantity:quantities[i], price:prices[i].replace(',','.').toDouble(), lot:lots[i], expiredDate: expiredDates[i])
+			def purchaseDetail = new PurchaseDetail(productStock:productStock, quantity:quantities[i], price:prices[i].replace(',','.').toDouble())
 			if(detailsIds[i]!=''){
 				purchaseDetail.id = detailsIds[i].toLong()
 			}
