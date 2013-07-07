@@ -11,7 +11,7 @@ class PurchaseDetail {
 		price column:'price_each'
 	}
 	
-	static transients = ['product','lot','expiredDate','total']
+	static transients = ['product','lot','expiredDate','total','productName']
 	
 	Product getProduct(){
 		return productStock?.product
