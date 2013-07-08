@@ -14,9 +14,9 @@
 	        <g:each in="${productStockList}" status="i" var="productStockInstance">
 	         <tr>
 	          <td>${productStockInstance?.product?.name}</td>
-	          <td>${productStockInstance?.quantity}</td>
+	          <td>${productStockInstance?.bought}</td>
 	          <td>${productStockInstance?.sold}</td>
-	          <td>${productStockInstance?.quantity - productStockInstance?.sold}</td>
+	          <td>${productStockInstance?.bought - productStockInstance?.sold}</td>
 	          <td>${productStockInstance?.lot}</td>
 	          <td><g:formatDate date="${productStockInstance?.expiredDate}" format="dd/MM/yyyy"/></td>
 	        </tr>

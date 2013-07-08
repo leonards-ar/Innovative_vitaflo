@@ -8,13 +8,14 @@ class InvoiceDetail {
 	String doseUnit
      
     static belongsTo = [invoice:Invoice, productStock:ProductStock]
+
   
     static constraints = {
         quantity(nullable:false, min:1)
         price(nullable:false, min:0d)
 		quantity validator: {
-			var total = productStock?.sold + it
-			return ( total <= productStock?.quantity)
+			var total = productStock?.getSold() + it
+			return ( total <= productStock?.getBought())
 		}
     }
     

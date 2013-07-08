@@ -18,3 +18,8 @@ insert into purchasedetails(price_each, quantity,purchase_id, product_stock_id,v
 insert into purchasedetails(price_each, quantity,purchase_id, product_stock_id,version) select price_each, quantity, purchase_id, 147,0 from product_stock where lot='23492A';
 insert into purchasedetails(price_each, quantity,purchase_id, product_stock_id,version) select price_each, quantity, purchase_id, 151,0 from product_stock where lot='30324';
 delete from product_stock where id in (11,23,95,135,77,101,10,136,88,121,84,119,78,128,125,105,113,140,143,154,14,45,80,152,157);
+insert into invoicedetails (version,invoice_id,price_each,product_stock_id,quantity) select 0 version,i.id invoice_id,pd.price_each price_each,ps.id product_stock_id, pd.quantity quantity from proformadetails pd, invoices i, product_stock ps where pd.proforma_id=i.proforma_id and pd.lot = ps.lot and ps.id in (select product_stock_id from purchasedetails);
+alter table product_stock drop price_each;
+alter table product_stock drop quantity;
+alter table product_stock drop purchase_id;
+alter table product_stock drop sold;

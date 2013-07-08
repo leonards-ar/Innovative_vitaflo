@@ -24,7 +24,7 @@ class ProductStock {
 	Integer getSold() {
 		
 		Integer total = 0;
-		invoicesDetails.each{
+		invoiceDetails.each{
 			total += it.quantity
 		}
 		

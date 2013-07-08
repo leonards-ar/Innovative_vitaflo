@@ -36,7 +36,7 @@
         <g:each in="${productStockList}" status="i" var="productStockInstance">
          <tr>
           <td><g:link action="edit" id="${productStockInstance?.id}">${productStockInstance?.product?.name}</g:link></td>
-          <td>${productStockInstance?.quantity}</td>
+          <td>${productStockInstance?.bought}</td>
           <td>${productStockInstance?.sold}</td>
           <td>${productStockInstance?.lot}</td>
           <td>${productStockInstance?.expiredDate}</td>
