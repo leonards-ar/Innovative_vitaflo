@@ -301,13 +301,10 @@ class InvoiceController extends BaseController {
   
   def showProductStock = {
 	  def product = Product.get(params.addProductId.toLong())
-	  List queryList = ProductStock.executeQuery("select p.product, sum(p.quantity) as quantity, sum(p.sold) as sold, p.lot, p.expiredDate from ProductStock p where p.product = ? and p.quantity > p.sold and (p.expiredDate > ? or p.expiredDate is null) group by p.product,p.lot order by p.expiredDate asc", [product, Calendar.instance.getTime()])
-	  List productStockList = []
-	  queryList.collect{ item ->
-		     def stock = new ProductStock(product:item[0],quantity:item[1],sold:item[2],lot:item[3],expiredDate:item[4])
-			 productStockList.add(stock)
-		  }
-	  render (view: 'showProductStock', model:[productStockList: productStockList, productStockListCount: productStockList.size(), productName:product?.name])
+	  List productStockList = ProductStock.executeQuery("from ProductStock p where p.product = ? and (p.expiredDate > ? or p.expiredDate is null) order by p.expiredDate asc", [product, Calendar.instance.getTime()])
+
+	  def productList = productStockList.findAll{productStock -> productStock.bought > productStock.sold}
+  	  render (view: 'showProductStock', model:[productStockList: productList, productStockListCount: productStockList.size(), productName:product?.name])
 	  
   }
   
@@ -341,18 +338,9 @@ class InvoiceController extends BaseController {
   
   def List getLots(Product product){
 	  
-	  def lotList = ProductStock.createCriteria().list{
-		  projections {
-			  distinct("lot")
-		  }
-		  eq('product', product)
-		  geProperty('quantity','sold')
-		  or{
-			  gt('expiredDate',Calendar.instance.getTime())
-			  isNull('expiredDate')
-		  }
+	  List productStockList = ProductStock.executeQuery("from ProductStock p where p.product = ? and (p.expiredDate > ? or p.expiredDate is null) order by p.expiredDate asc", [product, Calendar.instance.getTime()])
 
-	  }
+	  def lotList = productStockList.findAll{productStock -> productStock.bought > productStock.sold}.collect{it.lot}
 	  
 	  return lotList
 	  
@@ -378,12 +366,11 @@ class AddInvoiceDetailsListCommand {
 		
 		addQuantity validator: {val, obj ->
 			//def product = Product.get(obj.addProductId)
-			def productStockList = ProductStock.executeQuery("select p.product, sum(p.quantity) as quantity, sum(p.sold) as sold, p.lot, p.expiredDate from ProductStock p where p.product.id = ? and p.lot = ? group by p.product,p.lot", [obj.addProductId, obj.addLot])
-			def item = productStockList.get(0)
-			ProductStock productStock = new ProductStock(product:item[0],quantity:item[1],sold:item[2],lot:item[3],expiredDate:item[4])
+			def productStockList = ProductStock.executeQuery("from ProductStock p where p.product.id = ? and p.lot = ?", [obj.addProductId, obj.addLot])
+			def productStock = productStockList.get(0)
 			def total = productStock?.sold + val
 			
-			return total <= productStock?.quantity
+			return total <= productStock?.bought
 		}
 	}
 

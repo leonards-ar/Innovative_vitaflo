@@ -9,18 +9,20 @@ class ProductStockController {
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def list = {
-		StringBuilder select = new StringBuilder("select p, sum(ps.quantity - ps.sold) as stock from ProductStock ps right join ps.product p where ps.expiredDate > ? or ps.expiredDate is null group by p order by p.name");
-        //params.max = Math.min(params.max ? params.max.toInteger() : 10,  100)
-		
-		//Map parameters = [today:Calendar.instance.getTime()	]
+
 		def products = Product.getAll();
 		def stock = [];
 		
 		products.sort{it.name}
 		products.each {p ->
-			List sum = ProductStock.executeQuery("select sum(p.quantity - p.sold) as sum from ProductStock p where (p.expiredDate > ? or p.expiredDate is null) and p.product = ?", [Calendar.instance.getTime(), p])
+			List productList = ProductStock.executeQuery("from ProductStock p where (p.expiredDate > ? or p.expiredDate is null) and p.product = ?", [Calendar.instance.getTime(), p])
+			def sum = 0
+			productList.each{
+				sum += (it.bought - it.sold)
+			}
+			
 			//def productStockList = ProductStock.executeQuery(select.toString(), [Calendar.instance.getTime()])
-			def item = [product: p, sum: (!sum.get(0))?0:sum.get(0)?.toInteger()]
+			def item = [product: p, sum:sum]
 			stock.add(item);
 		}
 		
@@ -50,7 +52,7 @@ class ProductStockController {
     def show = {
  
 		def product = Product.get(params.id.toLong())
-		def productStockList = ProductStock.executeQuery("select p from ProductStock p where p.product = ? and (p.expiredDate > ? or p.expiredDate is null) order by p.expiredDate asc", [product, Calendar.instance.getTime()])
+		def productStockList = ProductStock.executeQuery("from ProductStock p where p.product = ? and (p.expiredDate > ? or p.expiredDate is null) order by p.expiredDate asc", [product, Calendar.instance.getTime()])
         
         if (!productStockList) {
             flash.message = "productStock.not.found"
