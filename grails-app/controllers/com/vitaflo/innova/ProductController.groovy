@@ -141,10 +141,11 @@ class ProductController extends BaseController {
 	                redirect(action: "show", id: params.id)
 	            }
 			} else {
-				flash.message = "product.associated"
-				flash.defaulMessage="Product with id {0} can't be deleted. It has other elements associated."
-				flash.args = {params.id}
-				redirect(action: "list")
+				productInstance.status = 'disabled'
+	                flash.message = "product.disabled"
+	                flash.args = [params.id]
+	                flash.defaultMessage = "Product ${params.id} disabled"
+					redirect(action: "list")
 			}
         }
         else {

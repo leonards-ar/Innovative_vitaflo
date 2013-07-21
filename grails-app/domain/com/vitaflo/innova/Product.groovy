@@ -10,6 +10,7 @@ class Product {
     Double presentation
     String doseUnit
     String comercialName
+	String status='enabled';
     
     Supplier supplier
     Drug drug
@@ -23,6 +24,7 @@ class Product {
         drug(nullable:false)
         comercialName(nullable:true)
         doseUnit(nullable:true, inList:UNIT_LIST)
+		status(inList:['enabled','disabled'])
     }
 
     static mapping = {
