@@ -64,6 +64,8 @@
 		<g:sortableColumn property="buyPrice" title="Price" titleKey="product.buyprice" />        
 
         <th><g:message code="product.supplier" default="Supplier" /></th>
+        
+        <th><g:message code="product.status" default="Status" /></th>
         </tr>
         </thead>
         <tbody>
@@ -81,6 +83,8 @@
           <td class="currencyValue"><g:formatNumber number="${productInstance?.buyPrice}" format="0.00"/></td>
 
           <td>${fieldValue(bean: productInstance, field: "supplier")}</td>
+          
+          <td>${fieldValue(bean: productInstance, field: "status")}</td>
 
           </tr>
         </g:each>
