@@ -65,7 +65,6 @@
 
         <th><g:message code="product.supplier" default="Supplier" /></th>
         
-        <th><g:message code="product.status" default="Status" /></th>
         </tr>
         </thead>
         <tbody>
@@ -84,8 +83,6 @@
 
           <td>${fieldValue(bean: productInstance, field: "supplier")}</td>
           
-          <td>${fieldValue(bean: productInstance, field: "status")}</td>
-
           </tr>
         </g:each>
         </tbody>

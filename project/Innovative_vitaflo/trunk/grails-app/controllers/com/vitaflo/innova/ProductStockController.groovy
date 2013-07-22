@@ -10,7 +10,7 @@ class ProductStockController {
 
     def list = {
 
-		def products = Product.getAll();
+		def products = Product.findAllByStatus('enabled');
 		def stock = [];
 		
 		products.sort{it.name}

@@ -42,7 +42,7 @@ grails.enable.native2ascii = true
         application.logoFile = "vitaflo-logo.gif"
         application.template = "templateVitaflo"
         application.favicon = "vitaflo-favicon.ico"
-        application.urls = ["http://localhost:8081/innova"]
+        application.urls = ["http://localhost:8080/innova", "http://localhost:8080/medgen"]
         
 environments {
     vitaflo {
@@ -85,7 +85,15 @@ environments {
         grails.serverURL = "http://localhost:8080/${appName}"
     }
     test {
-        grails.serverURL = "http://localhost:8080/${appName}"
+        grails.serverURL = "http://www.changeme.com"
+        grails.app.context = "/vitaflo_test"
+        application.emailFromAddress = "Vitaflo-Sistema@vitaflo.com.ar"
+        application.name = "Vitaflo"
+        application.cssFile = "vitaflo.css"
+        application.logoFile = "vitaflo-logo.gif"
+        application.template = "templateVitaflo"
+        application.favicon = "vitaflo-favicon.ico"
+        application.urls = ["http://localhost:8080/innova", "http://localhost:8080/medgen"]
     }
 
 }
