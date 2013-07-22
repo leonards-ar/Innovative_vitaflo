@@ -24,7 +24,7 @@ class InvoiceDetail {
         price column:'price_each'
     }
     
-	static transients = ['total','productName','productPrice','totalDoseDays','dailyDose','doseUnit']
+	static transients = ['total','productName','productPrice','totalDoseDays','dailyDose','doseUnit','lot']
 	
 	Integer getTotalDoseDays() {
 		if(this.product?.presentation != null && this.dailyDose != null && this.quantity != null) {
@@ -41,6 +41,10 @@ class InvoiceDetail {
 
 	String getProductName(){
 		this.productStock.product.name;
+	}
+	
+	String getLot(){
+		this.productStock.lot
 	}
 
 	String toString() {
