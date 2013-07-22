@@ -75,7 +75,7 @@
                     </table>
                 </div>
 
-                <g:if test="${invoiceInstance?.proforma?.details?.size()> 0}">
+                <g:if test="${invoiceInstance?.soldProducts?.size()> 0}">
                 <div id="detailListPanel" class="list">
                   <table style="margin-top: 5px;">
                     <thead>
@@ -88,14 +88,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <g:each in="${invoiceInstance.proforma.details}" status="i" var="proformaDetail">
+                    <g:each in="${invoiceInstance.soldProducts}" status="i" var="invoiceDetail">
                         <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
 
-                            <td>${fieldValue(bean:proformaDetail, field: "productName")}</td>
+                            <td>${fieldValue(bean:invoiceDetail, field: "productName")}</td>
 
-                            <td>${fieldValue(bean:proformaDetail, field: "quantity")}</td>
+                            <td>${fieldValue(bean:invoiceDetail, field: "quantity")}</td>
 
-                            <td>${fieldValue(bean:proformaDetail, field: "lot")}</td>
+                            <td>${fieldValue(bean:invoiceDetail, field: "lot")}</td>
                         </tr>
                     </g:each>
                    </tbody>
