@@ -10,27 +10,14 @@ class ProductController extends BaseController {
     def list = {
         rememberListState([max: 15, offset: 0, sort: 'name', order: 'asc'])
 
-        def query = {
-            if(params.name) {
-                like('name', '%' + params.name + '%')
-            }
-            if(params.supplier) {
-                supplier {
-                    eq('name', params.supplier)
-                }
-            }
-
-        }
-
-        def criteria = Product.createCriteria()
-        def total = criteria.count(query)
-
-        def products = Product.withCriteria {
-
-            maxResults(params.max?.toInteger())
-            firstResult(params.offset?.toInteger())
+		def criteria = Product.createCriteria()
+		
+        def products = criteria.list(max:params.max?.toInteger(), offset:params.offset?.toInteger()){
+ 
             order(params.sort, params.order)
 
+			eq('status','enabled')
+			
             if(params.name) {
                 like('name', '%' + params.name + '%')
             }
@@ -42,7 +29,7 @@ class ProductController extends BaseController {
 
         }
 
-        [productInstanceList: products, productInstanceTotal: total, name:params.name, supplier: params.supplier]
+        [productInstanceList: products, productInstanceTotal: products.totalCount, name:params.name, supplier: params.supplier]
     }
 
     def create = {
@@ -126,7 +113,8 @@ class ProductController extends BaseController {
 		
         if (productInstance) {
 			def proformaDetails = ProformaDetail.findByProduct(productInstance)
-			if(!proformaDetails){
+			def productStock = ProductStock.findByProduct(productInstance)
+			if(!proformaDetails && !productStock){
 	            try {
 	                productInstance.delete()
 	                flash.message = "product.deleted"

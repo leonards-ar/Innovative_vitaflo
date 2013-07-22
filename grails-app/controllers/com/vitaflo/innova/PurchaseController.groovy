@@ -415,9 +415,9 @@ class AddPurchaseDetailsListCommand {
 
 	PurchaseDetail createNewPurchaseDetail(){
 		def auxProduct = Product.get(addProductId)
-		def productStock = ProductStock.findByProductAndLot(auxProduct, addLot)
+		def productStock = ProductStock.findByProductAndLot(auxProduct, addLot.toUpperCase())
 		if(productStock == null) {
-			productStock = new ProductStock(product:auxProduct,lot:addLot,expiredDate:addExpiredDate)
+			productStock = new ProductStock(product:auxProduct,lot:addLot.toUpperCase(),expiredDate:addExpiredDate)
 		}
 		def purchaseDetail = new PurchaseDetail(productStock:productStock, quantity:addQuantity, price:addPrice)
 
@@ -449,9 +449,9 @@ class UpdatePurchaseDetailsListCommand {
 		List purchaseDetailList = []
 		productIds.eachWithIndex(){ productId, i->
 			def auxProduct = Product.get(productId)
-			def productStock = ProductStock.findByProductAndLot(auxProduct, lots[i])
+			def productStock = ProductStock.findByProductAndLot(auxProduct, lots[i].toUpperCase())
 			if(productStock == null) {
-				productStock = new ProductStock(product:auxProduct,lot:lots[i],expiredDate:expiredDates[i])
+				productStock = new ProductStock(product:auxProduct,lot:lots[i].toUpperCase(),expiredDate:expiredDates[i])
 			} else {
 				if(productStock.expiredDate != expiredDates[i]) {
 					productStock.expiredDate = expiredDates[i]
