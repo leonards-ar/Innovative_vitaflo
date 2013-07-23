@@ -13,9 +13,9 @@ class InvoiceDetail {
     static constraints = {
         quantity(nullable:false, min:1)
         price(nullable:false, min:0d)
-		quantity validator: {
-			var total = productStock?.getSold() + it
-			return ( total <= productStock?.getBought())
+		quantity validator: {val, obj ->
+			def total = obj?.productStock?.sold + val
+			return total <= productStock?.bought
 		}
     }
     
@@ -24,7 +24,7 @@ class InvoiceDetail {
         price column:'price_each'
     }
     
-	static transients = ['total','productName','productPrice','totalDoseDays','dailyDose','doseUnit','lot']
+	static transients = ['total','productName','productPrice','totalDoseDays','lot']
 	
 	Integer getTotalDoseDays() {
 		if(this.product?.presentation != null && this.dailyDose != null && this.quantity != null) {

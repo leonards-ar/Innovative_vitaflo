@@ -93,7 +93,7 @@ class InvoiceController extends BaseController {
   def save = {UpdateInvoiceDetailsListCommand updateCommand ->
 
     def invoiceInstance = new Invoice()
-	List invoiceDetailList = updateCommand.createProformaDetailsList()
+	List invoiceDetailList = updateCommand.createInvoiceDetailsList()
 	
 	invoiceDetailList.each{invoiceDetail ->
 		def productStock = ProductStock.findAllWhere(product: invoiceDetail?.productStock?.product, lot:invoiceDetail?.productStock?.lot)
@@ -350,8 +350,6 @@ class InvoiceController extends BaseController {
 class AddInvoiceDetailsListCommand {
 	Long addProductId
 	Integer addQuantity
-	Double addDailyDose
-	String addDoseUnit
 	String addLot
 	Double addPrice
 
@@ -359,9 +357,7 @@ class AddInvoiceDetailsListCommand {
 	static constraints = {
 		addProductId(nullable:false)
 		addQuantity(nullable:false, min:1)
-		addDailyDose(nullable:true, min:0.1d)
 		addLot(nullable:false)
-		addDoseUnit(nullable:true, inList: com.vitaflo.innova.ProformaDetail.UNIT_LIST)
 		addPrice(nullable:false, min:0d)
 		
 		addQuantity validator: {val, obj ->
@@ -377,7 +373,7 @@ class AddInvoiceDetailsListCommand {
 	InvoiceDetail createNewInvoiceDetail(){
 		def auxProduct = Product.get(addProductId)
 		def auxProductStock = ProductStock.findByProductAndLot(auxProduct, addLot)
-		def invoiceDetail = new InvoiceDetail(productStock:auxProductStock, quantity:addQuantity, dailyDose:addDailyDose, doseUnit:addDoseUnit, price:addPrice)
+		def invoiceDetail = new InvoiceDetail(productStock:auxProductStock, quantity:addQuantity, price:addPrice)
 
 		return invoiceDetail
 	}
@@ -396,8 +392,6 @@ class AddInvoiceDetailsListCommand {
 class UpdateInvoiceDetailsListCommand {
 	List productIds = []
 	List quantities = []
-	List dailyDoses = []
-	List doseUnits = []
 	List lots = []
 	List detailsIds = []
 	List prices = []
@@ -408,7 +402,7 @@ class UpdateInvoiceDetailsListCommand {
 		productIds.eachWithIndex(){ productId, i->
 			def auxProduct = Product.get(productId)
 			def auxProductStock = ProductStock.findByProductAndLot(auxProduct, lots[i])
-			def proformaDetail = new InvoiceDetail(productStock:auxProductStock, lot:lots[i],quantity:quantities[i], dailyDose:(dailyDoses[i])? dailyDoses[i].replace(',','.').toDouble():null, doseUnit: doseUnits[i], price:prices[i].replace(',','.').toDouble())
+			def proformaDetail = new InvoiceDetail(productStock:auxProductStock, quantity:quantities[i], price:prices[i].replace(',','.').toDouble())
 			if(detailsIds[i]!=''){
 				invoiceDetail.id = detailsIds[i].toLong()
 			}
