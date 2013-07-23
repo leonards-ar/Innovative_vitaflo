@@ -4,8 +4,6 @@ class InvoiceDetail {
     
     Integer quantity = 0
     Double price;
-	Double dailyDose
-	String doseUnit
      
     static belongsTo = [invoice:Invoice, productStock:ProductStock]
 
@@ -15,7 +13,7 @@ class InvoiceDetail {
         price(nullable:false, min:0d)
 		quantity validator: {val, obj ->
 			def total = obj?.productStock?.sold + val
-			return total <= productStock?.bought
+			return total <= obj?.productStock?.bought
 		}
     }
     
@@ -24,17 +22,8 @@ class InvoiceDetail {
         price column:'price_each'
     }
     
-	static transients = ['total','productName','productPrice','totalDoseDays','lot']
+	static transients = ['total','productName','lot']
 	
-	Integer getTotalDoseDays() {
-		if(this.product?.presentation != null && this.dailyDose != null && this.quantity != null) {
-			return Math.ceil(this.product?.presentation * this.quantity / this.dailyDose);
-		} else {
-			return new Integer(0);
-		}
-
-	}
-
 	Double getTotal(){
 		this.price * this.quantity
 	}
