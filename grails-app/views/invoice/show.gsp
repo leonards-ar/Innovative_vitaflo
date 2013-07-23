@@ -83,6 +83,8 @@
                             <th><g:message code="proformaDetail.product" default="Product" /></th>
 
                             <th><g:message code="proformaDetail.quantity" default="Quantity" /></th>
+                            
+                            <th><g:message code="proformaDetail.price" default="Price" /></th>
 
                             <th><g:message code="proformaDetail.lot" default="Batch Number" /></th>
                         </tr>
@@ -94,6 +96,8 @@
                             <td>${fieldValue(bean:invoiceDetail, field: "productName")}</td>
 
                             <td>${fieldValue(bean:invoiceDetail, field: "quantity")}</td>
+                            
+                            <td>${formatNumber(number:invoiceDetail?.price, format:'0.00')}</td>
 
                             <td>${fieldValue(bean:invoiceDetail, field: "lot")}</td>
                         </tr>
@@ -107,7 +111,7 @@
                     <g:if test="${invoiceInstance?.status == 'Pendiente'}">
                       <span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'delete', 'default': 'Delete')}" onclick="return confirm('${message(code: 'delete.confirm', 'default': 'Are you sure?')}');" /></span>
                     </g:if>
-                    <span class="menuButton"><g:link class="create" controller="proforma" action="addBatch" id="${invoiceInstance?.proforma?.id}" params="[invoiceId:invoiceInstance.id]"><g:message code="proforma.addBatch" default="Add Batch"/></g:link></span>
+                    <!-- span class="menuButton"><g:link class="create" controller="proforma" action="addBatch" id="${invoiceInstance?.proforma?.id}" params="[invoiceId:invoiceInstance.id]"><g:message code="proforma.addBatch" default="Add Batch"/></g:link></span-->
                     <!-- span class="button"><g:link class="printLink" url="#" onclick="print()"><g:message code="invoice.print" default="Print Remito"/></g:link></span-->
                 </div>
             </g:form>
