@@ -151,7 +151,7 @@ class InvoiceController extends BaseController {
       List proformasToSelect = findAllProformasWithNoInvoice()
       proformasToSelect.add(invoiceInstance.proforma)
       proformasToSelect.sort {it.id}
-      return [invoiceInstance: invoiceInstance, proformasToSelect: proformasToSelect]
+      return [invoiceInstance: invoiceInstance, invoiceDetailList:invoiceInstance.soldProducts, proformasToSelect: proformasToSelect]
     }
   }
   
@@ -168,7 +168,7 @@ class InvoiceController extends BaseController {
 	  }
   }
 
-  def update = {
+  def update = {UpdateProformaDetailsListCommand updateCommand ->
 
     def invoiceInstance = Invoice.get(params.id)
 
@@ -182,11 +182,47 @@ class InvoiceController extends BaseController {
         if (invoiceInstance.version > version) {
 
           invoiceInstance.errors.rejectValue("version", "invoice.optimistic.locking.failure", "Another user has updated this Invoice while you were editing")
-          render(view: "edit", model: [invoiceInstance: invoiceInstance])
+		  
+		  List proformasToSelect = findAllProformasWithNoInvoice()
+		  proformasToSelect.add(invoiceInstance.proforma)
+		  proformasToSelect.sort {it.id}
+		  
+          render(view: "edit", model: [invoiceInstance: invoiceInstance,invoiceDetailList:invoiceInstance.soldProducts, proformasToSelect: proformasToSelect])
           return
         }
       }
+	  
+	  List invoiceDetailList = updateCommand.createInvoiceDetailsList()
+	  
+            updatedDetailList.each {updatedDetail ->
+                if (updatedDetail.id){
+                    def auxProformaDetail = proformaInstance.details.find{it.id == updatedDetail.id}
+                    auxProformaDetail.quantity = updatedDetail.quantity
+                    auxProformaDetail.dailyDose = updatedDetail.dailyDose
+                    auxProformaDetail.doseUnit = updatedDetail.doseUnit
+                    auxProformaDetail.price = updatedDetail.price
+                    auxProformaDetail.product = updatedDetail.product
+                }
+            }
 
+            List removeDetails = []
+            
+            proformaInstance.details.each { proformaDetail ->
+                def auxUpdatedDetail = updatedDetailList.find{it.id == proformaDetail.id}
+                if (!auxUpdatedDetail){
+                    removeDetails.add(proformaDetail)
+                }
+            }
+
+            removeDetails.each { detailToRemove ->
+                proformaInstance.removeFromDetails(detailToRemove)
+            }
+
+            updatedDetailList.each {updatedDetail ->
+                if (updatedDetail.id == null){
+                    proformaInstance.addToDetails(updatedDetail)
+                }
+            }
       // Workaround for http://jira.codehaus.org/browse/GRAILS-1793
       def excludes = []
       if ((!params.deliveryDate_month) && (!params.deliveryDate_day) && (!params.deliveryDate_year)) {
@@ -304,7 +340,7 @@ class InvoiceController extends BaseController {
 	  List productStockList = ProductStock.executeQuery("from ProductStock p where p.product = ? and (p.expiredDate > ? or p.expiredDate is null) order by p.expiredDate asc", [product, Calendar.instance.getTime()])
 
 	  def productList = productStockList.findAll{productStock -> productStock.bought > productStock.sold}
-  	  render (view: 'showProductStock', model:[productStockList: productList, productStockListCount: productStockList.size(), productName:product?.name])
+  	  render (view: 'showProductStock', model:[productStockList: productList, productStockListCount: productList.size(), productName:product?.name])
 	  
   }
   

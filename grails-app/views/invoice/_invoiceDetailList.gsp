@@ -50,7 +50,7 @@
       <g:select name="productIds[${i}]" from="${com.vitaflo.innova.Product.findAll('from Product where status=? order by name',['enabled'])}" optionKey="id"
                 value="${invoiceDetail?.productStock?.product?.id}"
                 noSelection="['':'Seleccione...']"
-                onchange="${remoteFunction(controller:'invoice', action:'updatePrice',after:'showStock()',onSuccess:'updateInvoiceDetailsPrice(e,'+i+')', params:'\'addProductId=\'  + this.value')}"
+                onchange="${remoteFunction(controller:'invoice', action:'updatePrice',after:'showStock(this.value)',onSuccess:'updateInvoiceDetailsPrice(e,'+i+')', params:'\'addProductId=\'  + this.value')}"
                 />
       </td>
 
