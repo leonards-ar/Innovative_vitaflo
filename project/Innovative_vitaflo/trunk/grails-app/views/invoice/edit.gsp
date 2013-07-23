@@ -117,6 +117,9 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <div id="detailListPanel" /><g:render template="invoiceDetailList" model="[invoiceDetailList:invoiceDetailList]"/></div>
+                
                 <div class="buttons">
                     <span class="button"><g:submitButton name="update" class="save" value="${message(code: 'update', 'default': 'Update')}" onclick="submitForm('update')"/></span>
                     <g:if test="${invoiceInstance?.status == 'Pendiente'}">

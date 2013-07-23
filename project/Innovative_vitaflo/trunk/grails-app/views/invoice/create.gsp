@@ -29,7 +29,15 @@
           }
           
           function updateInvoiceDetailsPrice(e, index){
-          	document.getElementById('prices['+index+']').value = e.responseText;
+            var object = JSON.parse(e.responseText);
+          	$('prices['+index+']').value = object.price;
+            var lots = object.lotList;
+            
+            if(lots.size() > 0){
+                $('lots['+index+']').value=lots[0];
+            } else {
+                $('lots['+index+']').value='';
+            }         	
           }
           
           function showStock(productId){
