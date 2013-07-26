@@ -9,6 +9,18 @@
         <g:javascript library="scriptaculous" />
         <g:javascript>  
           var showProductStockLink = '${createLink(action:"showProductStock")}';
+          
+         Event.observe(window,"load", function () { 
+          <g:each in="${invoiceDetailList}" status="i" var="invoiceDetail">
+            Event.observe('stockInfo${i}','click',function(event) {
+                alert("Estoy aca!!!!!");
+                var clickedRow = event.findElement('img');
+                if(clickedRow){
+                    alert(clickedRow.inspect());
+                }
+            });
+          </g:each>
+        });          
         </g:javascript>
         <g:javascript library="invoice"/>
         
@@ -81,7 +93,7 @@
                             </tr>
                         
                             <tr class="prop">
-                                <td valign="top" class="name">
+                                <td id="please" valign="top" class="name">
                                     <label for="status"><g:message code="invoice.status" default="Status" />:</label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: invoiceInstance, field: 'status', 'errors')}">

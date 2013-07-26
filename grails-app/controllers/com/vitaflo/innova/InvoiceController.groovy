@@ -418,17 +418,20 @@ class AddInvoiceDetailsListCommand {
 
 	static constraints = {
 		addProductId(nullable:false)
-		addQuantity(nullable:false, min:1)
-		addLot(nullable:false)
+		addQuantity(nullable:false, min:1,blank:false)
+		addLot(nullable:false,blank:false)
 		addPrice(nullable:false, min:0d)
 		
 		addQuantity validator: {val, obj ->
 			//def product = Product.get(obj.addProductId)
 			def productStockList = ProductStock.executeQuery("from ProductStock p where p.product.id = ? and p.lot = ?", [obj.addProductId, obj.addLot])
-			def productStock = productStockList.get(0)
-			def total = productStock?.sold + val
-			
-			return total <= productStock?.bought
+			if(productStockList.size() > 0){
+				def productStock = productStockList.get(0)
+				def total = productStock?.sold + val
+				
+				if(!(total <= bought)) return ['invoiceDetail.quantity.validator.error',obj?.getProductName(),(sold - bought)]
+			}
+			return ['invoiceDetail.quantity.validator.error',Product.get(obj.addProductId),0]  
 		}
 	}
 

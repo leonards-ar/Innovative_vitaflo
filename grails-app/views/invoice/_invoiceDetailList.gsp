@@ -7,6 +7,7 @@
   <table style="margin-top: 5px;" id="invoiceTable">
     <thead>
       <tr>
+        <th>&nbsp;</th>
         <th><g:message code="proformaDetail.product" default="Product" /></th>
 
         <th><g:message code="proformaDetail.quantity" default="Quantity" /></th>
@@ -22,6 +23,7 @@
    </thead>
    <tbody>
       <tr class="odd">
+      <td>&nbsp;</td>
       <td valign="top" class="value ${hasErrors(field: 'addProductId', 'errors')}">
         <g:select name="addProductId" from="${com.vitaflo.innova.Product.findAll('from Product where status=? order by name',['enabled'])}" optionKey="id"
                   value="${addCommand?.addProductId}"
@@ -45,6 +47,7 @@
       </tr>
     <g:each in="${invoiceDetailList}" status="i" var="invoiceDetail">
       <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+      <td><img id="stockInfo${i}" src="${resource(dir:'images',file:'information.png')}" alt="${message(code:'stock.available', default: 'See available Stock')}"/></td>
       <td valign="top" class="value">
       <g:hiddenField name="detailsIds[${i}]" value="${formatNumber(number:invoiceDetail?.id, format:'###.##')}"/>
       <g:select name="productIds[${i}]" from="${com.vitaflo.innova.Product.findAll('from Product where status=? order by name',['enabled'])}" optionKey="id"
