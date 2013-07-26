@@ -4,7 +4,7 @@
       <g:renderErrors bean="${addCommand}" as="list" />
     </div>
   </g:hasErrors>
-  <table style="margin-top: 5px;">
+  <table style="margin-top: 5px;" id="invoiceTable">
     <thead>
       <tr>
         <th><g:message code="proformaDetail.product" default="Product" /></th>

@@ -6,28 +6,23 @@
         <meta name="layout" content="main" />
         <title><g:message code="invoice.edit" default="Edit Invoice" /></title>
         <g:javascript library="prototype" />
-          <script type="text/javascript" language="JavaScript">
-          function updateProformaAmount(e)
-          {
-            document.editInvoice.amount.value = e.responseText;
-          }
+        <g:javascript library="scriptaculous" />
+        <script type="text/javascript" language="JavaScript">
+        var showProductStockLink = '${createLink(action:"showProductStock")}';
+        function submitForm(name){
+          document.editInvoice.action = name;
+          document.editInvoice.submit();
+        }
 
-          function submitForm(name)
-          {
-            document.editInvoice.action = name;
-            document.editInvoice.submit();
+        function submitDeleteForm(){
+     	  if (confirm('${message(code: 'delete.confirm', 'default': 'Are you sure?')}')){
+            submitForm('delete');
+          }else{
+            return false;
           }
-
-          function submitDeleteForm()
-          {
-           if (confirm('${message(code: 'delete.confirm', 'default': 'Are you sure?')}'))
-           {
-             submitForm('delete');
-           }else{
-             return false;
-           }
-          }
+        }
         </script>
+        <g:javascript library="invoice" />
     </head>
     <body>
         <div class="nav">
@@ -45,6 +40,7 @@
                 <g:renderErrors bean="${invoiceInstance}" as="list" />
             </div>
             </g:hasErrors>
+            <div id="showStockDetail" style="display:none;position:absolute;top:150;left:80;z-index:10;background:#f7f7f7;"></div>
             <g:form name="editInvoice" method="post" >
                 <g:hiddenField name="id" value="${invoiceInstance?.id}" />
                 <g:hiddenField name="version" value="${invoiceInstance?.version}" />

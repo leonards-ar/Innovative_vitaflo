@@ -6,6 +6,12 @@ class PurchaseDetail {
 	Double price
 
 	static belongsTo = [purchase:Purchase, productStock:ProductStock]
+	
+	static constraints = {
+		quantity(nullable:false, min:1)
+		price(nullable:false, min:0d)
+	}
+	
 	static mapping = {
 		table 'purchasedetails'
 		price column:'price_each'
