@@ -168,7 +168,7 @@ class InvoiceController extends BaseController {
 	  }
   }
 
-  def update = {UpdateProformaDetailsListCommand updateCommand ->
+  def update = {UpdateInvoiceDetailsListCommand updateCommand ->
 
     def invoiceInstance = Invoice.get(params.id)
 
@@ -192,65 +192,91 @@ class InvoiceController extends BaseController {
         }
       }
 	  
+	  invoiceInstance.properties = params
+	  
 	  List invoiceDetailList = updateCommand.createInvoiceDetailsList()
 	  
-            updatedDetailList.each {updatedDetail ->
-                if (updatedDetail.id){
-                    def auxProformaDetail = proformaInstance.details.find{it.id == updatedDetail.id}
-                    auxProformaDetail.quantity = updatedDetail.quantity
-                    auxProformaDetail.dailyDose = updatedDetail.dailyDose
-                    auxProformaDetail.doseUnit = updatedDetail.doseUnit
-                    auxProformaDetail.price = updatedDetail.price
-                    auxProformaDetail.product = updatedDetail.product
-                }
-            }
+	  Invoice.withTransaction{status ->
+		  invoiceDetailList.each { updateDetail ->
+			  if (updateDetail.id){
+				  def auxInvoiceDetail = invoiceInstance.soldProducts.find{it.id == updateDetail.id}
+				  def auxProductStock = auxInvoiceDetail.productStock
+				  if(auxInvoiceDetail.quantity != updateDetail.quantity){
+					  //validate if the new quantity is in stock
+					  def value = updateDetail.quantity - auxInvoiceDetail.quantity
+					  def sold = auxProductStock.sold
+					  def bought = auxProductStock.bought
+					  
+					  if(auxProductStock.sold + value > bought ){
+						  status.setRollbackOnly()
+						  invoiceInstance.errors.reject(
+							  'invoiceDetail.quantity.validator.error',
+							  [auxInvoiceDetail.getProductName(), bought - sold] as Object[],
+							  "The stock for product {0} is {1}"
+							  )
 
-            List removeDetails = []
-            
-            proformaInstance.details.each { proformaDetail ->
-                def auxUpdatedDetail = updatedDetailList.find{it.id == proformaDetail.id}
-                if (!auxUpdatedDetail){
-                    removeDetails.add(proformaDetail)
-                }
-            }
+						  List proformasToSelect = findAllProformasWithNoInvoice()
+						  //Adding the original proforma to the list
+						  proformasToSelect.add(originalProforma)
+						  proformasToSelect.sort {it.id}
+						  render(view: "edit", model: [invoiceInstance: invoiceInstance, invoiceDetailList:invoiceDetailList, proformasToSelect: proformasToSelect])
+						  return
+					  }
+					  
+					  auxInvoiceDetail.quantity = updateDetail.quantity
+				  }
+				  
+				  auxInvoiceDetail.price = updateDetail.price
+				  if(updateDetail.productStock.id == null){
+					  updateDetail.productStock.save()
+					  auxInvoiceDetail.productStock = updateDetail.productStock
+				  }
+			  }
+		  }
+				
+		  List removeDetails = []
+	            
+		  invoiceInstance.soldProducts.each { invoiceDetail ->
+			  def auxUpdatedDetail = invoiceDetailList.find{it.id == invoiceDetail.id}
+			  if (!auxUpdatedDetail){
+				  removeDetails.add(invoiceDetail)
+			  }
+		  }
+				
+		  removeDetails.each { detailToRemove ->
+			  invoiceInstance.removeFromSoldProducts(detailToRemove)
+		  }
+				  
+		  invoiceDetailList.each {updatedDetail ->
+			  if (updatedDetail.id == null){
+				  if(updatedDetail?.productStock?.id == null){
+					  updatedDetail?.productStock.save()
+				  }
+				  invoiceInstance.addToSoldProducts(updatedDetail)
+			  }
+		  }
+		  //End of the manual removal
+	            
+		  if (!invoiceInstance.hasErrors() && invoiceInstance.save(flush:true)) {
+			  if (invoiceInstance.proforma.patient) {
+				  patientProductStockService.updatePatientProductStock(invoiceInstance);
+			  }
+			  flash.message = "invoice.updated"
+			  flash.args = [params.id]
+			  flash.defaultMessage = "Invoice ${params.id} updated"
+			  redirect(action: "show", id: invoiceInstance.id)
 
-            removeDetails.each { detailToRemove ->
-                proformaInstance.removeFromDetails(detailToRemove)
-            }
+		  }
+		  else {
+			  status.setRollbackOnly()
+			  List proformasToSelect = findAllProformasWithNoInvoice()
+			  //Adding the original proforma to the list
+			  proformasToSelect.add(originalProforma)
+			  proformasToSelect.sort {it.id}
+			  render(view: "edit", model: [invoiceInstance: invoiceInstance, invoiceDetailList:invoiceInstance.soldProducts, proformasToSelect: proformasToSelect])
+		  }
+	  }
 
-            updatedDetailList.each {updatedDetail ->
-                if (updatedDetail.id == null){
-                    proformaInstance.addToDetails(updatedDetail)
-                }
-            }
-      // Workaround for http://jira.codehaus.org/browse/GRAILS-1793
-      def excludes = []
-      if ((!params.deliveryDate_month) && (!params.deliveryDate_day) && (!params.deliveryDate_year)) {
-        excludes << "deliveryDate"
-      }
-      bindData(invoiceInstance, params, excludes)
-      // end the workaround
-
-      if (!excludes.isEmpty()) {
-        invoiceInstance.deliveryDate = null
-      }
-
-      if (!invoiceInstance.hasErrors() && invoiceInstance.save()) {
-        if (invoiceInstance.proforma.patient) {
-          patientProductStockService.updatePatientProductStock(invoiceInstance);
-        }
-        flash.message = "invoice.updated"
-        flash.args = [params.id]
-        flash.defaultMessage = "Invoice ${params.id} updated"
-        redirect(action: "show", id: invoiceInstance.id)
-      }
-      else {
-        List proformasToSelect = findAllProformasWithNoInvoice()
-        //Adding the original proforma to the list
-        proformasToSelect.add(originalProforma)
-        proformasToSelect.sort {it.id}
-        render(view: "edit", model: [invoiceInstance: invoiceInstance, proformasToSelect: proformasToSelect])
-      }
     }
     else {
       flash.message = "invoice.not.found"
@@ -438,11 +464,11 @@ class UpdateInvoiceDetailsListCommand {
 		productIds.eachWithIndex(){ productId, i->
 			def auxProduct = Product.get(productId)
 			def auxProductStock = ProductStock.findByProductAndLot(auxProduct, lots[i])
-			def proformaDetail = new InvoiceDetail(productStock:auxProductStock, quantity:quantities[i], price:prices[i].replace(',','.').toDouble())
+			def invoiceDetail = new InvoiceDetail(productStock:auxProductStock, quantity:quantities[i], price:prices[i].replace(',','.').toDouble())
 			if(detailsIds[i]!=''){
 				invoiceDetail.id = detailsIds[i].toLong()
 			}
-			invoiceDetailList.add(proformaDetail)
+			invoiceDetailList.add(invoiceDetail)
 		}
 
 		return invoiceDetailList

@@ -12,8 +12,10 @@ class InvoiceDetail {
         quantity(nullable:false, min:1)
         price(nullable:false, min:0d)
 		quantity validator: {val, obj ->
-			def total = obj?.productStock?.sold + val
-			return total <= obj?.productStock?.bought
+			Integer sold = obj?.productStock?.sold
+			Integer bought = obj?.productStock?.bought
+			def total = obj.id?  sold : sold + val
+			if(!(total <= bought)) return ['invoiceDetail.quantity.validator.error',obj?.getProductName(),(sold - bought)]
 		}
     }
     
