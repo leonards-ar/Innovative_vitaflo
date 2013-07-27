@@ -427,11 +427,16 @@ class AddInvoiceDetailsListCommand {
 			def productStockList = ProductStock.executeQuery("from ProductStock p where p.product.id = ? and p.lot = ?", [obj.addProductId, obj.addLot])
 			if(productStockList.size() > 0){
 				def productStock = productStockList.get(0)
-				def total = productStock?.sold + val
+				def sold = productStock?.sold
+				def bought = productStock?.bought
+				def total = sold + val
 				
 				if(!(total <= bought)) return ['invoiceDetail.quantity.validator.error',obj?.getProductName(),(sold - bought)]
-			}
-			return ['invoiceDetail.quantity.validator.error',Product.get(obj.addProductId),0]  
+			} else {
+				if (productStockList.size() == 0){
+					return ['invoiceDetail.quantity.validator.error',Product.get(obj.addProductId),0]
+				}
+			}  
 		}
 	}
 

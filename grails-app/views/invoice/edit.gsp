@@ -7,20 +7,11 @@
         <title><g:message code="invoice.edit" default="Edit Invoice" /></title>
         <g:javascript library="prototype" />
         <g:javascript library="scriptaculous" />
+        <g:javascript library="lowpro" />
         <script type="text/javascript" language="JavaScript">
         var showProductStockLink = '${createLink(action:"showProductStock")}';
 
-        Event.observe(window,"load", function () { 
-            <g:each in="${invoiceDetailList}" status="i" var="invoiceDetail">
-              Event.observe('stockInfo${i}','click',function(event) {
-                  alert("Estoy aca!!!!!");
-                  var clickedRow = event.findElement('img');
-                  if(clickedRow){
-                      alert(clickedRow.inspect());
-                  }
-              });
-            </g:each>
-        });        
+
         function submitForm(name){
           document.editInvoice.action = name;
           document.editInvoice.submit();
