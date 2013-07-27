@@ -1,4 +1,30 @@
-  function updateProformaAmount(e)
+
+var timerId;
+Event.addBehavior({
+	  '.information:mouseover' : function(event) {
+		   timerId = showStockHandler.delay(1,event);
+	  },
+	  
+	  '.information:mouseout' : function(event) {
+		  if (timerId) {
+			    window.clearTimeout(timerId)
+			    hideProductStock();
+			    timerId = null;
+		  }
+	  }
+});
+
+function showStockHandler(event){
+    //clickedRow takes td where the select is.
+    var clickedRow = event.findElement('img').up('tr').down('td',1);
+    if(clickedRow){
+  	  var descendants = clickedRow.descendants();
+        showStock(descendants[1].value);
+    }
+}
+
+
+function updateProformaAmount(e)
   {
     document.createInvoice.amount.value = e.responseText;
   }
@@ -41,9 +67,3 @@
   	Effect.DropOut('showStockDetail');
   }
   
-  Event.observe('invoiceTable','click',function(event) {
-	  var clickedRow = event.findElement('tr');
-	  if(clickedRow){
-		  productId = clickedRow.down('');
-	  }
-  })
