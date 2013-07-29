@@ -69,7 +69,7 @@
           <g:textField id="prices[${i}]" name="prices[${i}]" value="${formatNumber(number:invoiceDetail?.price, format:'0.00')}" style="text-align:center;vertical-align:middle"/>
       </td>
       <div id="total[${i}]"><td style="vertical-align:middle"><g:formatNumber number="${invoiceDetail?.total}" /></div></td>
-      <td><g:submitToRemote controller="proforma" update="detailListPanel" action="removeDetail" id="${i}" value="${message(code: 'remove', 'default': 'Remove')}" /></td>
+      <td><g:submitToRemote controller="invoice" update="detailListPanel" action="removeDetail" id="${i}" value="${message(code: 'remove', 'default': 'Remove')}" /></td>
       </tr>
     </g:each>
     </tbody>

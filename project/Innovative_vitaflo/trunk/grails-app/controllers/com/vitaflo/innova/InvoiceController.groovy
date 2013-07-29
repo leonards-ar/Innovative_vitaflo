@@ -310,6 +310,13 @@ class InvoiceController extends BaseController {
       redirect(action: "list")
     }
   }
+  
+  def removeDetail = { UpdateInvoiceDetailsListCommand updateCommand ->
+	  List invoiceDetailList = updateCommand.createInvoiceDetailsList()
+	  int i = params.id.toInteger()
+	  invoiceDetailList.remove(i)
+	  render (template:"invoiceDetailList", model:[invoiceDetailList:invoiceDetailList])
+  }
 
   def List findAllProformasWithNoInvoice() {
 	def invoices = Invoice.findAll()

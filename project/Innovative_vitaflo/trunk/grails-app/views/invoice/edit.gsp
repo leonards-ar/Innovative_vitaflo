@@ -68,9 +68,7 @@
                                 <td valign="top" class="value ${hasErrors(bean: invoiceInstance, field: 'proforma', 'errors')}">
                                     <g:select name="proforma.id" from="${proformasToSelect}" optionKey="id" 
                                               value="${invoiceInstance?.proforma?.id}"
-                                              noSelection="['':'Seleccione...']"
-                                              onchange="${remoteFunction(controller:'invoice', action:'lookUpAmountProforma',onSuccess:'updateProformaAmount(e)', params:'\'amountProformaId=\'  + this.value')}"
-                                    />
+                                              noSelection="['':'Seleccione...']"/>
 
                                 </td>
                             </tr>
