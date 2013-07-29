@@ -17,21 +17,24 @@ class PatientProductStockService {
 		if(invoice.deliveryDate != null) {
 			Proforma proforma = invoice.getProforma();
 			
-			proforma?.getDetails().each {
-				def patientProductStock = getPatientProductStock(proforma.patient, it.product, proforma);
+			invoice?.soldProducts.each { invoiceDetail ->
+				def patientProductStock = getPatientProductStock(proforma.patient, invoiceDetail.product, proforma);
 				def endDate, startDate
 				
+				ProformaDetail proformaDetail = proforma.getDetails().find{it.product == invoiceDetail.product}
+
+				Double dailyDose = proformaDetail?.dailyDose
 				if(patientProductStock != null) {
 					// It is an update of this invoice
 					if(invoice.deliveryDate > patientProductStock.startDate) {
 						startDate = clearTime(invoice.deliveryDate)
-						endDate = startDate + it.getTotalDoseDays()
+						endDate = startDate + invoiceDetail.getTotalDoseDays(dailyDose)
 						patientProductStock.startDate = startDate
 						patientProductStock.runningOutOfStockDate = endDate
 						patientProductStock.notified = false;
 						
 						if(!patientProductStock.save()) {
-							patientProductStock.errors.each { log.error it }
+							patientProductStock.errors.each { log.error invoiceDetail }
 						} else {
 							updateNextPatientProductStock(patientProductStock)
 						}
@@ -40,7 +43,7 @@ class PatientProductStockService {
 					// New record
 					patientProductStock = new PatientProductStock();
 					patientProductStock.patient = proforma.patient;
-					patientProductStock.product = it.product;
+					patientProductStock.product = invoiceDetail.product;
 					patientProductStock.proforma = proforma;
 					patientProductStock.startDate = invoice.deliveryDate;
 					
@@ -53,15 +56,17 @@ class PatientProductStockService {
 						}
 						prevPatientProductStock.next = patientProductStock;
 						if(!prevPatientProductStock.save()) {
-							prevPatientProductStock.errors.each { log.error it }
+							prevPatientProductStock.errors.each { log.error invoiceDetail }
 						}
 					}
 					
-					patientProductStock.runningOutOfStockDate = patientProductStock.startDate + it.getTotalDoseDays();
+					
+					
+					patientProductStock.runningOutOfStockDate = patientProductStock.startDate + invoiceDetail.getTotalDoseDays(dailyDose);
 					patientProductStock.notified = false;
 					
 					if(!patientProductStock.save()) {
-						patientProductStock.errors.each { log.error it }
+						patientProductStock.errors.each { log.error invoiceDetail }
 					} else {
 						updateNextPatientProductStock(patientProductStock)
 					}

@@ -10,18 +10,6 @@
         <g:javascript>  
           var showProductStockLink = '${createLink(action:"showProductStock")}';
           
-         Event.observe(window,"load", function () { 
-          <g:each in="${invoiceDetailList}" status="i" var="invoiceDetail">
-            Event.observe('stockInfo${i}','click',function(event) {
-                alert("Estoy aca!!!!!");
-                var clickedRow = event.findElement('img');
-                if(clickedRow){
-                    alert(clickedRow.inspect());
-                }
-            });
-          </g:each>
-        });          
-        </g:javascript>
         <g:javascript library="invoice"/>
         
 
@@ -65,10 +53,7 @@
                                 <td valign="top" class="value ${hasErrors(bean: invoiceInstance, field: 'proforma', 'errors')}">
                                     <g:select name="proforma.id" from="${proformasToSelect}" optionKey="id" 
                                               value="${invoiceInstance?.proforma?.id}"
-                                              noSelection="['null':'Seleccione...']"
-                                              onchange="${remoteFunction(controller:'invoice', action:'lookUpAmountProforma',onSuccess:'updateProformaAmount(e)', params:'\'amountProformaId=\'  + this.value')}"
-
-                                    />
+                                              noSelection="['null':'Seleccione...']"/>
 
                                 </td>
                             </tr>

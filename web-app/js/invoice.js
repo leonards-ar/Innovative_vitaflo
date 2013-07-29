@@ -55,6 +55,7 @@ function updateProformaAmount(e)
   }
   
   function showStock(productId){
+
   	new Ajax.Updater('showStockDetail', showProductStockLink, 
   	{method: 'post', 
   	 parameters:'addProductId=' + productId,

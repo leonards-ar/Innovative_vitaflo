@@ -24,7 +24,7 @@ class InvoiceDetail {
         price column:'price_each'
     }
     
-	static transients = ['total','productName','lot']
+	static transients = ['total','productName','lot','product','totalDoseDays']
 	
 	Double getTotal(){
 		this.price * this.quantity
@@ -32,6 +32,19 @@ class InvoiceDetail {
 
 	String getProductName(){
 		this.productStock.product.name;
+	}
+	
+	Product getProduct(){
+		this.productStock.product
+	}
+	
+	Integer getTotalDoseDays(Double dailyDose) {
+		if(this.product?.presentation != null && dailyDose != null && this.quantity != null) {
+			return Math.ceil(this.product?.presentation * this.quantity / dailyDose);
+		} else {
+			return new Integer(0);
+		}
+
 	}
 	
 	String getLot(){
