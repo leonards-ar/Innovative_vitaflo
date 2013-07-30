@@ -200,7 +200,7 @@ class InvoiceController extends BaseController {
 		  invoiceDetailList.each { updateDetail ->
 			  if (updateDetail.id){
 				  def auxInvoiceDetail = invoiceInstance.soldProducts.find{it.id == updateDetail.id}
-				  def auxProductStock = auxInvoiceDetail.productStock
+				  def auxProductStock = updateDetail.productStock
 				  if(auxInvoiceDetail.quantity != updateDetail.quantity){
 					  //validate if the new quantity is in stock
 					  def value = updateDetail.quantity - auxInvoiceDetail.quantity
@@ -227,10 +227,12 @@ class InvoiceController extends BaseController {
 				  }
 				  
 				  auxInvoiceDetail.price = updateDetail.price
+
 				  if(updateDetail.productStock.id == null){
 					  updateDetail.productStock.save()
-					  auxInvoiceDetail.productStock = updateDetail.productStock
+					  
 				  }
+				  auxInvoiceDetail.productStock = updateDetail.productStock
 			  }
 		  }
 				
