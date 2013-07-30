@@ -33,6 +33,7 @@ class Invoice implements Comparable {
     static mapping = {
         table 'invoices'
         number column:'code'
+		soldProducts cascade: 'all-delete-orphan'
     }
 
     String toString(){
