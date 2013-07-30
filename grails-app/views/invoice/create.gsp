@@ -7,9 +7,10 @@
         <title><g:message code="invoice.create" default="Create Invoice" /></title>
         <g:javascript library="prototype" />
         <g:javascript library="scriptaculous" />
-        <g:javascript>  
+        <g:javascript library="lowpro" />
+        <script type="text/javascript" language="JavaScript">  
           var showProductStockLink = '${createLink(action:"showProductStock")}';
-          
+        </script>
         <g:javascript library="invoice"/>
         
 
