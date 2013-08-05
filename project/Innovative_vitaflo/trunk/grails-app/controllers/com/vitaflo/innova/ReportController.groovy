@@ -139,10 +139,11 @@ class ReportController {
     }
 
     StringBuilder salesSelect = new StringBuilder("select year(i.date), month(i.date), sum(i.amount) ");
-    StringBuilder qtySelect = new StringBuilder("select year(i.date), month(i.date), sum(d.quantity) ");
+    StringBuilder qtySelect = new StringBuilder("select year(i.date), month(i.date), sum(p.quantity) ");
     StringBuilder salesFrom = new StringBuilder("from Invoice i ");
-    StringBuilder qtyFrom = new StringBuilder("from Invoice i inner join i.proforma p inner join p.details d ");
-    StringBuilder where = new StringBuilder("where i.date >= :lastDate and i.date <= :actualDate and i.status='Pagada' ")
+	StringBuilder qtyFrom = new StringBuilder("from Invoice i inner join i.soldProducts p ");
+    //StringBuilder qtyFrom = new StringBuilder("from Invoice i inner join i.proforma p inner join p.details d ");
+    StringBuilder where = new StringBuilder("where i.date >= :lastDate and i.date <= :actualDate ")
 
     Map parameters = [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()]
 
