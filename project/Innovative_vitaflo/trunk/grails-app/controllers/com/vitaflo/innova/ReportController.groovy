@@ -196,15 +196,15 @@ class ReportController {
       lastDate.setTime(params.fromDate)
     }
 
-    List productList = Invoice.executeQuery("select distinct pr from Invoice i inner join i.proforma p inner join p.details d inner join d.product pr where i.date >= :lastDate and i.date <= :actualDate order by pr.name", [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()])
+    List productList = Invoice.executeQuery("select distinct pr from Invoice i inner join i.soldProducts d inner join d.productStock sp inner join sp.product pr where i.date >= :lastDate and i.date <= :actualDate order by pr.name", [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()])
 
     List monthList = Invoice.executeQuery("select distinct year(i.date), month(i.date) from Invoice i where i.date >= :lastDate and i.date <= :actualDate order by year(i.date), month(i.date) ", [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()])
 
     StringBuilder salesSelect = new StringBuilder("select year(i.date), month(i.date), sum(d.quantity * d.price) ");
     StringBuilder qtySelect = new StringBuilder("select year(i.date), month(i.date), sum(d.quantity) ");
-    StringBuilder salesFrom = new StringBuilder("from Invoice i inner join i.proforma p inner join p.details d right outer join d.product prod ");
-    StringBuilder qtyFrom = new StringBuilder("from Invoice i inner join i.proforma p inner join p.details d inner join d.product prod ");
-    StringBuilder where = new StringBuilder("where i.date >= :lastDate and i.date <= :actualDate and i.status='Pagada' and d.product= :product ")
+    StringBuilder salesFrom = new StringBuilder("from Invoice i inner join i.soldProducts d inner join d.productStock ps right outer join ps.product prod ");
+    StringBuilder qtyFrom = new StringBuilder("from Invoice i inner join i.soldProducts d inner join d.productStock ps right outer join ps.product prod ");
+    StringBuilder where = new StringBuilder("where i.date >= :lastDate and i.date <= :actualDate and ps.product= :product ")
 
     Map parameters = [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()]
 
