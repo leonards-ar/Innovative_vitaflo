@@ -44,6 +44,10 @@
           <g:select name="supplier" from="${com.vitaflo.innova.Supplier.list()}" value="${supplier}" noSelection="['':'']" />
           </td>
           <td>
+            <div><g:message code="client.country"/> </div>
+          <g:select name="selectedCountry" from="${session?.countries}" optionKey="code" optionValue="name" noSelection="['':'']" value="${selectedCountry}"/>
+          </td>          
+          <td>
             <div>&nbsp;</div>
             <span class="button"><g:submitButton name="search" class="save" value="${message(code: 'find', 'default': 'Find')}" /></span>
           </td>
