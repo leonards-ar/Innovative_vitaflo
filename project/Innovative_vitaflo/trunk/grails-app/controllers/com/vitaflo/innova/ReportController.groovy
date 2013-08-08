@@ -139,10 +139,9 @@ class ReportController {
     }
 
     StringBuilder salesSelect = new StringBuilder("select year(i.date), month(i.date), sum(i.amount) ");
-    StringBuilder qtySelect = new StringBuilder("select year(i.date), month(i.date), sum(p.quantity) ");
+    StringBuilder qtySelect = new StringBuilder("select year(i.date), month(i.date), sum(sp.quantity) ");
     StringBuilder salesFrom = new StringBuilder("from Invoice i ");
-	StringBuilder qtyFrom = new StringBuilder("from Invoice i inner join i.soldProducts p ");
-    //StringBuilder qtyFrom = new StringBuilder("from Invoice i inner join i.proforma p inner join p.details d ");
+	StringBuilder qtyFrom = new StringBuilder("from Invoice i inner join i.soldProducts sp ");
     StringBuilder where = new StringBuilder("where i.date >= :lastDate and i.date <= :actualDate ")
 
     Map parameters = [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()]
@@ -153,8 +152,17 @@ class ReportController {
       where.append("and pat.lastName=:patient ")
       def str = params.patient.split(',')
       parameters.put("patient", str[0])
+	  
+	  if(params.selectedCountry){
+		  where.append("and pat.country=:country ")
+		  parameters.put("country", Country.findByCode(params.selectedCountry))
+	  }
+    } else if(params.selectedCountry){
+	      salesFrom.append("inner join i.proforma p inner join p.patient pat inner join p.client cli ")
+		  qtyFrom.append("inner join i.proforma p inner join p.patient pat inner join p.client cli ")
+		  where.append("and (pat.country=:country or cli.country=:country) ")
+		  parameters.put("country", Country.findByCode(params.selectedCountry))
     }
-
     if (params.supplier) {
       salesFrom.append("inner join i.purchase pur inner join pur.supplier s ")
       qtyFrom.append("inner join i.purchase pur inner join pur.supplier s ")
@@ -176,7 +184,7 @@ class ReportController {
     def sXml = createSalesReportXml(salesList)
     def qXml = createSalesReportXml(qtyList)
 
-    return [salesList: salesList, sXml: sXml, qtyList: qtyList, qXml: qXml, fromDate: lastDate, toDate: actualDate, patient: paramspatient, supplier: paramssupplier]
+    return [salesList: salesList, sXml: sXml, qtyList: qtyList, qXml: qXml, fromDate: lastDate, toDate: actualDate, patient: params.patient, supplier: params.supplier, selectedCountry:params.selectedCountry]
   }
 
   def salesReportByProduct = {
