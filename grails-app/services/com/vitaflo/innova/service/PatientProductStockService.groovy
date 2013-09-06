@@ -243,6 +243,7 @@ class PatientProductStockService {
 			projections { distinct("email") }
 			isNotNull("email")
 			like("email", '%@%')
+			eq('enabled',true)
 			
 			if(patientProductStock?.patient?.country != null) {
 				countries {
