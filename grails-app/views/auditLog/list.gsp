@@ -75,7 +75,7 @@
           <td>${fieldValue(bean: auditLogRecordInstance, field: "lastUpdated")}</td>
           <td>${fieldValue(bean: auditLogRecordInstance, field: "actor")}</td>
           <td>${fieldValue(bean: auditLogRecordInstance, field: "eventName")}</td>
-          <td>${fieldValue(bean: auditLogRecordInstance, field: "className")}</td>
+          <td><g:message code="object.${auditLogRecordInstance?.className}"/></td>
           <td>${fieldValue(bean: auditLogRecordInstance, field: "persistedObjectId")}</td>
           <td>${fieldValue(bean: auditLogRecordInstance, field: "propertyName")}</td>
           <td>${fieldValue(bean: auditLogRecordInstance, field: "newValue")}</td>
