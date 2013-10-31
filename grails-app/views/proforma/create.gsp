@@ -95,6 +95,26 @@ rgb(90, 90, 90); background: rgb(176, 180, 160) none repeat scroll 0%
       <div class="dialog">
         <table>
           <tbody>
+			<g:ifAllGranted role="ROLE_ADMIN">
+            <tr class="prop">
+              <td valign="top" class="name">
+                <label for="code"><g:message code="proforma.id" default="id" />:</label>
+              </td>
+              <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'code', 'errors')}">
+            <g:textField name="code" value="${proformaInstance.code}" />
+
+            </td>
+            </tr>
+			</g:ifAllGranted>
+            <tr class="prop">
+              <td valign="top" class="name">
+                <label for="createdAt"><g:message code="proforma.createdAt" default="Created At" />:</label>
+              </td>
+              <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'createdAt', 'errors')}">
+            <g:datePicker name="createdAt" value="${proformaInstance?.createdAt}" precision="day" year="${1990..2020}" />
+
+            </td>
+            </tr>
 
             <tr class="prop">
               <td valign="top" class="name">

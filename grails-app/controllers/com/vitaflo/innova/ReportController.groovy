@@ -97,8 +97,9 @@ class ReportController {
     }
 
     if (params?.format && params.format != "html") {
+      def extension = (params?.format = 'excel')? 'xsl':params?.format
       response.contentType = ConfigurationHolder.config.grails.mime.types[params.format]
-      response.setHeader("Content-disposition", "attachment; filename=ConsolidatedReport.${params.format}")
+      response.setHeader("Content-disposition", "attachment; filename=ConsolidatedReport.${extension}")
       def exportCriteria = Invoice.createCriteria()
       def exportInvoices = exportCriteria.list(query)
 

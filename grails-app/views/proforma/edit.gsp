@@ -100,6 +100,30 @@ rgb(90, 90, 90); background: rgb(176, 180, 160) none repeat scroll 0%
 
             <tr class="prop">
               <td valign="top" class="name">
+                <label for="code"><g:message code="proforma.id" default="id" />:</label>
+              </td>
+              <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'code', 'errors')}">
+              <g:ifAllGranted role="ROLE_ADMIN">
+                <g:textField name="code" value="${proformaInstance.code}" />
+              </g:ifAllGranted>
+              <g:ifNotGranted role="ROLE_ADMIN">
+              	<g:textField name="code" value="${proformaInstance.code}" readonly="readonly"/>
+              </g:ifNotGranted>
+            </td>
+            </tr>
+
+            <tr class="prop">
+              <td valign="top" class="name">
+                <label for="createdAt"><g:message code="proforma.createdAt" default="Created At" />:</label>
+              </td>
+              <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'createdAt', 'errors')}">
+            <g:datePicker name="createdAt" value="${proformaInstance?.createdAt}" precision="day" year="${1990..2020}" />
+
+            </td>
+            </tr>
+
+            <tr class="prop">
+              <td valign="top" class="name">
                 <label for="patient"><g:message code="proforma.patient" default="Patient" />:</label>
               </td>
               <td valign="top" class="value ${hasErrors(bean: proformaInstance, field: 'patient', 'errors')}">
