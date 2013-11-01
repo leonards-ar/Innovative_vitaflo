@@ -33,7 +33,7 @@ class Purchase implements Comparable {
         table 'purchases'
         codeNumber column:'code'
         creationDate column:'date'
-        details cascade:'all, delete-orphan'
+        details cascade:'all-delete-orphan'
     }
 
     String toString(){
