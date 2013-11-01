@@ -75,7 +75,7 @@
         <g:datePicker id="expiredDates[${i}]" name="expiredDates[${i}]" precision="day" noSelection="['':'']" value="${purchaseDetail?.expiredDate}" />
       </td>            
       <td style="vertical-align:middle"><g:formatNumber number="${purchaseDetail?.total}" /></td>
-      <td><g:submitToRemote controller="purchase" update="detailListPanel" action="removeDetail" id="${i}" onSuccess="updateAmount(e)" value="${message(code: 'remove', 'default': 'Remove')}"/></td>
+      <td><g:submitToRemote controller="purchase" update="detailListPanel" action="removeDetail" id="${i}" value="${message(code: 'remove', 'default': 'Remove')}"/></td>
       </tr>
     </g:each>
     <tr>
