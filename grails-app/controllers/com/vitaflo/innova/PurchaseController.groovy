@@ -129,9 +129,9 @@ class PurchaseController extends BaseController {
 						auxPurchaseDetail.quantity = updateDetail.quantity
 						auxPurchaseDetail.price = updateDetail.price
 						if(updateDetail.productStock.id == null){
-								updateDetail.productStock.save()
-								auxPurchaseDetail.productStock = updateDetail.productStock
+							updateDetail.productStock.save()
 						}
+						auxPurchaseDetail.productStock = updateDetail.productStock
 					}
 	            }
 				
