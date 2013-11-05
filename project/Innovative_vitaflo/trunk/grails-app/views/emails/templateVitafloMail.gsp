@@ -140,7 +140,11 @@
      de <g:formatNumber number="${proformaInstance?.dollarValue}" format="0.00" />.
      <br/><br/>
      <b>Importe en pesos:</b> <g:numToWords number="${formatNumber(number:totalAmount*proformaInstance?.dollarValue, format:'0.00')}" lang="es"/><br/>
-     <b>Condiciones de pago:</b> 100% pago a ${proformaInstance?.paymentConditions} d&iacute;as.<br/><br/>
+     <b>Condiciones de pago:</b> 100% pago a ${proformaInstance?.paymentConditions} d&iacute;as. Los precios de la presente pro-forma estar&aacute;n<br/>
+        vigentes hasta 30 d&iacute;as posteriores a la fecha de su emisi&oacute;n. Dado que todos los productos que en ella <br/>
+        se incluyen son importados, los pagos posteriores a dicha fecha, ser&aacute;n ajustados por la variaci&oacute;n en el <br/>
+        tipo de cambio del Banco de la Naci&oacute;n Argentina tipo vendedor entre la fecha de emisi&oacute;n de la factura <br/>
+        pro-forma y la efectiva acreditaci&oacute;n de vuestro pago.<br/><br/>
       
     Banco: Galicia Sucursal.<br/>
     N&deg; de cuenta: <b>4266-6 127-9</b><br />
