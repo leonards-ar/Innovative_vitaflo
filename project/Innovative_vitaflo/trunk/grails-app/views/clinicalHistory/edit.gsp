@@ -1,5 +1,5 @@
 
-<%@ page import="com.vitaflo.innova.ClinicalHistory" %>
+<%@ page import="com.vitaflo.innova.ClinicalHistory" defaultCodec="none"%>
 <html>
 <html>
     <head>
