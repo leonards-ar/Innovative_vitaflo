@@ -10,6 +10,7 @@ import com.vitaflo.innova.User
 
 class PatientProductStockService {
 	def mailService
+	def grailsApplication
 	
 	boolean transactional = true
 	
@@ -221,8 +222,7 @@ class PatientProductStockService {
 		if(recipients != null && recipients.length > 0) {
 			try{
 				mailService.sendMail {
-					// :TODO: Take from configuration!
-					from "labs@mindpool.com.ar"
+					from grailsApplication.config.application.emailFromAddress
 					to recipients
 					subject "${patientProductStock.patient} - ${patientProductStock.product}"
 					body (view:"/emails/runningoutofstocknotification", model:[patientProductStockInstance:patientProductStock])
