@@ -35,7 +35,7 @@ class Patient {
     static hasMany = [clinicalHistories: ClinicalHistory, pathologies: Pathology]
   
     static transients = ['indicator', 'pathology', 'ageMonths', 'ageYears']
-    static final def UNIT_LIST = ['sobres', 'sachets']
+    static final def UNIT_LIST = ['sobres', 'sachets','gr','latas','ml']
 
     static constraints = {
         firstName(blank:false, nullable:true)
