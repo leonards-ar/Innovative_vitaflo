@@ -15,7 +15,7 @@ class Product {
     Supplier supplier
     Drug drug
 
-    static final def UNIT_LIST = ['sobres', 'sachets']
+    static final def UNIT_LIST = ['sobres', 'sachets','gr','latas','ml']
 
     static constraints = {
         name(blank:false)

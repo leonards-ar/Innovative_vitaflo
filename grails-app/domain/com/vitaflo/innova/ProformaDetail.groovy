@@ -11,7 +11,7 @@ class ProformaDetail {
 
     static belongsTo = [proforma: Proforma]
 
-    static final def UNIT_LIST = ['sobres', 'sachets']
+    static final def UNIT_LIST = ['sobres', 'sachets','gr','latas','ml']
 
     static constraints = {
         quantity(nullable:false, min:1)
