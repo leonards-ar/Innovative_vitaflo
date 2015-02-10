@@ -39,7 +39,7 @@
           <td>${productStockInstance?.bought}</td>
           <td>${productStockInstance?.sold}</td>
           <td>${productStockInstance?.lot}</td>
-          <td>${productStockInstance?.expiredDate}</td>
+          <td><g:formatDate date="${productStockInstance?.expiredDate}" format="dd/MM/yyyy"/></td>
         </tr>
         </g:each>
                  

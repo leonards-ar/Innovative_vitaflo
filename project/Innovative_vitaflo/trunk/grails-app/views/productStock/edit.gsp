@@ -25,9 +25,6 @@
             <g:form method="post" >
                 <g:hiddenField name="id" value="${productStockInstance?.id}" />
                 <g:hiddenField name="version" value="${productStockInstance?.version}" />
-                <g:hiddenField name="price" value="${productStockInstance.price}"/>
-                <g:hiddenField name="sold" value="${productStockInstance.sold}"/>
-                <g:hiddenField name="price" value="${productStockInstance.price}"/>
                 <div class="dialog">
                     <table>
                         <tbody>
@@ -39,16 +36,6 @@
                                 <td valign="top" class="value ${hasErrors(bean: productStockInstance, field: 'name', 'errors')}">
                                     <g:hiddenField name="name" value="${productStockInstance?.product}" />
                                     ${productStockInstance?.product}
-
-                                </td>
-                            </tr>
-
-                            <tr class="prop">
-                                <td valign="top" class="name">
-                                    <label for="name"><g:message code="proformaDetail.quantity" default="quantity" />:</label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: productStockInstance, field: 'quantity', 'errors')}">
-                                    <g:textField name="quantity" value="${productStockInstance?.quantity}" />
 
                                 </td>
                             </tr>
