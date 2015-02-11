@@ -15,6 +15,7 @@ class PurchaseDetail {
 	static mapping = {
 		table 'purchasedetails'
 		price column:'price_each'
+		productStock cascade:'all-delete-orphan'
 	}
 	
 	static transients = ['product','lot','expiredDate','total','productName']

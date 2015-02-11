@@ -183,16 +183,7 @@ class PurchaseController extends BaseController {
         def purchaseInstance = Purchase.get(params.id)
         if (purchaseInstance) {
             try {
-                def invoiceList = []
-                
-                purchaseInstance.invoices.each {invoice ->
-                    invoiceList.add(invoice)
-                }
-
-                invoiceList.each {invoice ->
-                    purchaseInstance.removeFromInvoices(invoice)
-                }
-                
+			
                 purchaseInstance.delete()
                 flash.message = "purchase.deleted"
                 flash.args = [params.id]
