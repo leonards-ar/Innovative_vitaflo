@@ -79,7 +79,7 @@ rgb(90, 90, 90); background: rgb(176, 180, 160) none repeat scroll 0%
 <a target="_blank" href="http://www.dolarhoy.com/" alt="DolarHoy" title="DolarHoy.com" >
 <img src="http://www.dolaronline.com/" border="0" alt="DolarHoy.com">
 </a> 
-</div> <!-- fin código -->
+</div> <!-- fin cï¿½digo -->
   
   <div class="body">
     <h1><g:message code="proforma.edit" default="Edit Proforma" /></h1>
@@ -199,7 +199,7 @@ rgb(90, 90, 90); background: rgb(176, 180, 160) none repeat scroll 0%
       <div id="detailListPanel"><g:render template="proformaDetailList" model="[proformaDetailList:proformaDetailList]"/></div>
 
       <div class="buttons">
-        <g:if test="${(proformaInstance?.status == 'Creada') || (proformaInstance?.status == 'Rechazada')}">
+        <g:if test="${(proformaInstance?.status == 'Creada') || (proformaInstance?.status == 'Rechazada') || (proformaInstance?.status == 'Aprobada')}">
           <span class="button"><g:submitButton name="update" class="save" value="${message(code: 'update', 'default': 'Update')}" onclick="return submitForm('update')"/></span>
         </g:if>
         <g:if test="${proformaInstance?.status == 'Creada'}">

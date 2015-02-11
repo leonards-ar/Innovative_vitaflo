@@ -150,7 +150,7 @@
         </div>
       </g:if>
       <div class="buttons">
-        <g:if test="${(proformaInstance?.status == 'Creada') || (proformaInstance?.status == 'Rechazada')}">
+        <g:if test="${(proformaInstance?.status == 'Creada') || (proformaInstance?.status == 'Rechazada') || (proformaInstance?.status == 'Aprobada')}">
           <span class="button"><g:actionSubmit class="edit" action="edit" value="${message(code: 'edit', 'default': 'Edit')}" /></span>
         </g:if>
         <g:if test="${proformaInstance?.status == 'Creada'}">
