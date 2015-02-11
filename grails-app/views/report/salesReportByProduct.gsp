@@ -12,7 +12,7 @@
       var element = $('selProductList').value;
       var array = $w(element);
       if(box.checked){
-
+            
             if(array.indexOf(product) < 0){
               $('selProductList').value += product + ' ';
             } else {
@@ -30,6 +30,31 @@
         $('searchForm').submit();
 
     }
+  
+    function checkAll(selectAllBox) {
+      var element = $('productsIds').value;
+      var array = $w(element);
+      
+      if(selectAllBox.checked){
+        $('selProductList').value = '';
+        
+        for(var index = 0; index < array.length; index++){
+            var checkName = 'product'+array[index];
+            $(checkName).checked=true;
+             $('selProductList').value += array[index] + ' ';
+        }
+      } else {
+        $('selProductList').value = '';
+        for(var index = 0; index < array.length; index++){
+            var checkName = 'product'+array[index];
+            $(checkName).checked=false;
+        }
+        
+      }
+      
+      $('searchForm').submit();
+        
+    } 
   </g:javascript>
 </head>
 <body>
@@ -75,15 +100,21 @@
       </table>
 
       <g:hiddenField name="selProductList" value="${selProductList}"/>
-    </g:form>
+      <g:hiddenField name="productsIds" value="${productsIds}"/>
+    
 
   </div>
   <br/>
   <div id="searchBox">
     <table>
       <tr>
+        <td colspan = "5">
+            Seleccionar Todos <g:checkBox name="selectAll" value="${selectAll}" onclick="checkAll(this)"/>
+        </td>
+      </tr>
+      <tr>
       <g:each in="${productList}" status="i" var="product">
-        <td><g:checkBox name="product${product?.id}" value="${selProductList.split(' ').collect{it.toLong()}.contains(product?.id)}" onclick="updateList(this,'${product?.id}')"/></td>
+        <td><g:checkBox name="product${product?.id}" value="${(selProductList!=null) && (selProductList!='') && (selProductList.split(' ').collect{it.toLong()}.contains(product?.id))}" onclick="updateList(this,'${product?.id}')"/></td>
         <td>${product?.shortName()}</td>
         <g:if test="${( (i+1) % 5) == 0}">
           </tr><tr>
@@ -92,7 +123,7 @@
       </tr>
     </table>
   </div>
-
+</g:form>
   <br/>
 
   <div id="saleByProductChart">
