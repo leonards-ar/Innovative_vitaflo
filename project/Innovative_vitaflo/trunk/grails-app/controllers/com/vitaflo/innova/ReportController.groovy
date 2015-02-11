@@ -240,17 +240,18 @@ class ReportController {
     Map productQtySalesMap = [:]
 
 
-    def selectedProductIds = (params.selProductList)? params.selProductList : ""
+    def selectedProductIds = params.selProductList
+	def productsIds = ""
+	
 
     productList.each {p ->
 
-
-      def putProduct = (!params.selProductList) || (selectedProductIds?.split(' ').collect{it.toLong()}.contains(p.id))
+	  productsIds += p.id + " "
+      def putProduct = (selectedProductIds != null) && (selectedProductIds != '') && (selectedProductIds?.split(' ').collect{it.toLong()}.contains(p.id))
       if(putProduct){
           parameters.put("product", p)
           List moneySales = Invoice.executeQuery(salesSelect.toString(), parameters)
           List salesList = createSalesByPorductList(moneySales, monthList)
-          if(!params.selProductList) selectedProductIds += p.id + " "
 
           productMoneySalesMap.put(p.shortName() , salesList)
 
@@ -278,7 +279,8 @@ class ReportController {
     return [salesMap: productMoneySalesMap, sXml: sXml, qtyMap: productQtySalesMap, qXml: qXml,
             monthList: formatMonthList, fromDate: lastDate, toDate: actualDate,
             patient: params.patient, supplier: params.supplier,
-            productList: productList, selProductList: selectedProductIds]
+            productList: productList, selProductList: selectedProductIds,productsIds: productsIds,
+			selectAll: params.selectAll]
 
   }
 
