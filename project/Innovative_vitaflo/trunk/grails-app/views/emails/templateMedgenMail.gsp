@@ -81,11 +81,11 @@
 					</td>
 
 					<td style="text-align: right">
-					 <g:formatNumber	number="${(proformaDetail?.price*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" />
+					 <g:formatNumber	number="${(proformaDetail?.price*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="\$ 0.00" />
 					</td>
 
 					<td style="text-align: right">
-					 <g:formatNumber number="${(proformaDetail?.total*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" />
+					 <g:formatNumber number="${(proformaDetail?.total*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="\$ 0.00" />
 				  </td>
 				</tr>
 			</g:each>
@@ -95,7 +95,7 @@
 				  <g:message code="proforma.totalproducts" default="Total Products" />
 				</td>
 				<td style="text-align: right">
-				  <g:formatNumber number="${(totalDetails*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" />
+				  <g:formatNumber number="${(totalDetails*((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="\$ 0.00" />
 			  </td>
 			</tr>
       <g:if test="${proformaInstance?.courier  > 0}">
@@ -104,7 +104,7 @@
             <g:message code="proforma.courier" default="Courier" />
           </td>
           <td style="text-align: right">
-            <g:formatNumber number="${(proformaInstance?.courier *((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="U\$S 0.00" />
+            <g:formatNumber number="${(proformaInstance?.courier *((proformaInstance?.client?.ivaResponsibleType == 'inscripto')?(1/1.21) : 1))}" format="\$ 0.00" />
           </td>
         </tr>
      </g:if>			
@@ -120,21 +120,17 @@
       <g:if test="${proformaInstance?.client?.ivaResponsibleType == 'inscripto'}">
         <tr class="${((detailsSize+3) % 2) == 0?'background: #f7f7f7;':'background: #fff;'}">
           <td colspan="3"><g:message code="proforma.iva" default="IVA" args="${ [21] }"/></td>
-          <td style="text-align: right"><g:formatNumber number="${(totalAmount*(0.21/1.21))}" format="U\$S 0.00" /></td>
+          <td style="text-align: right"><g:formatNumber number="${(totalAmount*(0.21/1.21))}" format="\$ 0.00" /></td>
         </tr>
       </g:if>     			
-			<tr style="${((detailsSize+4) % 2) == 0?'background: #f7f7f7;':'background: #fff;'}">
-				<td colspan="3"><g:message code="proforma.totalAmount" default="Total Amount" /></td>
-				<td style="text-align: right"><g:formatNumber number="${totalAmount}" format="U\$S 0.00" /></td>
-			</tr>
-      <tr style="${((detailsSize+5) % 2) == 0?'background: #f7f7f7;':'background: #fff;'}">
+      <tr style="${((detailsSize+4) % 2) == 0?'background: #f7f7f7;':'background: #fff;'}">
         <td colspan="3"><g:message code="proforma.totalAmount" default="Total Amount" /></td>
-        <td style="text-align: right"><b><g:formatNumber number="${(totalAmount*proformaInstance?.dollarValue)}" format="\$ 0.00" /></b></td>
+        <td style="text-align: right"><b><g:formatNumber number="${totalAmount}" format="\$ 0.00" /></b></td>
       </tr>
 		</tbody>
 	</table>
 </g:if> <br />
-    <p><b>Importe en pesos:</b> <g:numToWords number="${formatNumber(number:totalAmount*proformaInstance?.dollarValue, format:'0.00')}" lang="es"/><br/>
+    <p><b>Importe en pesos:</b> <g:numToWords number="${formatNumber(number:totalAmount, format:'0.00')}" lang="es"/><br/>
      <b>Condiciones de pago:</b> 100% pago a ${proformaInstance?.paymentConditions} d&iacute;as. Los precios de la presente pro-forma estar&aacute;n<br/>
         vigentes hasta 30 d&iacute;as posteriores a la fecha de su emisi&oacute;n.<br/><br/>
                 
