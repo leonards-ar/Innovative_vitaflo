@@ -63,7 +63,7 @@ environments {
 		application.name = "Medgen"
 		application.cssFile = "vitaflo.css"
 		application.logoFile = "medgen-logo.jpg"
-		application.template = "templateVitaflo"
+		application.template = "templateMedgen"
 		application.favicon = "medgen-favicon.ico"
         application.urls = ["http://localhost:8080/innova", "http://localhost:8080/vitaflo"]
 	}
