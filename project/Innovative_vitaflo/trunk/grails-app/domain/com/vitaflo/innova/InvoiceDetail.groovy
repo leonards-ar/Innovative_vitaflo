@@ -15,7 +15,7 @@ class InvoiceDetail {
 			Integer sold = obj?.productStock?.sold
 			Integer bought = obj?.productStock?.bought
 			def total = obj.id?  sold : sold + val
-			if(!(total <= bought)) return ['invoiceDetail.quantity.validator.error',obj?.getProductName(),(sold - bought)]
+			if(!(total <= bought)) return ['invoiceDetail.quantity.validator.error',obj?.getProductName(),obj?.getLot(),(total - bought)]
 		}
     }
     

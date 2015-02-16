@@ -211,8 +211,8 @@ class InvoiceController extends BaseController {
 						  status.setRollbackOnly()
 						  invoiceInstance.errors.reject(
 							  'invoiceDetail.quantity.validator.error',
-							  [auxInvoiceDetail.getProductName(), bought - sold] as Object[],
-							  "The stock for product {0} is {1}"
+							  [auxInvoiceDetail.getProductName(), auxInvoiceDetail.getLot(), bought - sold] as Object[],
+							  "The stock for product {0} with lot {1} is {2}"
 							  )
 
 						  List proformasToSelect = findAllProformasWithNoInvoice()
@@ -440,10 +440,10 @@ class AddInvoiceDetailsListCommand {
 				def bought = productStock?.bought
 				def total = sold + val
 				
-				if(!(total <= bought)) return ['invoiceDetail.quantity.validator.error',obj?.getProductName(),(sold - bought)]
+				if(!(total <= bought)) return ['invoiceDetail.quantity.validator.error',productStock.product.name,productStock.lot,(total - bought)]
 			} else {
 				if (productStockList.size() == 0){
-					return ['invoiceDetail.quantity.validator.error',Product.get(obj.addProductId),0]
+					return ['invoiceDetail.product.not.found',Product.get(obj.addProductId),obj.addLot,0]
 				}
 			}  
 		}
@@ -474,7 +474,6 @@ class UpdateInvoiceDetailsListCommand {
 	List lots = []
 	List detailsIds = []
 	List prices = []
-	
 
 	List createInvoiceDetailsList(){
 		List invoiceDetailList = []
