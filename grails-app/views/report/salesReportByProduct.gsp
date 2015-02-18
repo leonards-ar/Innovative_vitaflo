@@ -51,7 +51,7 @@
         }
         
       }
-      
+      alert(selProductList);
       $('searchForm').submit();
         
     } 
@@ -115,7 +115,7 @@
       <tr>
       <g:each in="${productList}" status="i" var="product">
         <td><g:checkBox name="product${product?.id}" value="${(selProductList!=null) && (selProductList!='') && (selProductList.split(' ').collect{it.toLong()}.contains(product?.id))}" onclick="updateList(this,'${product?.id}')"/></td>
-        <td>${product?.shortName()}</td>
+        <td>${product?.name}</td>
         <g:if test="${( (i+1) % 5) == 0}">
           </tr><tr>
         </g:if>

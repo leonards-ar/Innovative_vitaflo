@@ -210,10 +210,14 @@ class ReportController {
     List monthList = Invoice.executeQuery("select distinct year(i.date), month(i.date) from Invoice i where i.date >= :lastDate and i.date <= :actualDate order by year(i.date), month(i.date) ", [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()])
 
     StringBuilder salesSelect = new StringBuilder("select year(i.date), month(i.date), sum(d.quantity * d.price) ");
+	StringBuilder totalSalesSelect = new StringBuilder("select sum(d.quantity * d.price) ")
     StringBuilder qtySelect = new StringBuilder("select year(i.date), month(i.date), sum(d.quantity) ");
+	StringBuilder totalQtySelect = new StringBuilder("select sum(d.quantity) ");
     StringBuilder salesFrom = new StringBuilder("from Invoice i inner join i.soldProducts d inner join d.productStock ps right outer join ps.product prod ");
     StringBuilder qtyFrom = new StringBuilder("from Invoice i inner join i.soldProducts d inner join d.productStock ps right outer join ps.product prod ");
     StringBuilder where = new StringBuilder("where i.date >= :lastDate and i.date <= :actualDate and ps.product= :product ")
+	StringBuilder totalWhere = new StringBuilder("where i.date >= :lastDate and i.date <= :actualDate ")
+	
 
     Map parameters = [lastDate: lastDate.getTime(), actualDate: actualDate.getTime()]
 
@@ -234,7 +238,9 @@ class ReportController {
 
 
     salesSelect.append(salesFrom.toString()).append(where.toString()).append(" group by year(i.date),month(i.date), prod.name order by year(i.date), month(i.date), prod.name ")
+	totalSalesSelect.append(salesFrom.toString()).append(totalWhere.toString()).append(" group by year(i.date),month(i.date) order by year(i.date), month(i.date) ")
     qtySelect.append(qtyFrom.toString()).append(where.toString()).append(" group by year(i.date),month(i.date), prod.name order by year(i.date), month(i.date), prod.name ")
+	totalQtySelect.append(qtyFrom.toString()).append(totalWhere.toString()).append(" group by year(i.date),month(i.date) order by year(i.date), month(i.date) ")
 
     Map productMoneySalesMap = [:]
     Map productQtySalesMap = [:]
@@ -243,7 +249,8 @@ class ReportController {
     def selectedProductIds = params.selProductList
 	def productsIds = ""
 	
-
+	Map totalMoneySalesMap = [:]
+	Map totalQtySalesMap = [:]
     productList.each {p ->
 
 	  productsIds += p.id + " "
@@ -253,13 +260,28 @@ class ReportController {
           List moneySales = Invoice.executeQuery(salesSelect.toString(), parameters)
           List salesList = createSalesByPorductList(moneySales, monthList)
 
-          productMoneySalesMap.put(p.shortName() , salesList)
-
+		  def total=0
+		  salesList.each {sales ->
+			  total += sales.amount
+		  }
+		  
+          productMoneySalesMap.put(p , salesList)
+		  totalMoneySalesMap.put(p, total)
+		  
           List qtySales = Invoice.executeQuery(qtySelect.toString(), parameters)
           List qtyList = createSalesByPorductList(qtySales, monthList)
-          productQtySalesMap.put(p.shortName(), qtyList)
+		  total=0
+		  qtyList.each {qty ->
+			  total += qty.amount
+		  }
+		  
+          productQtySalesMap.put(p, qtyList)
+		  totalQtySalesMap.put(p, total)
       }
     }
+	
+	List totalMoneySales = Invoice.executeQuery(totalSalesSelect.toString(), parameters)
+    List totalQtySales = Invoice.executeQuery(totalQtySelect.toString(), parameters)
 
     def sXml = createSalesByProductReportXml(productMoneySalesMap, monthList)
     def qXml = createSalesByProductReportXml(productQtySalesMap, monthList)
@@ -280,7 +302,8 @@ class ReportController {
             monthList: formatMonthList, fromDate: lastDate, toDate: actualDate,
             patient: params.patient, supplier: params.supplier,
             productList: productList, selProductList: selectedProductIds,productsIds: productsIds,
-			selectAll: params.selectAll]
+			selectAll: params.selectAll,totalMoneySalesMap: totalMoneySalesMap, totalQtySalesMap: totalQtySalesMap,
+			totalMoneySales: totalMoneySales, totalQtySales: totalQtySales]
 
   }
 
@@ -337,9 +360,10 @@ class ReportController {
 
   List createSalesByPorductList(List sales, List monthList) {
     List salesList = []
-    Double foundAmount = new Double(0.0)
+    
 
     for (Calendar idxDate in monthList) {
+	  Double foundAmount = new Double(0.0)
       boolean found = false
       def foundItem;
       sales.each({item ->
