@@ -9,18 +9,18 @@
             <g:each in="${monthList}" status="i" var="date">
               <th><g:formatDate date="${date}" format="MM/yyyy"/></th>
             </g:each>
-
+            <th>Total</th>
           </tr>
           </thead>
           <tbody>
           <g:each in="${salesMap}" status="i" var="entry">
 
             <tr class="${(i % 2) == 0 ? 'odd' : 'even'}">
-              <td>${entry.key}</td>
+              <td>${entry.key.shortName()}</td>
               <g:each in="${entry.value}" status="j" var="salesInstance">
                 <td class="currencyValue">${formatNumber(number: salesInstance?.amount, format: "0.00")}</td>
               </g:each>
-
+              <td class="currencyValue"><g:formatNumber number="${totalMoneySalesMap.get(entry.key)}" format="0.00"/></td>
             </tr>
           </g:each>
 
@@ -52,7 +52,7 @@
             <g:each in="${monthList}" status="i" var="date">
               <th><g:formatDate date="${date}" format="M/yyyy"/></th>
             </g:each>
-
+            <th>Total</th>
           </tr>
           </thead>
           <tbody>
@@ -63,9 +63,15 @@
               <g:each in="${entry.value}" status="j" var="salesInstance">
                 <td class="currencyValue">${formatNumber(number: salesInstance?.amount, format: "0")}</td>
               </g:each>
-
+              <td class="currencyValue"><g:formatNumber number="${totalQtySalesMap.get(entry.key)}" format="0"/></td>
+              
             </tr>
           </g:each>
+            <tr>
+                <g:each in="${totalMoneySales}" var="totalSale">
+                    <td class="currencyValue"><g:formatNumber number="${totalSale}" format="0"/></td>
+                </g:each>
+            </tr>
 
           </tbody>
         </table>
