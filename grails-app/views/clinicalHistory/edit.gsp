@@ -37,7 +37,7 @@
                                     <label for="date"><g:message code="clinicalHistory.date" default="Date" />:</label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: clinicalHistoryInstance, field: 'date', 'errors')}">
-                                    <g:datePicker name="date" value="${clinicalHistoryInstance?.date}" precision="day" years="${1990..2020}" />
+                                    <g:datePicker name="date" value="${clinicalHistoryInstance?.date}" precision="day" years="${1990..Calendar.instance.get(Calendar.YEAR) + 5}" />
 
                                 </td>
                             </tr>
