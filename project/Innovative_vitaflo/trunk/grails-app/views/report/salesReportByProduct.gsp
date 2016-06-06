@@ -72,12 +72,12 @@
         <tr>
           <td>
             <div><g:message code="salesReportByProduct.report.startingDate" default="Starting Date"/></div>
-            <g:datePicker name="fromDate" value="${fromDate}" precision="month" years="${2008..2020}"/>
+            <g:datePicker name="fromDate" value="${fromDate}" precision="month" years="${2008..Calendar.instance.get(Calendar.YEAR) + 5}"/>
           </td>
 
           <td>
             <div><g:message code="salesReportByProduct.report.endingDate" default="Ending Date"/></div>
-            <g:datePicker name="toDate" value="${toDate}" precision="month" years="${2008..2020}"/>
+            <g:datePicker name="toDate" value="${toDate}" precision="month" years="${2008..Calendar.instance.get(Calendar.YEAR) + 5}"/>
           </td>
 
           <td>
