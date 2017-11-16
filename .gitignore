@@ -2,3 +2,5 @@
 .idea
 *.iml
 target
+vitaflo
+stactrace.log
