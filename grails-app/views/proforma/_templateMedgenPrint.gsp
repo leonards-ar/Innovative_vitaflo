@@ -130,10 +130,13 @@
             <td style="text-align: right"><g:formatNumber number="${(totalAmount*(0.21/1.21))}" format="\$ 0.00" /></td>
           </tr>
        </g:if>
-
-        <tr class="${((detailsSize+4) % 2) == 0?'odd':'even'}">
+      <tr class="${((detailsSize+4) % 2) == 0?'odd':'even'}">
+        <td colspan="3"><g:message code="proforma.totalAmount" default="Total Amount" /></td>
+        <td style="text-align: right"><g:formatNumber number="${totalAmount}" format="U\$S 0.00" /></td>
+      </tr>
+        <tr class="${((detailsSize+5) % 2) == 0?'odd':'even'}">
           <td colspan="3"><b><g:message code="proforma.totalAmount" default="Total Amount" /></b></td>
-          <td style="text-align: right"><b><g:formatNumber number="${totalAmount}" format="\$ 0.00" /></b></td>
+          <td style="text-align: right"><b><g:formatNumber number="${totalAmount*proformaInstance?.dollarValue}" format="\$ 0.00" /></b></td>
         </tr>
       </tbody>
     </table>
