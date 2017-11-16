@@ -145,6 +145,11 @@
 	</g:if>
 
 	<br />
+	<p>Importe expresado en d&oacute;lares estadounidenses <g:formatNumber number="${totalAmount}" format="U\$S 0.00" /> a fines impositivos<br/>
+		se expresan en pesos <g:formatNumber number="${(totalAmount*proformaInstance?.dollarValue)}" format="\$ 0.00" /> seg&uacute;n tipo de cambio
+		libre vendedor BNA del d&iacute;a <g:formatDate date="${proformaInstance?.createdAt}" format="dd/MM/yyyy"/>
+		de <g:formatNumber number="${proformaInstance?.dollarValue}" format="0.00" />.
+		<br/><br/>
 	<p><b>Importe en pesos:</b> <g:numToWords number="${formatNumber(number:totalAmount, format:'0.00')}" lang="es"/><br/>
      <b>Condiciones de pago:</b> 100% pago a ${proformaInstance?.paymentConditions} d&iacute;as. Los precios de la presente pro-forma estar&aacute;n<br/>
         vigentes hasta 30 d&iacute;as posteriores a la fecha de su emisi&oacute;n.<br/><br/>
@@ -160,8 +165,8 @@
           <td>
             <p>
                MEDGEN SA <br/>
-               Oficinas Comerciales : Cabello 3627 (5&deg; A)<br/>
-               CP 1425 Ciudad de Buenos Aires
+               Oficinas Comerciales : Av. Callao 2094 (3&deg; Derecha)<br/>
+               CP 1424 Ciudad de Buenos Aires
             </p>
           </td>
           <td>

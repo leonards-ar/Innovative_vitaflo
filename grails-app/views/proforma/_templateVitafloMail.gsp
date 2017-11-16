@@ -171,8 +171,8 @@
           <td>
             <p>
                Vitaflo Buenos Aires SA<br/>
-               Cabello 3627 (5&deg; A)<br/>
-               CP 1425 Ciudad de Buenos Aires
+               Av. Callao 2094 (3&deg; Derecha)<br/>
+               CP 1424 Ciudad de Buenos Aires
             </p>
           </td>
           <td>
