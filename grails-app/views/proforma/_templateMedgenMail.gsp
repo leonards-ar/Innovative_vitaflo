@@ -175,12 +175,12 @@
             <p>
                MEDGEN SA <br/>
                Oficinas Comerciales : Av. Callao 2094 (3&deg; Derecha)<br/>
-               CP 1424 Ciudad de Buenos Aires
+               CP 1024 Ciudad de Buenos Aires
             </p>
           </td>
           <td>
             <p>
-              Tel/Fax: 4807-0999/4809-0969<br/>
+              Tel/Fax: 3221-7620 al 23<br/>
               E-mail: info@medgen-latam.com<br/>
 
             </p>
