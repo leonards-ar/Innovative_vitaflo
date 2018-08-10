@@ -146,8 +146,8 @@
 
   <br />
       <g:if test="${proformaInstance?.dollarValue > 0}">
-        <p>Importe expresado en d&oacute;lares estadounidenses <g:formatNumber number="${totalAmount/proformaInstance?.dollarValue}" format="U\$S 0.00" /> a fines impositivos<br/>
-          se expresan en pesos <g:formatNumber number="${totalAmount}" format="\$ 0.00" /> seg&uacute;n tipo de cambio
+        <p>Importe expresado en d&oacute;lares estadounidenses <g:formatNumber number="${totalAmount}" format="U\$S 0.00" /> a fines impositivos<br/>
+          se expresan en pesos <g:formatNumber number="${totalAmount * proformaInstance?.dollarValue}" format="\$ 0.00" /> seg&uacute;n tipo de cambio
           libre vendedor BNA del d&iacute;a <g:formatDate date="${proformaInstance?.createdAt}" format="dd/MM/yyyy"/>
           de <g:formatNumber number="${proformaInstance?.dollarValue}" format="0.00" />.
           <br/><br/>
