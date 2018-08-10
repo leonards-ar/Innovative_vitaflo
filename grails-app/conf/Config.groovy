@@ -68,11 +68,11 @@ environments {
 		application.favicon = "medgen-favicon.ico"
         application.urls = ["http://localhost:8080/innova", "http://localhost:8080/vitaflo"]
 	}
-    medgen-us {
+    medgen_us {
         grails.serverURL = "http://www.changeme.com"
         grails.app.context = "/medgen-us"
         application.emailFromAddress = "Medgen-Sistema@medgen.com.ar"
-        application.name = "Medgen"
+        application.name = "MedgenUs"
         application.cssFile = "vitaflo.css"
         application.logoFile = "medgen-us-logo.jpg"
         application.template = "templateMedgen"

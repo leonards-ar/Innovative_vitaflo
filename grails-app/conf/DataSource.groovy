@@ -45,7 +45,7 @@ environments {
 						url = "jdbc:mysql://localhost/medgen_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
 		}
 	}
-	medgen-us {
+	medgen_us {
 		dataSource {
 			dbCreate = "update"
 			url = "jdbc:mysql://localhost/medgen_us_db?useUnicode=true&characterEncoding=utf-8&autoReconnect=true"
